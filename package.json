@@ -1,0 +1,18 @@
+{
+  "name": "mintbean-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Monarch Wadia",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.0"
+  }
+}
