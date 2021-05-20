@@ -1,19 +1,55 @@
-const fs = require("fs");
-const path = require("path");
-const glob = require("glob");
-const { buildSchema } = require("graphql");
-const { mergeSchemas } = require("graphql-tools");
+const fakeData = require("./fake-data");
 
-// read + build all the schemas in this folder
-const schemas = glob
-  .sync(__dirname + "/**/*.graphql")
-  .map((val) => fs.readFileSync(path.resolve(__dirname, val), "utf-8"))
-  .map((val) => buildSchema(val));
+const {
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLString,
+  isRequiredArgument,
+  GraphQLSchema,
+  GraphQLList,
+} = require("graphql");
 
-// merge the schemas
-const mergedSchemas = mergeSchemas({
-  schemas,
-  throwOnConflict: true,
+const PostType = new GraphQLObjectType({
+  name: "Post",
+  fields: {
+    id: { type: GraphQLString },
+    title: { type: GraphQLString },
+    commentCount: { type: GraphQLInt },
+    upvoteCount: { type: GraphQLInt },
+    createdAt: { type: GraphQLString },
+  },
 });
 
-module.exports = mergedSchemas;
+const UserType = new GraphQLObjectType({
+  name: "User",
+  fields: {
+    id: { type: GraphQLString },
+    firstName: {
+      type: GraphQLString,
+    },
+    lastName: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
+    posts: {
+      type: GraphQLList(PostType),
+      resolve: ({ id }) => {
+        return fakeData.posts.filter((p) => p.createdBy === id);
+      },
+    },
+  },
+});
+
+const QueryType = new GraphQLObjectType({
+  name: "Query",
+  fields: {
+    users: {
+      type: GraphQLList(UserType),
+      resolve: () => {
+        return fakeData.users;
+      },
+    },
+  },
+});
+
+const schema = new GraphQLSchema({ query: QueryType });
+
+module.exports = schema;

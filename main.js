@@ -1,14 +1,14 @@
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
-const schemas = require("./schemas");
-const resolvers = require("./resolvers");
+const schema = require("./schemas");
+// const resolvers = require("./resolvers");
 
 const app = express();
 
 app.use(
   graphqlHTTP({
-    schema: schemas,
-    rootValue: resolvers,
+    schema,
+    graphiql: true,
   })
 );
 
