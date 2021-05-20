@@ -1,13 +1,19 @@
 const fs = require("fs");
 const path = require("path");
+const glob = require("glob");
 const { buildSchema } = require("graphql");
+const { mergeSchemas } = require("graphql-tools");
 
-// monoschema for now
-const schemaFile = fs.readFileSync(
-  path.resolve(__dirname, "schema.graphql"),
-  "utf-8"
-);
+// read + build all the schemas in this folder
+const schemas = glob
+  .sync(__dirname + "/**/*.graphql")
+  .map((val) => fs.readFileSync(path.resolve(__dirname, val), "utf-8"))
+  .map((val) => buildSchema(val));
 
-const schema = buildSchema(schemaFile);
+// merge the schemas
+const mergedSchemas = mergeSchemas({
+  schemas,
+  throwOnConflict: true,
+});
 
-module.exports = schema;
+module.exports = mergedSchemas;
