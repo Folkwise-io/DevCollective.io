@@ -1,4 +1,4 @@
-const fakeData = require("./fake-data");
+const fakeData = require("../db/fake-data");
 
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require("graphql");
 
