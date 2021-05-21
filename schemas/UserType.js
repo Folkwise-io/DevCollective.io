@@ -1,6 +1,9 @@
 const fakeData = require("../db/fake-data");
+const { getUserFieldById } = require("../db/user-db");
 
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require("graphql");
+
+const userFieldHoc = (fieldName) => (id) => getUserFieldById(id, fieldName);
 
 const UserType = new GraphQLObjectType({
   name: "User",
@@ -10,18 +13,17 @@ const UserType = new GraphQLObjectType({
     return {
       id: {
         type: GraphQLString,
+        resolve: (id) => id,
       },
       firstName: {
         type: GraphQLString,
+        resolve: userFieldHoc("firstName"),
       },
-      lastName: { type: GraphQLString },
-      createdAt: { type: GraphQLString },
+      lastName: { type: GraphQLString, resolve: userFieldHoc("lastName") },
+      createdAt: { type: GraphQLString, resolve: userFieldHoc("createdAt") },
       posts: {
         type: GraphQLList(PostType),
-        resolve: ({ id }) => {
-          return fakeData.posts.filter((p) => p.createdBy === id);
-          // .map((x) => x.id);
-        },
+        resolve: ({ id }) => getPostIdsForUserId(id),
       },
     };
   },

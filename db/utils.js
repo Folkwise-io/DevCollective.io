@@ -13,6 +13,7 @@ const objectSubset =
 
     return newObj;
   };
+
 const pick =
   (...fields) =>
   (obj) => {
@@ -23,6 +24,14 @@ const pick =
     }
   };
 
+const pickOne = (field) => (obj) => {
+  if (obj instanceof Array) {
+    return obj.map((o) => o[field]);
+  } else {
+    return o[field];
+  }
+};
 module.exports = {
   pick,
+  pickOne,
 };
