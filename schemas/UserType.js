@@ -24,7 +24,7 @@ const UserType = new GraphQLObjectType({
       createdAt: { type: GraphQLString, resolve: userFieldHoc("createdAt") },
       posts: {
         type: GraphQLList(PostType),
-        resolve: ({ id }) => getPostIdsForUserId(id),
+        resolve: (id) => getPostIdsForUserId(id),
       },
     };
   },

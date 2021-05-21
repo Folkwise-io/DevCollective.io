@@ -12,6 +12,7 @@ const PostType = new GraphQLObjectType({
   name: "Post",
   fields: () => {
     const UserType = require("./UserType");
+    const CommunityType = require("./CommunityType");
 
     return {
       id: {
@@ -37,6 +38,10 @@ const PostType = new GraphQLObjectType({
       author: {
         type: UserType,
         resolve: postFieldHoc("createdBy"),
+      },
+      community: {
+        type: CommunityType,
+        resolve: postFieldHoc("community"),
       },
     };
   },
