@@ -1,7 +1,7 @@
 const { GraphQLObjectType, GraphQLList } = require("graphql");
 const { getAllUserIds } = require("../db/user-db");
 const communityDb = require("../db/community-db");
-const postDb = require("../db/post-db");
+const { getAllPostIds } = require("../db/post-db");
 
 const QueryType = new GraphQLObjectType({
   name: "Query",
@@ -21,7 +21,7 @@ const QueryType = new GraphQLObjectType({
       },
       posts: {
         type: GraphQLList(PostType),
-        resolve: () => postDb.list(),
+        resolve: () => getAllPostIds(),
       },
     };
   },

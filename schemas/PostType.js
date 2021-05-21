@@ -4,26 +4,39 @@ const {
   GraphQLString,
   GraphQLList,
 } = require("graphql");
-const userDb = require("../db/user-db");
+const { getPostFieldById } = require("../db/post-db");
+
+const postFieldHoc = (fieldName) => (id) => getPostFieldById(id, fieldName);
 
 const PostType = new GraphQLObjectType({
   name: "Post",
   fields: () => {
     const UserType = require("./UserType");
-    const fakeData = require("../db/fake-data");
 
     return {
-      id: { type: GraphQLString },
-      title: { type: GraphQLString, resolve: ({ id }) => userDb.list("title") }, // TODO: Gotta find a better pattern for these kinds of queries
-      commentCount: { type: GraphQLInt },
-      upvoteCount: { type: GraphQLInt },
-      createdAt: { type: GraphQLString },
+      id: {
+        type: GraphQLString,
+        resolve: (id) => id,
+      },
+      title: {
+        type: GraphQLString,
+        resolve: postFieldHoc("title"),
+      },
+      commentCount: {
+        type: GraphQLString,
+        resolve: postFieldHoc("commentCount"),
+      },
+      upvoteCount: {
+        type: GraphQLString,
+        resolve: postFieldHoc("upvoteCount"),
+      },
+      createdAt: {
+        type: GraphQLString,
+        resolve: postFieldHoc("createdAt"),
+      },
       author: {
         type: UserType,
-        resolve: ({ author }) => {
-          userDb.list("id").then();
-          return fakeData.users.find((u) => u.id === author).id;
-        },
+        resolve: ({ author }) => author,
       },
     };
   },

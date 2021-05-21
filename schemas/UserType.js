@@ -1,5 +1,6 @@
 const fakeData = require("../db/fake-data");
 const { getUserFieldById } = require("../db/user-db");
+const { getPostIdsForUserId } = require("../db/post-db");
 
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require("graphql");
 
