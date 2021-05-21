@@ -1,17 +1,16 @@
-const fakeData = require("../db/fake-data");
-const { getCommunityFieldById } = require("../db/community-db");
-const { getPostIdsForCommunityId } = require("../db/post-db");
+import { getCommunityFieldById } from "../db/community-db";
+import { getPostIdsForCommunityId } from "../db/post-db";
 
-const { GraphQLObjectType, GraphQLString, GraphQLList } = require("graphql");
+import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 
-const communityFieldHoc = (fieldName) => (id) =>
+const communityFieldHoc = (fieldName: string) => (id: string) =>
   getCommunityFieldById(id, fieldName);
 
-const CommunityType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Community",
   fields: () => {
-    const PostType = require("./PostType");
-    const UserType = require("./UserType");
+    const PostType = require("./PostType").default;
+    const UserType = require("./UserType").default;
 
     return {
       id: {
@@ -41,5 +40,3 @@ const CommunityType = new GraphQLObjectType({
     };
   },
 });
-
-module.exports = CommunityType;

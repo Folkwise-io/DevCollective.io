@@ -1,6 +1,6 @@
-const faker = require("faker");
+import faker from "faker";
 
-const fill = (num = 0, cb) => {
+const fill = <T>(num = 0, cb: (i: number) => T): T[] => {
   const arr = [];
   for (let i = 0; i < num; i++) {
     arr.push(cb(i));
@@ -8,6 +8,7 @@ const fill = (num = 0, cb) => {
   return arr;
 };
 
+export type TUser = ReturnType<typeof user>;
 const user = () => ({
   id: faker.datatype.uuid(),
   firstName: faker.name.firstName(),
@@ -15,7 +16,8 @@ const user = () => ({
   createdAt: faker.date.past(),
 });
 
-const community = (users) => ({
+export type TCommunity = ReturnType<typeof community>;
+const community = (users: TUser[]) => ({
   id: faker.datatype.uuid(),
   title: faker.company.companyName(),
   description: faker.company.bs(),
@@ -23,7 +25,8 @@ const community = (users) => ({
   createdBy: faker.random.arrayElement(users).id,
 });
 
-const post = (users, communities) => ({
+export type TPost = ReturnType<typeof post>;
+const post = (users: TUser[], communities: TCommunity[]) => ({
   id: faker.datatype.uuid(),
   title: faker.lorem.sentence(),
   commentCount: faker.datatype.number(100),
@@ -33,12 +36,6 @@ const post = (users, communities) => ({
   community: faker.random.arrayElement(communities).id,
 });
 
-const users = fill(50, user);
-const communities = fill(10, () => community(users));
-const posts = fill(1000, () => post(users, communities));
-
-module.exports = {
-  users,
-  communities,
-  posts,
-};
+export const users = fill(50, user);
+export const communities = fill(10, () => community(users));
+export const posts = fill(1000, () => post(users, communities));

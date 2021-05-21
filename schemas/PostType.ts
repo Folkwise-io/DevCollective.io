@@ -1,18 +1,19 @@
-const {
+import {
   GraphQLInt,
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
-} = require("graphql");
-const { getPostFieldById } = require("../db/post-db");
+} from "graphql";
+import { getPostFieldById } from "../db/post-db";
 
-const postFieldHoc = (fieldName) => (id) => getPostFieldById(id, fieldName);
+const postFieldHoc = (fieldName: string) => (id: string) =>
+  getPostFieldById(id, fieldName);
 
-const PostType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "Post",
   fields: () => {
-    const UserType = require("./UserType");
-    const CommunityType = require("./CommunityType");
+    const UserType = require("./UserType").default;
+    const CommunityType = require("./CommunityType").default;
 
     return {
       id: {
@@ -46,5 +47,3 @@ const PostType = new GraphQLObjectType({
     };
   },
 });
-
-module.exports = PostType;

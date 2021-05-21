@@ -1,15 +1,15 @@
-const fakeData = require("../db/fake-data");
-const { getUserFieldById } = require("../db/user-db");
-const { getPostIdsForUserId } = require("../db/post-db");
+import { getUserFieldById } from "../db/user-db";
+import { getPostIdsForUserId } from "../db/post-db";
 
-const { GraphQLObjectType, GraphQLString, GraphQLList } = require("graphql");
+import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 
-const userFieldHoc = (fieldName) => (id) => getUserFieldById(id, fieldName);
+const userFieldHoc = (fieldName: string) => (id: string) =>
+  getUserFieldById(id, fieldName);
 
-const UserType = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: "User",
   fields: () => {
-    const PostType = require("./PostType");
+    const PostType = require("./PostType").default;
 
     return {
       id: {
@@ -29,5 +29,3 @@ const UserType = new GraphQLObjectType({
     };
   },
 });
-
-module.exports = UserType;
