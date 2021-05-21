@@ -28,7 +28,7 @@ const pickOne = (field) => (obj) => {
   if (obj instanceof Array) {
     return obj.map((o) => o[field]);
   } else {
-    return o[field];
+    return obj[field];
   }
 };
 module.exports = {

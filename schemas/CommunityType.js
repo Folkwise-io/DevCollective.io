@@ -1,5 +1,6 @@
 const fakeData = require("../db/fake-data");
 const { getCommunityFieldById } = require("../db/community-db");
+const { getPostIdsForCommunityId } = require("../db/post-db");
 
 const { GraphQLObjectType, GraphQLString, GraphQLList } = require("graphql");
 
@@ -35,7 +36,7 @@ const CommunityType = new GraphQLObjectType({
       },
       posts: {
         type: GraphQLList(PostType),
-        resolve: ({ id }) => getPostIdsForCommunityId(id),
+        resolve: (id) => getPostIdsForCommunityId(id),
       },
     };
   },

@@ -1,13 +1,14 @@
 const { communities } = require("./fake-data");
 const { pickOne } = require("./utils");
+const DataLoader = require("dataloader");
+
+const communityLoader = new DataLoader(async (ids) =>
+  communities.filter((community) => ids.indexOf(community.id) >= 0)
+);
 
 module.exports = {
-  list: () => Promise.resolve(communities).then(pick("id")),
-  get: (id) => Promise.resolve(communities.find((x) => x.id === id)),
   getCommunityFieldById: async (id, fieldName) => {
-    const community = await Promise.resolve(
-      communities.find((x) => x.id === id)
-    );
+    const community = await communityLoader.load(id);
     if (!community) {
       return null;
     }
