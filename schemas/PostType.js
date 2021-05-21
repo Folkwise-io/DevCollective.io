@@ -36,7 +36,7 @@ const PostType = new GraphQLObjectType({
       },
       author: {
         type: UserType,
-        resolve: ({ author }) => author,
+        resolve: postFieldHoc("createdBy"),
       },
     };
   },

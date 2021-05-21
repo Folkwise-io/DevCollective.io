@@ -13,5 +13,5 @@ module.exports = {
     }
     return post[fieldName];
   },
-  get: (id) => Promise.resolve(posts.find((x) => x.id === id)),
+  getAllPostIds: () => Promise.resolve(posts.map((p) => p.id)),
 };
