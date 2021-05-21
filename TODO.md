@@ -1,0 +1,1 @@
+- harden graphql endpoint against malicious actors
