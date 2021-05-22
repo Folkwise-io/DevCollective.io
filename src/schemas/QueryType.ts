@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLList } from "graphql";
-import { getAllUserIds } from "../db/user-db";
+import { getAllUserIds } from "../data/UserRepo";
 import { getAllCommunityIds } from "../db/community-db";
 import { getAllPostIds } from "../db/post-db";
 

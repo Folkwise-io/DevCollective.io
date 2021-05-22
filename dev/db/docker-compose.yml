@@ -1,0 +1,13 @@
+version: "3"
+services:
+  database:
+    image: postgres:12.3
+    container_name: mintbean-database
+    volumes:
+      - "./init:/docker-entrypoint-initdb.d/"
+    ports:
+      - "10800:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
