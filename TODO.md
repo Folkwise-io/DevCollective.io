@@ -1,1 +1,10 @@
+- unit tests for api
+- database connection
+- authentication and the user model
+- authorization and the permission model https://www.apollographql.com/docs/apollo-server/security/authentication/#authorization-methods
+- Replies to posts
+- Upvotes and downvotes
+- Hot posts, new posts, top posts
+- Community search
+- How many members does my community have?
 - harden graphql endpoint against malicious actors
