@@ -4,7 +4,7 @@ import {
   GraphQLString,
   GraphQLList,
 } from "graphql";
-import { getPostFieldById } from "../db/post-db";
+import { getPostFieldById } from "../data/PostRepo";
 
 const postFieldHoc = (fieldName: string) => (id: string) =>
   getPostFieldById(id, fieldName);

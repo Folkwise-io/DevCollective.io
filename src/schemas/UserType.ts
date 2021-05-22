@@ -1,5 +1,5 @@
 import { getUserFieldById } from "../data/UserRepo";
-import { getPostIdsForUserId } from "../db/post-db";
+import { getPostIdsForUserId } from "../data/PostRepo";
 
 import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 

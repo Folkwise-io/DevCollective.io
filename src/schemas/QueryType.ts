@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLList } from "graphql";
 import { getAllUserIds } from "../data/UserRepo";
-import { getAllCommunityIds } from "../db/community-db";
-import { getAllPostIds } from "../db/post-db";
+import { getAllCommunityIds } from "../data/CommunityRepo";
+import { getAllPostIds } from "../data/PostRepo";
 
 export default new GraphQLObjectType({
   name: "Query",

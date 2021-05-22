@@ -8,7 +8,8 @@
     "dev": "(cd dev/db && docker-compose up -d) && nodemon -e graphql,js,ts src/main.ts",
     "test": "jest",
     "knex": "knex --knexfile src/data/knexfile.ts",
-    "pristine": "dev/db/init-db.sh && yarn knex migrate:latest && yarn knex seed:run"
+    "pristine": "dev/db/init-db.sh && yarn knex migrate:latest && yarn knex seed:run",
+    "lint": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",

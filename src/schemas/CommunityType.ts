@@ -1,5 +1,5 @@
-import { getCommunityFieldById } from "../db/community-db";
-import { getPostIdsForCommunityId } from "../db/post-db";
+import { getCommunityFieldById } from "../data/CommunityRepo";
+import { getPostIdsForCommunityId } from "../data/PostRepo";
 
 import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 
