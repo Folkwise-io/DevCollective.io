@@ -1,11 +1,11 @@
 {
   "name": "mintbean-api",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "src/main.js",
   "author": "Monarch Wadia",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -e graphql,js,ts main.ts",
+    "dev": "nodemon -e graphql,js,ts src/main.ts",
     "test": "jest"
   },
   "devDependencies": {
