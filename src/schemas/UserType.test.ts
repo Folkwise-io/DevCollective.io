@@ -1,5 +1,5 @@
 import appFactory from "../appFactory";
-import request from "supertest";
+import { queryGql } from "../test/gql";
 
 describe("User Type", () => {
   beforeAll(() => {
@@ -8,19 +8,15 @@ describe("User Type", () => {
 
   it("", async (done) => {
     const app = appFactory();
-    const response = await request(app)
-      .post("/")
-      .set("Accept", "application/json")
-      .set("Content-Type", "application/graphql")
-      .send(
-        `
+    const response = await queryGql(app)(
+      `
         {
           users {
             id
           }
         }
       `
-      );
+    );
 
     console.log(response.body);
 
