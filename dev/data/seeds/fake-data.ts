@@ -3,7 +3,7 @@ import communityFactory from "../factories/communityFactory";
 import communityUserMixer from "../factories/communityUserFactory";
 import postFactory from "../factories/postFactory";
 import userFactory from "../factories/userFactory";
-import knexProvider from "../knex-provider";
+import knexProvider from "../../../src/data/knex-provider";
 
 const fill = <T>(num = 0, cb: (i: number) => T): T[] => {
   const arr = [];

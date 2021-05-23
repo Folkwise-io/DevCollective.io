@@ -6,12 +6,12 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/main.ts",
-    "dev": "(cd dev/db && docker-compose up -d) && MB_KNEXFILE=./dev/db/dev.knexfile.js nodemon -e graphql,js,ts src/main.ts",
+    "dev": "(cd dev/db && docker-compose up -d) && nodemon -e graphql,js,ts src/main.ts --knexfile ./dev/db/dev.knexfile.ts",
     "test": "jest",
     "knex": "knex --knexfile dev/db/dev.knexfile.ts",
     "knex:prod": "knex --knexfile /etc/mintbean-v4/config/knexfile.ts",
     "knex:test": "knex --knexfile dev/test/test.knexfile.ts",
-    "pristine": "dev/db/init-db.sh && yarn knex migrate:latest && yarn knex seed:run && yarn knex:test migrate:latest && yarn knex:test seed:run ",
+    "pristine": "dev/db/init-db.sh && yarn knex migrate:latest && yarn knex seed:run && yarn knex:test migrate:latest && yarn knex:test seed:run",
     "lint": "tsc --noEmit && prettier --check ."
   },
   "devDependencies": {

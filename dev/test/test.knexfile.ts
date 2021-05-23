@@ -1,6 +1,6 @@
-const path = require("path");
+import path from "path";
 
-module.exports = {
+export default {
   client: "postgresql",
   connection: {
     database: "mintbean_v4_test",
@@ -16,7 +16,5 @@ module.exports = {
     tableName: "knex_migrations_test",
     directory: path.join(__dirname, "../../src/data/migrations"),
   },
-  seeds: {
-    directory: path.join(__dirname, "../../src/data/seeds"),
-  },
+  // no seeds for test file
 };
