@@ -7,7 +7,8 @@
   "scripts": {
     "start": "ts-node src/main.ts",
     "dev": "(cd dev/db && docker-compose up -d) && nodemon -e graphql,js,ts src/main.ts --knexfile ./dev/db/dev.knexfile.ts",
-    "test": "jest",
+    "test": "MB_KNEXFILE=dev/test/test.knexfile.ts yarn test:jest",
+    "test:jest": "jest",
     "knex": "knex --knexfile dev/db/dev.knexfile.ts",
     "knex:prod": "knex --knexfile /etc/mintbean-v4/config/knexfile.ts",
     "knex:test": "knex --knexfile dev/test/test.knexfile.ts",
