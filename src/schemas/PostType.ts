@@ -32,11 +32,11 @@ export default new GraphQLObjectType({
       },
       author: {
         type: UserType,
-        resolve: postFieldHoc("createdBy"),
+        resolve: postFieldHoc("authorId"),
       },
       community: {
         type: CommunityType,
-        resolve: postFieldHoc("community"),
+        resolve: postFieldHoc("communityId"),
       },
     };
   },
