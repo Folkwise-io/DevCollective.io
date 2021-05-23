@@ -1,7 +1,11 @@
 import appFactory from "../appFactory";
 import request from "supertest";
 
-describe("", () => {
+describe("User Type", () => {
+  beforeAll(() => {
+    const app = appFactory();
+  });
+
   it("", async (done) => {
     const app = appFactory();
     const response = await request(app)
