@@ -9,8 +9,7 @@
     "test": "jest",
     "knex": "knex --knexfile src/data/knexfile.ts",
     "pristine": "dev/db/init-db.sh && yarn knex migrate:latest && yarn knex seed:run",
-    "lint": "tsc --noEmit",
-    "prettier": "prettier --write ."
+    "lint": "tsc --noEmit && prettier --check ."
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
