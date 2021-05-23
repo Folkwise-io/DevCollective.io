@@ -2,11 +2,7 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("posts", (table) => {
-    table
-      .uuid("id")
-      .notNullable()
-      .defaultTo(knex.raw("uuid_generate_v4()"))
-      .unique();
+    table.uuid("id").notNullable().defaultTo(knex.raw("uuid_generate_v4()")).unique();
 
     table.uuid("authorId").notNullable();
     table.uuid("communityId").notNullable();
@@ -19,10 +15,7 @@ export async function up(knex: Knex): Promise<void> {
     // Constraints and indices
     table.primary(["id"]);
     table.foreign("authorId").references("users.id").onDelete("CASCADE");
-    table
-      .foreign("communityId")
-      .references("communities.id")
-      .onDelete("CASCADE");
+    table.foreign("communityId").references("communities.id").onDelete("CASCADE");
   });
 }
 

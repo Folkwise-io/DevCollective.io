@@ -1,7 +1,4 @@
-export default function communityUserJoinFactory(
-  communities: DCommunity[],
-  users: DUser[]
-): DCommunitiesUsers[] {
+export default function communityUserJoinFactory(communities: DCommunity[], users: DUser[]): DCommunitiesUsers[] {
   const communitiesUsers: DCommunitiesUsers[] = [];
 
   communities.forEach((c) => {

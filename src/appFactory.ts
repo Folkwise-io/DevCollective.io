@@ -9,7 +9,7 @@ export default function appFactory() {
     graphqlHTTP({
       schema,
       graphiql: true,
-    })
+    }),
   );
 
   return app;

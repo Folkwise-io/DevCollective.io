@@ -4,12 +4,10 @@ import knex from "./knex";
 
 const communityLoader = new DataLoader<String, DCommunity>(async (ids) =>
   // @ts-ignore
-  knex.raw<DCommunity>("select * from comunities where id in (?)", ids)
+  knex.raw<DCommunity>("select * from comunities where id in (?)", ids),
 );
 
-export const getCommunityFieldById = fieldGetterHoc((id) =>
-  communityLoader.load(id)
-);
+export const getCommunityFieldById = fieldGetterHoc((id) => communityLoader.load(id));
 
 export const getCommunityIdsForUserId = async (authorId: string) => {
   const communities = await knex.raw(
@@ -18,7 +16,7 @@ export const getCommunityIdsForUserId = async (authorId: string) => {
       LEFT JOIN communitiesUsers AS cu ON c.id = cu.communityId
     WHERE cu.userId = ?
   `,
-    [authorId]
+    [authorId],
   );
   communities.rows.forEach((c: DCommunity) => communityLoader.prime(c.id, c));
   return pickOne("id")(communities.rows);

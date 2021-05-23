@@ -1,13 +1,7 @@
-import {
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-} from "graphql";
+import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 import { getPostFieldById } from "../data/PostRepo";
 
-const postFieldHoc = (fieldName: string) => (id: string) =>
-  getPostFieldById(id, fieldName);
+const postFieldHoc = (fieldName: string) => (id: string) => getPostFieldById(id, fieldName);
 
 export default new GraphQLObjectType({
   name: "Post",

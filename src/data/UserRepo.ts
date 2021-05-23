@@ -4,7 +4,7 @@ import knex from "./knex";
 
 const userLoader = new DataLoader<String, DUser>(async (ids) =>
   // @ts-ignore
-  knex.raw<DUser>("select * from users where id in (?)", ids)
+  knex.raw<DUser>("select * from users where id in (?)", ids),
 );
 
 export const getUserFieldById = fieldGetterHoc((id) => userLoader.load(id));

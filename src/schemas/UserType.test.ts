@@ -15,7 +15,7 @@ describe("User Type", () => {
             id
           }
         }
-      `
+      `,
     );
 
     console.log(response.body);

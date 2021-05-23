@@ -2,11 +2,7 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("communities", (table) => {
-    table
-      .uuid("id")
-      .notNullable()
-      .defaultTo(knex.raw("uuid_generate_v4()"))
-      .unique();
+    table.uuid("id").notNullable().defaultTo(knex.raw("uuid_generate_v4()")).unique();
 
     table.text("title").notNullable().unique();
     table.text("description").notNullable();

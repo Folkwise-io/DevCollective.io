@@ -26,8 +26,7 @@ export async function seed(): Promise<void> {
       email: "a@a.com",
       firstName: "Amy",
       lastName: "Adams",
-      passwordHash:
-        "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // "password"
+      passwordHash: "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // "password"
       createdAt: new Date("2019-10-15"),
       updatedAt: new Date(),
     },

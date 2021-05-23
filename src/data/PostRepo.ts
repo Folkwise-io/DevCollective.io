@@ -4,7 +4,7 @@ import knex from "./knex";
 
 const postLoader = new DataLoader<String, DPost>(async (ids) =>
   // @ts-ignore
-  knex.raw<DPost>("select * from posts where id in (?)", ids)
+  knex.raw<DPost>("select * from posts where id in (?)", ids),
 );
 
 const prime = (posts: DPost[]) => {
@@ -33,7 +33,7 @@ export const getPostIdsForUserId = async (userId: string) => {
     `
     SELECT * FROM posts WHERE "authorId" = ?
   `,
-    [userId]
+    [userId],
   );
   prime(posts.rows);
   return pickOne("id")(posts.rows);

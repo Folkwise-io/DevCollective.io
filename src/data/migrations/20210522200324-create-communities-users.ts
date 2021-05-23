@@ -9,10 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 
     // Constraints and indices
     table.primary(["communityId", "userId"]);
-    table
-      .foreign("communityId")
-      .references("communities.id")
-      .onDelete("CASCADE");
+    table.foreign("communityId").references("communities.id").onDelete("CASCADE");
     table.foreign("userId").references("users.id").onDelete("CASCADE");
   });
 }

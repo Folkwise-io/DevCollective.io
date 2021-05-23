@@ -3,8 +3,7 @@ import { getPostIdsForCommunityId } from "../data/PostRepo";
 
 import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
 
-const communityFieldHoc = (fieldName: string) => (id: string) =>
-  getCommunityFieldById(id, fieldName);
+const communityFieldHoc = (fieldName: string) => (id: string) => getCommunityFieldById(id, fieldName);
 
 export default new GraphQLObjectType({
   name: "Community",
