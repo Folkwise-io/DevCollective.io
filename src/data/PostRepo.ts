@@ -1,10 +1,10 @@
 import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
-import knex from "./knex";
+import knexProvider from "./knex-provider";
 
 const postLoader = new DataLoader<String, DPost>(async (ids) =>
   // @ts-ignore
-  knex.raw<DPost>("select * from posts where id in (?)", ids),
+  knexProvider().then((knex) => knex.raw<DPost>("select * from posts where id in (?)", ids)),
 );
 
 const prime = (posts: DPost[]) => {
@@ -17,18 +17,21 @@ const prime = (posts: DPost[]) => {
 export const getPostFieldById = fieldGetterHoc((id) => postLoader.load(id));
 
 export const getPostIdsForCommunityId = async (communityId: string) => {
+  const knex = await knexProvider();
   const posts = await knex.raw("select * from posts where communityId = ?", []);
   prime(posts.rows);
   return pickOne("id")(posts.rows);
 };
 
 export const getAllPostIds = async () => {
+  const knex = await knexProvider();
   const posts = await knex.raw("select * from posts");
   prime(posts.rows);
   return pickOne("id")(posts.rows);
 };
 
 export const getPostIdsForUserId = async (userId: string) => {
+  const knex = await knexProvider();
   const posts = await knex.raw(
     `
     SELECT * FROM posts WHERE "authorId" = ?

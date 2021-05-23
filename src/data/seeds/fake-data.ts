@@ -3,7 +3,7 @@ import communityFactory from "../factories/communityFactory";
 import communityUserMixer from "../factories/communityUserFactory";
 import postFactory from "../factories/postFactory";
 import userFactory from "../factories/userFactory";
-import knex from "../knex";
+import knexProvider from "../knex-provider";
 
 const fill = <T>(num = 0, cb: (i: number) => T): T[] => {
   const arr = [];
@@ -15,6 +15,7 @@ const fill = <T>(num = 0, cb: (i: number) => T): T[] => {
 
 export async function seed(): Promise<void> {
   // clear database
+  const knex = await knexProvider();
   await knex("users").del();
   await knex("communities").del();
   await knex("communitiesUsers").del();

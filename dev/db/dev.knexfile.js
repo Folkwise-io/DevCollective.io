@@ -1,5 +1,4 @@
-// Update with your config settings.
-import path from "path";
+const path = require("path");
 
 module.exports = {
   client: "postgresql",
@@ -15,9 +14,9 @@ module.exports = {
   },
   migrations: {
     tableName: "knex_migrations",
-    directory: path.join(__dirname, "/migrations"),
+    directory: path.join(__dirname, "../../src/data/migrations"),
   },
   seeds: {
-    directory: path.join(__dirname, "/seeds"),
+    directory: path.join(__dirname, "../../src/data/seeds"),
   },
 };

@@ -9,9 +9,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ALTER DATABASE mintbean_v4 OWNER TO mintbean;
 GRANT ALL PRIVILEGES ON DATABASE mintbean_v4 TO mintbean;
 
-DROP DATABASE IF EXISTS mintbean_test_v4;
-CREATE DATABASE mintbean_test_v4;
-\c mintbean_test_v4;
+DROP DATABASE IF EXISTS mintbean_v4_test;
+CREATE DATABASE mintbean_v4_test;
+\c mintbean_v4_test;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-ALTER DATABASE mintbean_test_v4 OWNER TO mintbean;
-GRANT ALL PRIVILEGES ON DATABASE mintbean_test_v4 TO mintbean;
+ALTER DATABASE mintbean_v4_test OWNER TO mintbean;
+GRANT ALL PRIVILEGES ON DATABASE mintbean_v4_test TO mintbean;
