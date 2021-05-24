@@ -1,7 +1,7 @@
 import appFactory from "../appFactory";
 import query from "../test/query";
 import { Express } from "express";
-import { dataset_complex, users } from "../../dev/test/datasets/complex";
+import { dataset_complex, users, posts } from "../../dev/test/datasets/complex";
 
 describe("User object", () => {
   let app: Express;
@@ -32,6 +32,27 @@ describe("User object", () => {
         );
 
         expect(response.body.data.users.length).toEqual(users.length);
+      });
+
+      it("can fetch all posts for a given user", async () => {
+        const user = users[1];
+        const userPostIds = posts.filter((p: any) => p.authorId === user.id).map((p: any) => ({ id: p.id }));
+        const response = await query(app).gql(
+          `
+          query Query($id: String!) {
+            user(id: $id) {
+              id,
+              posts {
+                id
+              }
+            }
+          }
+          `,
+          {
+            id: user.id,
+          },
+        );
+        expect(response.body.data.user.posts).toMatchObject(userPostIds);
       });
     });
 

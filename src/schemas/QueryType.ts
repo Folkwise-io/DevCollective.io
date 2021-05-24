@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString } from "graphql";
 import { getAllUserIds } from "../data/UserRepo";
 import { getAllCommunityIds } from "../data/CommunityRepo";
 import { getAllPostIds } from "../data/PostRepo";
@@ -11,6 +11,17 @@ export default new GraphQLObjectType({
     const PostType = require("./PostType").default;
 
     return {
+      user: {
+        type: UserType,
+        args: {
+          id: {
+            type: GraphQLString,
+          },
+        },
+        resolve: (_, args) => {
+          return args.id;
+        },
+      },
       users: {
         type: GraphQLList(UserType),
         resolve: () => getAllUserIds(),
