@@ -10,8 +10,8 @@ describe("User object", () => {
   });
 
   describe("root user query", () => {
-    it("can fetch all users", async (done) => {
-      const response = await query(app).gql(
+    it("can fetch all users", async () => {
+      await query(app).gql(
         `
           {
             users {
@@ -20,10 +20,6 @@ describe("User object", () => {
           }
         `,
       );
-
-      console.log(response.body);
-
-      done();
     });
   });
 });

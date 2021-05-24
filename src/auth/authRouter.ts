@@ -16,7 +16,7 @@ authRouter.post("/login", async (req, res) => {
     req.session.user = user;
     return res.send(user);
   } else {
-    return res.send(401);
+    return res.sendStatus(401);
   }
 });
 
@@ -24,14 +24,14 @@ authRouter.post("/logout", async (req, res) => {
   if (req.session) {
     req.session.user = null;
   }
-  return res.send(200);
+  return res.sendStatus(200);
 });
 
 authRouter.post("/check", async (req, res) => {
-  if (!req.session) {
-    return res.send(401);
-  } else {
+  if (req.session?.user) {
     return res.json(req.session.user);
+  } else {
+    return res.sendStatus(401);
   }
 });
 
