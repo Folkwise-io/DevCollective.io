@@ -14,6 +14,8 @@ MVP
 
 LATER
 
+- Create more beautiful tooling. Datasetgenerator and datasetloader are useful but very raw right now.
+
 DONE
 
 - unit tests for api
