@@ -21,6 +21,7 @@ export default new GraphQLObjectType({
       },
       lastName: { type: GraphQLString, resolve: userFieldHoc("lastName") },
       createdAt: { type: GraphQLString, resolve: userFieldHoc("createdAt") },
+      updatedAt: { type: GraphQLString, resolve: userFieldHoc("updatedAt") },
       posts: {
         type: GraphQLList(PostType),
         resolve: (id) => getPostIdsForUserId(id),
