@@ -13,7 +13,8 @@
     "knex:prod": "MB_ENV_FILE=/etc/mintbean-v4/config/prod.env knex --knexfile /etc/mintbean-v4/config/prod.env",
     "knex:test": "MB_ENV_FILE=dev/test.env knex --knexfile ./dev/test/test.knexfile.ts",
     "pristine": "dev/db/init-db.sh && yarn knex migrate:latest && yarn knex seed:run && yarn knex:test migrate:latest && yarn knex:test seed:run",
-    "lint": "tsc --noEmit && prettier --check ."
+    "lint": "tsc --noEmit && prettier --check .",
+    "dev:generate-dataset": "ts-node dev/test/datasetGenerator.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

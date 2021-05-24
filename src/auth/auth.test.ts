@@ -5,46 +5,48 @@ import { createUser } from "../service/UserService";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import supertest from "supertest";
 import { dataset_oneUser, user } from "../../dev/test/datasets/dataset-one-user";
+import { datasetLoader } from "../../dev/test/datasetLoader";
 
 describe("Authentication", () => {
   let app: Express;
+  let user: any;
   let getAgent = (): MbQueryAgent => query(app);
-
-  // utilities *****************************************************************
-
-  const login = (email: string, password: string, agent?: MbQueryAgent): supertest.Test => {
-    const _agent = agent || getAgent();
-
-    return _agent.post("/auth/login", {
-      email,
-      password,
-    });
-  };
-
-  const login_goodParams = (agent?: MbQueryAgent) => {
-    const _agent = agent || getAgent();
-    return login(user.email, user.password, _agent);
-  };
-
-  const check = (agent?: MbQueryAgent) => {
-    const _agent = agent || getAgent();
-    return _agent.post("/auth/check");
-  };
-
-  const expectedUser = {
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-  };
-
-  // ***************************************************************************
+  let login: Function;
+  let login_goodParams: Function;
+  let check: Function;
+  let expectedUser: any;
 
   beforeAll(async () => {
     app = appFactory();
   });
 
   beforeEach(async () => {
-    await dataset_oneUser();
+    const data = await datasetLoader("simple");
+    user = data.users[0];
+    login = (email: string, password: string, agent?: MbQueryAgent): supertest.Test => {
+      const _agent = agent || getAgent();
+
+      return _agent.post("/auth/login", {
+        email,
+        password,
+      });
+    };
+
+    login_goodParams = (agent?: MbQueryAgent) => {
+      const _agent = agent || getAgent();
+      return login(user.email, "password", _agent);
+    };
+
+    check = (agent?: MbQueryAgent) => {
+      const _agent = agent || getAgent();
+      return _agent.post("/auth/check");
+    };
+
+    expectedUser = {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
   });
 
   describe("login", () => {

@@ -1,17 +1,21 @@
 import appFactory from "../appFactory";
 import query from "../test/query";
 import { Express } from "express";
-import { dataset_complex, users, posts } from "../../dev/test/datasets/complex";
+import { datasetLoader } from "../../dev/test/datasetLoader";
 
 describe("User object", () => {
   let app: Express;
+  let users: any;
+  let posts: any;
 
   beforeAll(async () => {
     app = appFactory();
   });
 
   beforeEach(async () => {
-    await dataset_complex();
+    const data = await datasetLoader("complex");
+    users = data.users;
+    posts = data.posts;
   });
 
   describe("root user query", () => {

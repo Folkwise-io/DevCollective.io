@@ -1,17 +1,19 @@
 import appFactory from "../appFactory";
 import query from "../test/query";
 import { Express } from "express";
-import { dataset_complex, communities, posts } from "../../dev/test/datasets/complex";
+import { datasetLoader } from "../../dev/test/datasetLoader";
 
 describe("Community object", () => {
   let app: Express;
+  let communities: any;
 
   beforeAll(async () => {
     app = appFactory();
   });
 
   beforeEach(async () => {
-    await dataset_complex();
+    const data = await datasetLoader("complex");
+    communities = data.communities;
   });
 
   describe("root community query", () => {
