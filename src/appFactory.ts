@@ -2,18 +2,23 @@ import express from "express";
 import { graphqlHTTP, RequestInfo, OptionsData } from "express-graphql";
 import schema from "./schemas";
 import depthLimit from "graphql-depth-limit";
-import configurePassport from "./auth/configurePassport";
 import authRouter from "./auth/authRouter";
-import { initialize, session } from "passport";
+import cookieSession from "cookie-session";
+import { config } from "dotenv";
+
+import configProvider from "./configProvider";
+
+const { MB_SESSION_KEY } = configProvider();
 
 export default function appFactory() {
-  configurePassport();
-
   const app = express();
 
-  app.use(initialize());
-  app.use(session());
-
+  app.use(
+    cookieSession({
+      name: "mb-session",
+      keys: [MB_SESSION_KEY], // TODO: change
+    }),
+  );
   app.use("/auth", authRouter);
 
   app.use(
