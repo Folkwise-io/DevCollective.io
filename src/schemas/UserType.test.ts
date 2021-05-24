@@ -1,25 +1,35 @@
 import appFactory from "../appFactory";
 import query from "../test/query";
 import { Express } from "express";
+import { dataset_oneUser, user } from "../../dev/test/datasets/dataset-one-user";
 
 describe("User object", () => {
   let app: Express;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     app = appFactory();
   });
 
+  beforeEach(async () => {
+    await dataset_oneUser();
+  });
+
   describe("root user query", () => {
-    it("can fetch all users", async () => {
-      await query(app).gql(
+    it("can fetch one users", async () => {
+      const response = await query(app).gql(
         `
           {
             users {
-              id
+              firstName,
+              lastName
             }
           }
         `,
       );
+
+      expect(response.body.data).toMatchObject({
+        users: [{ firstName: user.firstName, lastName: user.lastName }],
+      });
     });
   });
 });

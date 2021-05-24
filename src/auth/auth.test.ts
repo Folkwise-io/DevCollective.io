@@ -4,10 +4,14 @@ import { Express } from "express";
 import { createUser } from "../service/UserService";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import supertest from "supertest";
+import { dataset_oneUser, user } from "../../dev/test/datasets/dataset-one-user";
 
 describe("Authentication", () => {
   let app: Express;
   let getAgent = (): MbQueryAgent => query(app);
+
+  // utilities *****************************************************************
+
   const login = (email: string, password: string, agent?: MbQueryAgent): supertest.Test => {
     const _agent = agent || getAgent();
 
@@ -16,34 +20,31 @@ describe("Authentication", () => {
       password,
     });
   };
+
   const login_goodParams = (agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();
-    return login(userParams.email, userParams.password, _agent);
+    return login(user.email, user.password, _agent);
   };
+
   const check = (agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();
     return _agent.post("/auth/check");
   };
 
-  let userParams = {
-    email: "test@test.com",
-    firstName: "John",
-    lastName: "Doe",
-    password: "password",
-  };
   const expectedUser = {
-    email: userParams.email,
-    firstName: userParams.firstName,
-    lastName: userParams.lastName,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
   };
+
+  // ***************************************************************************
 
   beforeAll(async () => {
     app = appFactory();
   });
 
   beforeEach(async () => {
-    await clearDatabase();
-    await createUser(userParams);
+    await dataset_oneUser();
   });
 
   describe("login", () => {
@@ -79,10 +80,10 @@ describe("Authentication", () => {
 
     describe("rainy cases", () => {
       it("can't log in with the wrong password", async () => {
-        await login(userParams.email, "wrongpassword").expect(401);
+        await login(user.email, "wrongpassword").expect(401);
       });
       it("can't log in with the wrong email", async () => {
-        await login("wrongemail@test.com", userParams.password).expect(401);
+        await login("wrongemail@test.com", user.password).expect(401);
       });
       it("can't log in with the wrong email and wrong password", async () => {
         await login("wrongemail@test.com", "wrongpassword").expect(401);
