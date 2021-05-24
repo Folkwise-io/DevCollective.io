@@ -1,17 +1,5 @@
-import faker from "faker";
-import communityFactory from "../factories/communityFactory";
-import communityUserMixer from "../factories/communityUserFactory";
-import postFactory from "../factories/postFactory";
-import userFactory from "../factories/userFactory";
 import knexProvider from "../../../src/data/knex-provider";
-
-const fill = <T>(num = 0, cb: (i: number) => T): T[] => {
-  const arr = [];
-  for (let i = 0; i < num; i++) {
-    arr.push(cb(i));
-  }
-  return arr;
-};
+import datasetFactory from "../factories/datasetFactory";
 
 export async function seed(): Promise<void> {
   // clear database
@@ -21,21 +9,12 @@ export async function seed(): Promise<void> {
   await knex("communitiesUsers").del();
   await knex("posts").del();
 
-  const users: DUser[] = [
-    {
-      id: faker.datatype.uuid(),
-      email: "a@a.com",
-      firstName: "Amy",
-      lastName: "Adams",
-      passwordHash: "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // "password"
-      createdAt: new Date("2019-10-15"),
-      updatedAt: new Date(),
-    },
-    ...fill(49, userFactory),
-  ];
-  const communities = fill(10, () => communityFactory());
-  const communitiesUsers = communityUserMixer(communities, users);
-  const posts = fill(1000, () => postFactory(users, communities));
+  const { users, communities, communitiesUsers, posts } = datasetFactory({
+    totalUsers: 20,
+    totalCommunities: 5,
+    userCommunityProbability: 0.5,
+    totalPosts: 100,
+  });
 
   await knex("users").insert(users);
   await knex("communities").insert(communities);

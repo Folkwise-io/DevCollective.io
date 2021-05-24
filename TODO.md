@@ -1,10 +1,21 @@
-- unit tests for api
-- database connection
-- authentication and the user model
+MVP
+
+- join and leave communities
+- Create posts
 - authorization and the permission model https://www.apollographql.com/docs/apollo-server/security/authentication/#authorization-methods
+- Create communities (admin only)
 - Replies to posts
 - Upvotes and downvotes
 - Hot posts, new posts, top posts
+- password reset
 - Community search
-- How many members does my community have?
-- harden graphql endpoint against malicious actors
+- Community statistics (number of members, total number of posts, number of posts in last 24h / 7d / 30d)
+- basic hardening of graphql endpoint against malicious actors
+
+LATER
+
+DONE
+
+- unit tests for api
+- database connection
+- authentication and the user model
