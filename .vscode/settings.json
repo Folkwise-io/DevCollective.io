@@ -1,3 +1,4 @@
 {
-  "prettier.configPath": "./.prettierrc"
+  "prettier.configPath": "./.prettierrc",
+  "jest.jestCommandLine": "MB_ENV_FILE=dev/test.env yarn test"
 }

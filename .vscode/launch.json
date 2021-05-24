@@ -6,6 +6,24 @@
   "configurations": [
     {
       "type": "node",
+      "runtimeExecutable": "node",
+      "name": "vscode-jest-tests",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["--runInBand", "--no-cache", "--watchAll"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "env": {
+        "MB_ENV_FILE": "dev/test.env"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      }
+    },
+    {
+      "type": "node",
       "request": "launch",
       "name": "Backend",
       "runtimeExecutable": "yarn",

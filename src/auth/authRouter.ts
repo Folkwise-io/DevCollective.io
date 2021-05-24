@@ -27,11 +27,11 @@ authRouter.post("/logout", async (req, res) => {
   return res.send(200);
 });
 
-authRouter.get("/check", async (req, res) => {
+authRouter.post("/check", async (req, res) => {
   if (!req.session) {
     return res.send(401);
   } else {
-    return res.send(req.session.user);
+    return res.json(req.session.user);
   }
 });
 
