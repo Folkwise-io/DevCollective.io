@@ -2,11 +2,22 @@ import express from "express";
 import { graphqlHTTP, RequestInfo, OptionsData } from "express-graphql";
 import schema from "./schemas";
 import depthLimit from "graphql-depth-limit";
+import configurePassport from "./auth/configurePassport";
+import authRouter from "./auth/authRouter";
+import { initialize, session } from "passport";
 
 export default function appFactory() {
+  configurePassport();
+
   const app = express();
 
+  app.use(initialize());
+  app.use(session());
+
+  app.use("/auth", authRouter);
+
   app.use(
+    "/graphql",
     graphqlHTTP({
       schema,
       graphiql: true,

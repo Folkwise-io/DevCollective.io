@@ -16,9 +16,12 @@
     "lint": "tsc --noEmit && prettier --check ."
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.11",
     "@types/faker": "^5.5.5",
     "@types/jest": "^26.0.23",
+    "@types/passport": "^1.0.6",
+    "@types/passport-local": "^1.0.33",
     "@types/supertest": "^2.0.11",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
@@ -29,6 +32,8 @@
   },
   "dependencies": {
     "@types/graphql-depth-limit": "^1.1.2",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
     "dataloader": "^2.0.0",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
@@ -38,6 +43,8 @@
     "graphql-depth-limit": "^1.1.0",
     "graphql-tools": "^7.0.5",
     "knex": "^0.95.6",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "pg": "^8.6.0",
     "ts-node": "^9.1.1",
     "type-fest": "^1.1.3",

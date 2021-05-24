@@ -1,5 +1,5 @@
 import appFactory from "../appFactory";
-import { queryGql } from "../test/gql";
+import query from "../test/query";
 import { Express } from "express";
 
 describe("User object", () => {
@@ -11,7 +11,7 @@ describe("User object", () => {
 
   describe("root user query", () => {
     it("can fetch all users", async (done) => {
-      const response = await queryGql(app)(
+      const response = await query(app).gql(
         `
           {
             users {

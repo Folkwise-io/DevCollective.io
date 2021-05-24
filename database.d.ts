@@ -1,4 +1,5 @@
 // This file contains types for the database layer.
+
 interface DUser {
   id: string;
   email: string;
