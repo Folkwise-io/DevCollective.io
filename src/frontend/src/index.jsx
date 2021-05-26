@@ -1,5 +1,15 @@
+/** @jsx jsx */
 import React from "react";
 import ReactDOM from "react-dom";
-import "./global.css";
+import { jsx, css } from "@emotion/react";
 
-ReactDOM.render(<div style={{ color: "red" }}>Hello, World</div>, document.getElementById("out"));
+ReactDOM.render(
+  <div
+    css={css`
+      color: hotpink;
+    `}
+  >
+    Hello, World
+  </div>,
+  document.getElementById("out"),
+);
