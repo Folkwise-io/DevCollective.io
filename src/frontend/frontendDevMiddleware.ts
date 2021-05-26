@@ -6,12 +6,28 @@ import fs from "fs";
 
 const frontendDevMiddleware = (app: Application) => {
   const webpackOpts: webpack.Configuration = {
-    entry: path.join(__dirname, "src"),
+    entry: {
+      main: path.join(__dirname, "src", "index.jsx"),
+    },
     mode: "development",
     devtool: false,
     output: {
       filename: "bundle.js",
       path: path.join(__dirname, "dist"),
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"],
+            },
+          },
+        },
+      ],
     },
   };
   const middlewareOpts = {};
