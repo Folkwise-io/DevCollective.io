@@ -22,3 +22,7 @@ DONE
 - unit tests for api
 - database connection
 - authentication and the user model
+
+KNOWN ISSUES
+
+hmr is not working. i've followed this advice. https://github.com/webpack-contrib/webpack-hot-middleware/issues/391#issuecomment-841196392
