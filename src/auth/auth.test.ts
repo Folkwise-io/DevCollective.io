@@ -17,6 +17,7 @@ describe("Authentication", () => {
   let expectedUser: any;
 
   beforeAll(async () => {
+    await clearDatabase();
     app = appFactory();
   });
 

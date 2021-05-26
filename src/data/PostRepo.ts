@@ -18,9 +18,11 @@ export const getPostFieldById = fieldGetterHoc((id) => postLoader.load(id));
 
 export const getPostIdsForCommunityId = async (communityId: string) => {
   const knex = await knexProvider();
-  const posts = await knex.raw("select * from posts where communityId = ?", []);
-  prime(posts.rows);
-  return pickOne("id")(posts.rows);
+  const posts = await knex("posts").where({
+    communityId,
+  });
+  prime(posts);
+  return pickOne("id")(posts);
 };
 
 export const getAllPostIds = async () => {

@@ -1,5 +1,3 @@
-import { fieldGetterHoc, pickOne } from "../../src/data/utils";
-import DataLoader from "dataloader";
 import knexProvider from "../../src/data/knex-provider";
 
 export const clearDatabase = async () => {

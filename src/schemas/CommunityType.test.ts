@@ -2,24 +2,29 @@ import appFactory from "../appFactory";
 import query from "../test/query";
 import { Express } from "express";
 import { datasetLoader } from "../../dev/test/datasetLoader";
+import { clearDatabase } from "../../dev/test/TestRepo";
 
 describe("Community object", () => {
   let app: Express;
   let communities: any;
+  let users: any;
 
   beforeAll(async () => {
+    await clearDatabase();
     app = appFactory();
   });
 
-  beforeEach(async () => {
-    const data = await datasetLoader("complex");
+  beforeEach(async (done) => {
+    const data = await datasetLoader("simple");
     communities = data.communities;
+    users = data.users;
+    done();
   });
 
   describe("root community query", () => {
     describe("sunny cases", () => {
       it("can fetch all communities", async () => {
-        const response = await query(app).gql(
+        const response = await query(app).gqlQuery(
           `
             {
               communities {
@@ -34,6 +39,32 @@ describe("Community object", () => {
         expect(response.body.data.communities).toMatchObject(
           communities.map((c: any) => ({ id: c.id, title: c.title, description: c.description })),
         );
+      });
+
+      it("Allows users to join communities.", async () => {
+        const user = users[0];
+        const community = communities[0];
+
+        const response = await query(app)
+          .gqlMutation(
+            `
+            mutation Mutation($userId: String!, $communityId: String!) {
+              joinCommunity(userId: $userId, communityId: $communityId) {
+                id,
+                posts {
+                  id
+                }
+              }
+            }
+            `,
+            {
+              userId: user.id,
+              communityId: community.id,
+            },
+          )
+          .expect(200);
+
+        expect(response?.body.data.joinCommunity).toBeTruthy();
       });
 
       //     it("can fetch all posts for a given user", async () => {

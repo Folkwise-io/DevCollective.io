@@ -1,11 +1,5 @@
 [
   {
-    "userId": "c0682b1b-6a96-4db3-8e48-9e33427141b8",
-    "communityId": "c1519d2b-9c5f-4740-bf45-32c0be6e9ab7",
-    "createdAt": "2021-05-24T23:13:29.369Z",
-    "updatedAt": "2021-05-24T23:13:29.369Z"
-  },
-  {
     "userId": "625ea07f-597d-4a76-ba28-2be4dde6c9c0",
     "communityId": "c1519d2b-9c5f-4740-bf45-32c0be6e9ab7",
     "createdAt": "2021-05-24T23:13:29.369Z",
@@ -20,12 +14,6 @@
   {
     "userId": "0400bd1c-3cbc-496e-b62d-2185d410654d",
     "communityId": "c1519d2b-9c5f-4740-bf45-32c0be6e9ab7",
-    "createdAt": "2021-05-24T23:13:29.369Z",
-    "updatedAt": "2021-05-24T23:13:29.369Z"
-  },
-  {
-    "userId": "c0682b1b-6a96-4db3-8e48-9e33427141b8",
-    "communityId": "e9a9d159-2de7-4527-a4b5-b617e7038b65",
     "createdAt": "2021-05-24T23:13:29.369Z",
     "updatedAt": "2021-05-24T23:13:29.369Z"
   },

@@ -5,29 +5,34 @@ const query = (app: Express.Application) => {
   const agent = request.agent(app);
 
   return {
-    gql: (query: string, variables?: any) => {
+    gqlQuery: (query: string, variables?: any) => {
       const postData = {
         query,
         variables,
       };
-      return (
-        agent
-          .post("/graphql")
-          .set("Accept", "application/json")
-          // .set("Content-Type", "application/graphql")
-          .send(postData)
-      );
+      return agent.post("/graphql").set("Accept", "application/json").send(postData);
+    },
+    gqlMutation: (mutation: string, variables?: any) => {
+      const postData = {
+        query: mutation,
+        variables,
+      };
+      return agent.post("/graphql").set("Accept", "application/json").send(postData);
     },
     post: (route: string, payload?: any) => {
-      let x = agent.post(route).set("Accept", "application/json").set("Content-Type", "application/json").send(payload);
+      let request = agent
+        .post(route)
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .send(payload);
 
       if (payload) {
-        x = x.set("Content-Type", "application/json").send(payload);
+        request = request.set("Content-Type", "application/json").send(payload);
       } else {
-        x = x.send();
+        request = request.send();
       }
 
-      return x;
+      return request;
     },
     get: (route: string) => {
       return agent.post(route).set("Accept", "application/json").send();

@@ -27,7 +27,7 @@ export const datasetLoader = async (datasetName: string, verbose = false) => {
 
   const k = async (tableName: string, data: any) => {
     log(`Writing ${data.length} records to ${tableName}...`);
-    return knex(tableName).insert(data);
+    return await knex(tableName).insert(data);
   };
 
   await k("users", users);

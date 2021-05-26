@@ -2,6 +2,7 @@ import appFactory from "../appFactory";
 import query from "../test/query";
 import { Express } from "express";
 import { datasetLoader } from "../../dev/test/datasetLoader";
+import { clearDatabase } from "../../dev/test/TestRepo";
 
 describe("User object", () => {
   let app: Express;
@@ -9,6 +10,7 @@ describe("User object", () => {
   let posts: any;
 
   beforeAll(async () => {
+    await clearDatabase();
     app = appFactory();
   });
 
@@ -21,7 +23,7 @@ describe("User object", () => {
   describe("root user query", () => {
     describe("sunny cases", () => {
       it("can fetch all users", async () => {
-        const response = await query(app).gql(
+        const response = await query(app).gqlQuery(
           `
             {
               users {
@@ -41,7 +43,7 @@ describe("User object", () => {
       it("can fetch all posts for a given user", async () => {
         const user = users[1];
         const userPostIds = posts.filter((p: any) => p.authorId === user.id).map((p: any) => ({ id: p.id }));
-        const response = await query(app).gql(
+        const response = await query(app).gqlQuery(
           `
           query Query($id: String!) {
             user(id: $id) {
@@ -56,13 +58,15 @@ describe("User object", () => {
             id: user.id,
           },
         );
-        expect(response.body.data.user.posts).toMatchObject(userPostIds);
+        expect(response.body.data.user.posts.map((p: any) => p.id).sort()).toMatchObject(
+          userPostIds.map((p: any) => p.id).sort(),
+        );
       });
     });
 
     describe("rainy cases", () => {
       it("does not provide email", async () => {
-        const response = await query(app).gql(
+        const response = await query(app).gqlQuery(
           `
           {
             users {
@@ -74,7 +78,7 @@ describe("User object", () => {
         expect(response.body.errors[0].message).toEqual('Cannot query field "email" on type "User".');
       });
       it("does not provide password", async () => {
-        const response = await query(app).gql(
+        const response = await query(app).gqlQuery(
           `
           {
             users {
@@ -86,7 +90,7 @@ describe("User object", () => {
         expect(response.body.errors[0].message).toEqual('Cannot query field "password" on type "User".');
       });
       it("does not provide passwordHash", async () => {
-        const response = await query(app).gql(
+        const response = await query(app).gqlQuery(
           `
           {
             users {

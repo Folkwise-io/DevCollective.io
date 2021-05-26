@@ -8,17 +8,21 @@ import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo
 
 import CommunityType from "./CommunityType";
 
-const mutationType = new GraphQLObjectType({
+const MutationType = new GraphQLObjectType({
   name: "Mutation",
   fields: {
     joinCommunity: {
       type: CommunityType,
       args: {
-        id: {
+        userId: {
+          type: GraphQLString,
+        },
+        communityId: {
           type: GraphQLString,
         },
       },
       resolve: async function (source, args, context) {
+        const { communityId, userId } = args;
         return args.communityId;
         // const { communityId } = args;
         // const { userId } = context;
@@ -43,4 +47,4 @@ const mutationType = new GraphQLObjectType({
   },
 });
 
-exports.mutationType = mutationType;
+export default MutationType;
