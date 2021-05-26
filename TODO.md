@@ -11,6 +11,7 @@ MVP
 - Community search
 - Community statistics (number of members, total number of posts, number of posts in last 24h / 7d / 30d)
 - basic hardening of graphql endpoint against malicious actors
+- production frontend
 
 LATER
 
