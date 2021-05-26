@@ -46,6 +46,10 @@ const frontendDevMiddleware = (app: Application) => {
             },
           },
         },
+        {
+          test: /\.(scss|sass|css)$/i,
+          use: ["style-loader", "css-loader", "sass-loader"],
+        },
       ],
     },
   };
