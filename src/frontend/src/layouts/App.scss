@@ -1,0 +1,21 @@
+@import "../variables.scss";
+
+$max-width: 1200px;
+$header-height: 60px;
+
+.root {
+  .header {
+    height: $header-height;
+    margin: auto;
+    background-color: $primary;
+    margin-bottom: 30px;
+
+    .headerContent {
+      max-width: $max-width;
+    }
+  }
+  .body {
+    margin: auto;
+    max-width: $max-width;
+  }
+}
