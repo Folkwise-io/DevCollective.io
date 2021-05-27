@@ -8,9 +8,15 @@ const PostCard = ({ post }) => {
 
   return (
     <div>
-      <div styles={{ display: "grid", gridAutoFlow: "column" }}>
+      <div style={{ display: "grid" }}>
         <Header>{title}</Header>
-        <Header>{title}</Header>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div style={{ flex: "0 1 auto" }}>
+            {firstName} {lastName}
+          </div>
+          <div style={{ flex: "0 1 auto" }}>{communityTitle}</div>
+          <div style={{ flex: "0 1 auto" }}>Test</div>
+        </div>
       </div>
     </div>
   );
