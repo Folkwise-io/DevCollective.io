@@ -1,19 +1,39 @@
 @import "../variables";
 
-.postCard {
+$vertical-space: 10px;
+
+.root {
+  margin-bottom: $vertical-space;
   display: grid;
-  .header {
-    font-weight: bold;
-    font-size: $default-font-size + 2;
-  }
-  .body {
-    .preview {
-      color: #778;
+  grid-template-columns: 54px auto;
+  .like {
+    margin: 10px auto;
+    .heart {
+      color: #be1931;
+      margin-bottom: 2px;
     }
-    .summary {
-      display: flex;
-      * {
-        margin-right: 5px;
+    .likeCount {
+      font-weight: bold;
+    }
+  }
+  .main {
+    display: grid;
+    .header {
+      font-weight: bold;
+      font-size: $default-font-size + 2;
+      margin-bottom: $vertical-space;
+    }
+    .body {
+      .preview {
+        margin-bottom: $vertical-space;
+        color: #778;
+      }
+      .summary {
+        margin-bottom: $vertical-space;
+        display: flex;
+        * {
+          margin-right: 5px;
+        }
       }
     }
   }
