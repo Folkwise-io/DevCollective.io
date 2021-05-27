@@ -16,7 +16,7 @@ const frontendDevMiddleware = (app: Application) => {
       main: ["webpack-hot-middleware/client?reload=true", path.join(__dirname, "src", "index.jsx")],
     },
     mode: "development",
-    // devtool: false,
+    devtool: "source-map",
     output: {
       filename: "bundle.js",
       path: path.join(__dirname, "dist"),
@@ -38,13 +38,18 @@ const frontendDevMiddleware = (app: Application) => {
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,
-          use: {
-            loader: "babel-loader",
-            options: {
-              presets: ["@babel/preset-env", "@babel/preset-react"],
-              plugins: [reactRefresh],
+          use: [
+            {
+              loader: "source-map-loader",
             },
-          },
+            {
+              loader: "babel-loader",
+              options: {
+                presets: ["@babel/preset-env", "@babel/preset-react"],
+                plugins: [reactRefresh],
+              },
+            },
+          ],
         },
         {
           test: /\.(scss|sass|css)$/i,
