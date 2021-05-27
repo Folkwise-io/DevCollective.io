@@ -14,22 +14,23 @@ $vertical-space: 10px;
     }
     .likeCount {
       font-weight: bold;
+      font-size: $font-header-size;
     }
   }
   .main {
     display: grid;
     .header {
       font-weight: bold;
-      font-size: $default-font-size + 2;
-      margin-bottom: $vertical-space;
+      font-size: $font-header-size;
+      margin-bottom: $vertical-space / 2;
     }
     .body {
       .preview {
-        margin-bottom: $vertical-space;
+        margin-bottom: $vertical-space / 2;
         color: #778;
       }
       .summary {
-        margin-bottom: $vertical-space;
+        margin-bottom: $vertical-space / 2;
         display: flex;
         * {
           margin-right: 5px;
