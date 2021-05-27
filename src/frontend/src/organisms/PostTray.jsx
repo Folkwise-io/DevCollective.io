@@ -1,6 +1,7 @@
 import React from "react";
 import $ from "./PostTray.scss";
 import PostCard from "../molecules/PostCard";
+import Button from "../elements/Button";
 
 const PostTray = ({ posts }) => {
   return (
@@ -10,15 +11,11 @@ const PostTray = ({ posts }) => {
           <div>Hot</div>
           <div>New</div>
         </div>
-        <div className={$.newPostButton}>New Post</div>
+        <Button>New Post</Button>
       </div>
       <div className={$.runway}>
         {posts.map((post) => {
-          return (
-            <div>
-              <PostCard post={post} key={post.id} />
-            </div>
-          );
+          return <PostCard post={post} key={post.id} />;
         })}
       </div>
     </div>

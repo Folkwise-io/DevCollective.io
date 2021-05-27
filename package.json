@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.19",
+    "@babel/plugin-transform-runtime": "^7.14.3",
     "@types/graphql-depth-limit": "^1.1.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
@@ -57,6 +58,7 @@
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "faker": "^5.5.3",
+    "formik": "^2.2.8",
     "glob": "^7.1.7",
     "graphql": "^15.5.0",
     "graphql-depth-limit": "^1.1.0",

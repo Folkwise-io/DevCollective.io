@@ -4,11 +4,12 @@ import CommunityPage from "../pages/CommunityPage";
 import $ from "./App.scss";
 import AuthModal from "../modals/AuthModal";
 
-export default () => {
+const App = () => {
   const [showAuthModal, setShowAuthModal] = useState(true);
+
   return (
     <Router>
-      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)}></AuthModal>}
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       <div className={$.root}>
         <div className={$.header}>
           <div className={$.headerContent}>
@@ -35,3 +36,5 @@ export default () => {
     </Router>
   );
 };
+
+export default App;

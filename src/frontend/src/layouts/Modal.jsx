@@ -6,8 +6,8 @@ export const Modal = ({ title, children, onClose }) => {
   const closeButton = useRef();
 
   const handleClose = (e) => {
-    e.preventDefault();
     if (e.target === overlay.current || e.target === closeButton.current) {
+      e.preventDefault();
       e.stopPropagation();
       onClose();
     }

@@ -7,6 +7,8 @@ import webpackHotMiddleware from "webpack-hot-middleware";
 import reactRefresh from "react-refresh/babel";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import fs from "fs";
+// @ts-expect-error no types found
+import babelTransformRuntime from "@babel/plugin-transform-runtime";
 
 const frontendDevMiddleware = (app: Application) => {
   const hmrPlugin = new webpack.HotModuleReplacementPlugin();
@@ -46,7 +48,15 @@ const frontendDevMiddleware = (app: Application) => {
               loader: "babel-loader",
               options: {
                 presets: ["@babel/preset-env", "@babel/preset-react"],
-                plugins: [reactRefresh],
+                plugins: [
+                  reactRefresh,
+                  {
+                    name: "@babel/plugin-transform-runtime",
+                    manipulateOptions: (opts: any) => {
+                      opts.regenerator = true;
+                    },
+                  },
+                ],
               },
             },
           ],

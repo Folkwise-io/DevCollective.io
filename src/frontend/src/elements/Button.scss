@@ -1,0 +1,21 @@
+@use "sass:color";
+@import "../variables.scss";
+
+.root {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  $height: 48px;
+  font-size: $font-header-size;
+  background: linear-gradient(95.52deg, #21c0e3 0%, #1b23de 100%);
+  width: 90px;
+  height: $height;
+  line-height: $height;
+  border-radius: 2px;
+  text-align: center;
+
+  &:hover {
+    box-shadow: 0px 5px 10px 1px color.scale($primary, $alpha: -50%);
+    outline: none;
+  }
+}
