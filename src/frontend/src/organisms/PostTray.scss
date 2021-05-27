@@ -1,0 +1,39 @@
+@import "../variables";
+
+.root {
+  border: 3px solid $primary;
+  border-radius: 3px;
+  padding: 15px;
+
+  .controls {
+    min-height: 60px;
+    display: grid;
+    justify-content: space-between;
+    grid-auto-flow: column;
+    justify-content: space-between;
+
+    .tabs {
+      display: grid;
+      grid-auto-flow: column;
+      width: fit-content;
+      font-weight: bold;
+      font-size: 18px;
+
+      & > * {
+        margin-right: 10px;
+      }
+    }
+    .newPostButton {
+      $height: 30px;
+
+      background: linear-gradient(95.52deg, #21c0e3 0%, #1b23de 100%);
+      width: 90px;
+      height: $height;
+      line-height: $height;
+      border-radius: 2px;
+      text-align: center;
+    }
+  }
+  .runway {
+  }
+}

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import { gql, useQuery, ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PostCard from "./molecules/PostCard";
+import PostTray from "./organisms/PostTray";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
@@ -36,13 +37,7 @@ const App = () => {
     return <div>Error</div>;
   }
 
-  return data.posts.map((post) => {
-    return (
-      <div>
-        <PostCard post={post} key={post.id} />
-      </div>
-    );
-  });
+  return <PostTray posts={data.posts} />;
 };
 
 ReactDOM.render(
