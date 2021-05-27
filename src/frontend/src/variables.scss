@@ -10,3 +10,12 @@ $default-font-color: $white;
 
 $font-body-size: 17px;
 $font-header-size: 20px;
+$font-title-size: 24px;
+
+$border-bottom-dotted: 3px dotted $primary;
+
+@mixin outlined {
+  border: 3px solid $primary;
+  border-radius: 3px;
+  padding: 15px;
+}

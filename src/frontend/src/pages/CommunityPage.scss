@@ -1,11 +1,5 @@
 @import "../variables.scss";
 
-@mixin outlined {
-  border: 3px solid $primary;
-  border-radius: 3px;
-  padding: 15px;
-}
-
 $grid-gap: 45px;
 
 .root {
@@ -29,7 +23,7 @@ $grid-gap: 45px;
         height: 60px;
         line-height: 60px;
         font-size: $font-header-size;
-        border-bottom: 3px dotted $primary;
+        border-bottom: $border-bottom-dotted;
       }
       .body {
         padding: 15px;
@@ -42,7 +36,7 @@ $grid-gap: 45px;
         height: 60px;
         line-height: 60px;
         font-size: $font-header-size;
-        border-bottom: 3px dotted $primary;
+        border-bottom: $border-bottom-dotted;
       }
       .body {
         padding: 15px;
