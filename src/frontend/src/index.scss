@@ -1,0 +1,8 @@
+@import "./variables";
+
+:global(*) {
+  font-family: $font-family;
+  font-size: $default-font-size;
+  color: $default-font-color;
+  background-color: $default-background-color;
+}

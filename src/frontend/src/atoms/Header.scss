@@ -1,6 +1,6 @@
+@import "../variables";
+
 .header {
-  color: red;
-  .something {
-    color: blue;
-  }
+  font-weight: bold;
+  font-size: $default-font-size + 2;
 }
