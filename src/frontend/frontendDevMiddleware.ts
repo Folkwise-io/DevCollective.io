@@ -50,6 +50,9 @@ const frontendDevMiddleware = (app: Application) => {
         },
       ],
     },
+    resolve: {
+      extensions: ["", ".js", ".jsx", ".ts", ".tsx"],
+    },
   };
   const middlewareOpts = {};
   const compiler = webpack(webpackOpts);
