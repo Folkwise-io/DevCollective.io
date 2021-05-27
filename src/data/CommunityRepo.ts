@@ -4,8 +4,7 @@ import knexProvider from "./knex-provider";
 
 const communityLoader = new DataLoader<String, DCommunity>(async (ids) => {
   const knex = await knexProvider();
-  // @ts-ignore
-  return knex.raw<DCommunity[]>("select * from comunities where id in (?)", ids);
+  return knex("communities").whereIn("id", ids);
 });
 
 export const getCommunityFieldById = fieldGetterHoc((id) => communityLoader.load(id));
