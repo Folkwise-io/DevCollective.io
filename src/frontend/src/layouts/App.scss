@@ -6,12 +6,26 @@ $header-height: 60px;
 .root {
   .header {
     height: $header-height;
-    margin: auto;
     background-color: $primary;
     margin-bottom: 30px;
 
     .headerContent {
       max-width: $max-width;
+      margin: auto;
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: space-between;
+
+      & * {
+        font-size: 24 + px;
+        color: #090909;
+        font-weight: bold;
+        line-height: $header-height;
+      }
+
+      .logo {
+        user-select: none;
+      }
     }
   }
   .body {
