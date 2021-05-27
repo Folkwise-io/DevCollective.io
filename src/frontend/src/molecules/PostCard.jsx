@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../atoms/Header";
+import $ from "./PostCard.scss";
 
 const PostCard = ({ post }) => {
   const { id: postId, title, author, community } = post;
@@ -7,15 +7,21 @@ const PostCard = ({ post }) => {
   const { id: communityId, title: communityTitle } = community;
 
   return (
-    <div>
-      <div style={{ display: "grid" }}>
-        <Header>{title}</Header>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ flex: "0 1 auto" }}>
+    <div className={$.postCard}>
+      <div className={$.header}>{title}</div>
+      <div className={$.body}>
+        <div className={$.preview}>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi quo, excepturi animi exercitationem eaque cum
+          impedit voluptates nemo praesentium dicta veniam. A reiciendis veniam provident sint porro. Quod, non illo?
+        </div>
+        <div className={$.summary}>
+          <div>
             {firstName} {lastName}
           </div>
-          <div style={{ flex: "0 1 auto" }}>{communityTitle}</div>
-          <div style={{ flex: "0 1 auto" }}>Test</div>
+          <div>·</div>
+          <div>{communityTitle}</div>
+          <div>·</div>
+          <div>36 Comments</div>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import Header from "./atoms/Header";
 import { gql, useQuery, ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import PostCard from "./molecules/PostCard";
 
