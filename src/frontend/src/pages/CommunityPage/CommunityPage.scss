@@ -1,4 +1,4 @@
-@import "../variables.scss";
+@import "../../variables.scss";
 
 $grid-gap: 45px;
 
@@ -9,6 +9,7 @@ $grid-gap: 45px;
 
   .main {
     @include outlined;
+    width: 860px;
   }
   .sidebar {
     display: inline;

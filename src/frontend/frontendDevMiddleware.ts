@@ -63,6 +63,7 @@ const frontendDevMiddleware = (app: Application) => {
         },
         {
           test: /\.(scss|sass|css)$/i,
+          exclude: /\/node_modules\//,
           use: [
             { loader: "style-loader" },
             {
@@ -72,6 +73,17 @@ const frontendDevMiddleware = (app: Application) => {
                   localIdentName: "[local]__[hash:base64:5]",
                 },
               },
+            },
+            { loader: "sass-loader" },
+          ],
+        },
+        {
+          test: /\.(scss|sass|css)$/i,
+          include: /\/node_modules\//,
+          use: [
+            { loader: "style-loader" },
+            {
+              loader: "css-loader",
             },
             { loader: "sass-loader" },
           ],

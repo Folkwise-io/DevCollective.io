@@ -1,38 +1,30 @@
 @import "../variables";
 
-.root {
-  .controls {
-    min-height: 60px;
-    display: grid;
-    justify-content: space-between;
-    grid-auto-flow: column;
-    justify-content: space-between;
-    border-bottom: $border-bottom-dotted;
+.controls {
+  display: grid;
+  justify-content: space-between;
+  grid-auto-flow: column;
+}
 
-    .tabs {
-      line-height: 60px;
-      display: grid;
-      grid-auto-flow: column;
-      width: fit-content;
-      font-weight: bold;
+.tabs {
+  line-height: 60px;
+  display: grid;
+  grid-auto-flow: column;
+  width: fit-content;
+  font-weight: bold;
 
-      & > * {
-        margin-right: 10px;
-        font-size: $font-header-size;
-      }
-    }
-    .newPostButton {
-      $height: 48px;
-      font-size: $font-header-size;
-      background: linear-gradient(95.52deg, #21c0e3 0%, #1b23de 100%);
-      width: 90px;
-      height: $height;
-      line-height: $height;
-      border-radius: 2px;
-      text-align: center;
-    }
+  & > * {
+    margin-right: 10px;
+    font-size: $font-header-size;
   }
-  .runway {
-    padding-top: 15px;
-  }
+}
+.newPostButton {
+  $height: 48px;
+  font-size: $font-header-size;
+  background: linear-gradient(95.52deg, #21c0e3 0%, #1b23de 100%);
+  width: 90px;
+  height: $height;
+  line-height: $height;
+  border-radius: 2px;
+  text-align: center;
 }

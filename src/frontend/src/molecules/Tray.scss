@@ -1,0 +1,11 @@
+@import "../variables";
+
+.root {
+  .controls {
+    min-height: 60px;
+    border-bottom: $border-bottom-dotted;
+  }
+  .runway {
+    padding-top: 15px;
+  }
+}

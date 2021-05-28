@@ -1,9 +1,12 @@
 import React from "react";
-import "../variables.scss";
 import { gql, useQuery } from "@apollo/client";
-import PostTray from "../organisms/PostTray";
+import PostTray from "../../organisms/PostTray";
+import PostEditorTray from "../../organisms/PostEditorTray";
 import $ from "./CommunityPage.scss";
 import { useParams } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import EditPostFragment from "./EditPostFragment";
+import NewPostFragment from "./NewPostFragment";
 
 const CommunityPage = () => {
   const { callsign } = useParams();
@@ -43,7 +46,17 @@ const CommunityPage = () => {
   return (
     <div className={$.root}>
       <div className={$.main}>
-        <PostTray posts={data.community.posts} />
+        <Switch>
+          <Route path="/c/:callsign" exact>
+            <PostTray posts={data.community.posts} />
+          </Route>
+          <Route path="/c/:callsign/new" exact>
+            <NewPostFragment />
+          </Route>
+          <Route path="/c/:callsign/:postId/:postSeoTitle/edit">
+            <EditPostFragment />
+          </Route>
+        </Switch>
       </div>
       <div className={$.sidebar}>
         <div className={$.communityInfo}>
