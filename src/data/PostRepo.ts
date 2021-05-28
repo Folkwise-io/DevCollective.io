@@ -2,7 +2,7 @@ import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 
-const postLoader = new DataLoader<String, DPost>(async (ids) =>
+const postLoader = new DataLoader<string, DPost>(async (ids) =>
   // @ts-ignore
   knexProvider().then((knex) => knex.raw<DPost>("select * from posts where id in (?)", ids)),
 );

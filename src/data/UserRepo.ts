@@ -3,7 +3,7 @@ import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 import knex, { Knex } from "knex";
 
-const userLoader = new DataLoader<String, DUser>(async (ids) => {
+const userLoader = new DataLoader<string, DUser>(async (ids) => {
   const knex = await knexProvider();
   return knex("users").whereIn("id", ids);
 });
@@ -16,8 +16,7 @@ export const getUserByEmail = async (email: string): Promise<Knex.Raw<DUser>> =>
 
 export const getUserById = async (id: string): Promise<Knex.Raw<DUser>> => {
   const knex = await knexProvider();
-  const response = await knex.raw("select * from users where id = (?)", id);
-  return response;
+  return knex("users").where({ id }).first();
 };
 
 export const getUserFieldById = fieldGetterHoc((id) => userLoader.load(id));

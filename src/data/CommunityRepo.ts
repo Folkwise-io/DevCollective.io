@@ -2,12 +2,12 @@ import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 
-const communityLoader = new DataLoader<String, DCommunity>(async (ids) => {
+const communityLoader = new DataLoader<string, DCommunity>(async (ids) => {
   const knex = await knexProvider();
   return knex("communities").whereIn("id", ids);
 });
 
-export const getCommunityIdByCallsign = async (communityCallsign: string): Promise<String> => {
+export const getCommunityIdByCallsign = async (communityCallsign: string): Promise<string> => {
   const knex = await knexProvider();
   const community = await knex("communities")
     .select("id")

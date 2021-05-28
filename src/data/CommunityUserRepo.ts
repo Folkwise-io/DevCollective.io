@@ -9,7 +9,7 @@ interface CommunityUserParams {
 
 export const createCommunityUser = async ({ userId, communityId }: CommunityUserParams): Promise<void> => {
   const knex = await knexProvider();
-  await knex("communitiesUsers").insert({
+  return await knex("communitiesUsers").insert({
     userId,
     communityId,
   });
@@ -25,7 +25,7 @@ export const getCommunityUser = async ({ userId, communityId }: CommunityUserPar
     .first();
 };
 
-// const communityLoader = new DataLoader<String, DCommunity>(async (ids) => {
+// const communityLoader = new DataLoader<string, DCommunity>(async (ids) => {
 //   const knex = await knexProvider();
 //   // @ts-ignore
 //   return knex.raw<DCommunity[]>("select * from comunities where id in (?)", ids);
