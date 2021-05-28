@@ -6,7 +6,7 @@ import { StateContext } from "../../state";
 
 const NewPostFragment = () => {
   const { state, dispatch } = useContext(StateContext);
-  const { history } = useHistory();
+  const history = useHistory();
   const { callsign } = useParams();
 
   const [submitPost, { data }] = useMutation(
@@ -16,7 +16,6 @@ const NewPostFragment = () => {
           title
           body
           url
-          author
         }
       }
     `,
@@ -30,7 +29,7 @@ const NewPostFragment = () => {
     }
 
     try {
-      const post = await submitPost({
+      const response = await submitPost({
         variables: {
           title,
           body,
@@ -39,11 +38,12 @@ const NewPostFragment = () => {
         },
       });
 
-      const { url } = post;
+      const { url } = response.data.createPost;
 
       history.push(url);
     } catch (e) {
       console.error(e);
+      alert("Something went wrong while creating the post.");
     }
   };
 
