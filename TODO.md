@@ -1,9 +1,13 @@
+CURRENT
+
+- Community handles
+- Single hardcoded community (c/mintbean)
+
 FRIDAY - MUST DO
 
-- Single hardcoded community
-- Sign up + emails
 - Create posts
 - Threaded discussion
+- Sign up + emails
 - Admin functionality - Delete replies, delete posts
 
 LATER
