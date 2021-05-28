@@ -43,3 +43,14 @@ export const getPostIdsForUserId = async (userId: string) => {
   prime(posts.rows);
   return pickOne("id")(posts.rows);
 };
+
+export const createPost = async (title: string, body: string, communityId: string): Promise<{ id: string }> => {
+  const knex = await knexProvider();
+  return knex<DPost>("posts")
+    .insert({
+      communityId,
+      title,
+      body,
+    })
+    .returning("id");
+};

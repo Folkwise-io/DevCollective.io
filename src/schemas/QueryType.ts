@@ -39,6 +39,17 @@ export default new GraphQLObjectType({
         type: GraphQLList(CommunityType),
         resolve: () => getAllCommunityIds(),
       },
+      post: {
+        type: PostType,
+        args: {
+          id: {
+            type: GraphQLString,
+          },
+        },
+        resolve: (_, args) => {
+          return args.id;
+        },
+      },
       posts: {
         type: GraphQLList(PostType),
         resolve: () => getAllPostIds(),

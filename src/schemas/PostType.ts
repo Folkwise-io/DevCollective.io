@@ -18,13 +18,9 @@ export default new GraphQLObjectType({
         type: GraphQLString,
         resolve: postFieldHoc("title"),
       },
-      commentCount: {
+      body: {
         type: GraphQLString,
-        resolve: postFieldHoc("commentCount"),
-      },
-      upvoteCount: {
-        type: GraphQLString,
-        resolve: postFieldHoc("upvoteCount"),
+        resolve: postFieldHoc("body"),
       },
       createdAt: {
         type: GraphQLString,

@@ -1,6 +1,7 @@
 CURRENT
 
 - Create posts
+- Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
 
 FRIDAY - MUST DO
 
@@ -10,6 +11,7 @@ FRIDAY - MUST DO
 
 LATER
 
+- better error handling and more rainy day cases
 - Upvotes and downvote posts
 - mobile friendly
 - password reset
