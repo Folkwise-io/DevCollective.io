@@ -65,10 +65,12 @@ const CommunityPage = () => {
           <div className={$.body}>Stuff about this community</div>
         </div>
         <div className={$.relatedCommunities}>
-          <div className={$.header}>Related Communities</div>
+          <div className={$.header}>WARNING - Pre-release</div>
           <div className={$.body}>
-            Stuff about related communitiesStuff about related communitiesStuff about related communitiesStuff about
-            related communitiesStuff about related communitiesStuff about related communities
+            This app is still in pre-release form. Please expect bugs and, if you find one, I'd appreciate it if you
+            reported it to me -- chances are I'm unaware of it. Also, if you're currently using a version of the
+            platform that's deployed to a server of some sort, your data will be wiped during development every few
+            days. Expect a production release in June. -Monarch
           </div>
         </div>
       </div>
