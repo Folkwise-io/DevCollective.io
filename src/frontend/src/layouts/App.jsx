@@ -24,11 +24,18 @@ const App = () => {
           <Switch>
             <Route path="/" exact>
               {/* Temporary redirect to community page */}
-              <Redirect to="/c/1" />
+              <Redirect to="/c/mintbean" />
             </Route>
-            <Route path="/c/:id">
-              <CommunityPage />
-            </Route>
+            <Route
+              path="/c/:callsign"
+              component={({ location }) => {
+                if (location.pathname.indexOf("/c/mintbean") !== 0) {
+                  return <Redirect to="/c/mintbean" />;
+                } else {
+                  return <CommunityPage />;
+                }
+              }}
+            ></Route>
           </Switch>
         </div>
       </div>

@@ -3,25 +3,34 @@ import "../variables.scss";
 import { gql, useQuery } from "@apollo/client";
 import PostTray from "../organisms/PostTray";
 import $ from "./CommunityPage.scss";
+import { useParams } from "react-router-dom";
 
 const CommunityPage = () => {
-  const { loading, error, data } = useQuery(gql`
-    query Query {
-      posts {
-        id
-        title
-        community {
-          id
+  const { callsign } = useParams();
+  const { loading, error, data } = useQuery(
+    gql`
+      query Query($callsign: String!) {
+        community(callsign: $callsign) {
           title
-        }
-        author {
-          id
-          firstName
-          lastName
+          description
+          posts {
+            id
+            title
+            author {
+              id
+              firstName
+              lastName
+            }
+          }
         }
       }
-    }
-  `);
+    `,
+    {
+      variables: {
+        callsign: callsign,
+      },
+    },
+  );
 
   if (loading) {
     return <div>"Loading"</div>;
@@ -34,7 +43,7 @@ const CommunityPage = () => {
   return (
     <div className={$.root}>
       <div className={$.main}>
-        <PostTray posts={data.posts} />
+        <PostTray posts={data.community.posts} />
       </div>
       <div className={$.sidebar}>
         <div className={$.communityInfo}>

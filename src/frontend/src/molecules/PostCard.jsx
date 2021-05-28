@@ -2,9 +2,29 @@ import React from "react";
 import $ from "./PostCard.scss";
 
 const PostCard = ({ post }) => {
-  const { id: postId, title, author, community } = post;
-  const { id: userId, firstName, lastName } = author;
-  const { id: communityId, title: communityTitle } = community;
+  debugger;
+  const { title, author, community } = post;
+
+  const summaryFragments = [];
+  if (author) {
+    const fullName = `${author.firstName} ${author.lastName}`;
+    summaryFragments.push(<div key={fullName}>{fullName}</div>);
+  }
+  if (community) {
+    const { title } = community;
+    fragments.push(<div key={title}>{title}</div>);
+  }
+
+  const writableFragments = [];
+  for (let i = 0; i < summaryFragments.length; i++) {
+    const thisFragment = summaryFragments[i];
+    const hasNext = summaryFragments[i + 1];
+
+    writableFragments.push(thisFragment);
+    if (hasNext) {
+      writableFragments.push(<div key={i}>·</div>);
+    }
+  }
 
   return (
     <div className={$.root}>
@@ -20,15 +40,7 @@ const PostCard = ({ post }) => {
             cum impedit voluptates nemo praesentium dicta veniam. A reiciendis veniam provident sint porro. Quod, non
             illo?
           </div>
-          <div className={$.summary}>
-            <div>
-              {firstName} {lastName}
-            </div>
-            <div>·</div>
-            <div>{communityTitle}</div>
-            <div>·</div>
-            <div>36 Comments</div>
-          </div>
+          <div className={$.summary}>{writableFragments}</div>
         </div>
       </div>
     </div>
