@@ -15,10 +15,7 @@ const PostTray = ({ posts }) => {
     <Tray>
       <TrayControls>
         <div className={$.controls}>
-          <div className={$.tabs}>
-            {/* <div>Hot</div> */}
-            <div>New Posts</div>
-          </div>
+          <div>New Posts</div>
           <Button onClick={() => history.push(`/c/${callsign}/new`)}>New Post</Button>
         </div>
       </TrayControls>

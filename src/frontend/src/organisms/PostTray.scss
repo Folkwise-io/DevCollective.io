@@ -6,11 +6,6 @@
   grid-auto-flow: column;
 }
 
-.tabs {
-  display: grid;
-  grid-auto-flow: column;
-  width: fit-content;
-}
 .newPostButton {
   $height: 48px;
   font-size: $font-header-size;
