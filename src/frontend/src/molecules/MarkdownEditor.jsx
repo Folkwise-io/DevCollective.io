@@ -13,6 +13,7 @@ const MarkdownEditor = ({ value, onBeforeChange }) => {
         mode: "markdown",
         lineNumbers: false,
         theme: "midnight",
+        lineWrapping: true,
       }}
       onBeforeChange={(editor, data, value) => {
         onBeforeChange(value);

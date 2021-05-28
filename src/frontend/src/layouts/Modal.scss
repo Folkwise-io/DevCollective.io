@@ -12,6 +12,7 @@ $max-width: 680px;
   bottom: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.9);
+  z-index: 9998;
 
   .main {
     @include outlined;
