@@ -10,7 +10,7 @@ const communityLoader = new DataLoader<string, DCommunity>(async (ids) => {
 export const getCommunityIdByCallsign = async (communityCallsign: string): Promise<string> => {
   const knex = await knexProvider();
   const community = await knex("communities")
-    .select("id")
+    .select("*")
     .where({
       callsign: communityCallsign,
     })
