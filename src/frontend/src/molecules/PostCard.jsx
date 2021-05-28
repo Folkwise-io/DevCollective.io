@@ -2,7 +2,6 @@ import React from "react";
 import $ from "./PostCard.scss";
 
 const PostCard = ({ post }) => {
-  debugger;
   const { title, author, community } = post;
 
   const summaryFragments = [];
