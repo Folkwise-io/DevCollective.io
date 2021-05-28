@@ -1,8 +1,9 @@
 import React from "react";
 import $ from "./PostCard.scss";
+import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
-  const { title, author, community } = post;
+  const { title, author, community, url, id } = post;
 
   const summaryFragments = [];
   if (author) {
@@ -32,7 +33,9 @@ const PostCard = ({ post }) => {
         <div className={$.likeCount}>29</div>
       </div>
       <div className={$.main}>
-        <div className={$.header}>{title}</div>
+        <Link className={$.header} to={url}>
+          {title}
+        </Link>
         <div className={$.body}>
           <div className={$.preview}>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi quo, excepturi animi exercitationem eaque

@@ -20,6 +20,7 @@ $vertical-space: 10px;
   .main {
     display: grid;
     .header {
+      color: $white;
       font-weight: bold;
       font-size: $font-header-size;
       margin-bottom: $vertical-space / 2;
