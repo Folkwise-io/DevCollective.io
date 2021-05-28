@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
+import ViewPostFragment from "./ViewPostFragment";
 
 const CommunityPage = () => {
   const { callsign } = useParams();
@@ -54,6 +55,9 @@ const CommunityPage = () => {
           </Route>
           <Route path="/c/:callsign/new" exact>
             <NewPostFragment />
+          </Route>
+          <Route path="/c/:callsign/:postId/:postSeoTitle">
+            <ViewPostFragment />
           </Route>
           <Route path="/c/:callsign/:postId/:postSeoTitle/edit">
             <EditPostFragment />
