@@ -7,6 +7,7 @@ import { post } from "../utils/rest-api";
 const AuthButton = () => {
   const { state, dispatch } = useContext(StateContext);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [signinClicked, setSigninClicked] = useState(false);
   const { user } = state;
 
   useEffect(async () => {
@@ -28,6 +29,17 @@ const AuthButton = () => {
       });
     }
   };
+
+  const openSignin = () => {
+    // CONTINUE: I'm trying to set the AuthModal to start in signin or singup  mode, depending on which button was clicked.
+    // Right now, I'm taking the tack of setting a useState variable (signinClicked)
+    // Maybe there's a better way...
+    setShowAuthModal(true);
+  };
+  const openSignup = () => {
+    setShowAuthModal(true);
+  };
+
   return (
     <div className={$.root}>
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
@@ -37,9 +49,14 @@ const AuthButton = () => {
         </a>
       )}
       {!user && (
-        <a href="#" onClick={() => setShowAuthModal(true)} className={$.text}>
-          Sign In
-        </a>
+        <>
+          <a href="#" onClick={() => setShowAuthModal(true)} className={$.text}>
+            Sign In
+          </a>
+          <a href="#" onClick={() => setShowAuthModal(true)} className={$.text}>
+            Sign Up
+          </a>
+        </>
       )}
     </div>
   );
