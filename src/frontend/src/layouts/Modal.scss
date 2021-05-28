@@ -16,7 +16,7 @@ $max-width: 680px;
 
   .main {
     @include outlined;
-    background-color: #090909;
+    background-color: $black;
     max-width: $max-width;
     width: $max-width;
     display: grid;

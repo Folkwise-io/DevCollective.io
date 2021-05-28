@@ -7,16 +7,9 @@
 }
 
 .tabs {
-  line-height: 60px;
   display: grid;
   grid-auto-flow: column;
   width: fit-content;
-  font-weight: bold;
-
-  & > * {
-    margin-right: 10px;
-    font-size: $font-header-size;
-  }
 }
 .newPostButton {
   $height: 48px;

@@ -8,11 +8,13 @@
   background-color: $background;
   padding: 0;
   margin: 0;
-  background-color: #090909;
+  background-color: $black;
 }
 
 :global(form) {
   input {
+    box-sizing: border-box;
+    background-color: $black;
     display: block;
     width: 100%;
     padding: 6px;
