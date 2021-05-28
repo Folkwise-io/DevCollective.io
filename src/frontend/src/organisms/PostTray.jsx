@@ -8,8 +8,8 @@ const PostTray = ({ posts }) => {
     <div className={$.root}>
       <div className={$.controls}>
         <div className={$.tabs}>
-          <div>Hot</div>
-          <div>New</div>
+          {/* <div>Hot</div> */}
+          <div>New Posts</div>
         </div>
         <Button>New Post</Button>
       </div>
