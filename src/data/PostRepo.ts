@@ -44,13 +44,21 @@ export const getPostIdsForUserId = async (userId: string) => {
   return pickOne("id")(posts.rows);
 };
 
-export const createPost = async (title: string, body: string, communityId: string): Promise<{ id: string }> => {
+export const getPostById = async (id: string) => postLoader.load(id);
+
+interface CreatePostParams {
+  title: string;
+  body: string;
+  communityId: string;
+  authorId: string;
+}
+export const createPost = async (params: CreatePostParams): Promise<DPost | void> => {
   const knex = await knexProvider();
-  return knex<DPost>("posts")
-    .insert({
-      communityId,
-      title,
-      body,
-    })
-    .returning("id");
+  const posts: DPost[] = (await knex<DPost>("posts").insert(params).returning("*")) as any;
+  if (posts && posts.length) {
+    posts.forEach((p) => {
+      postLoader.prime(p.id, p);
+    });
+    return posts[0];
+  }
 };

@@ -40,6 +40,45 @@ describe("Post object", () => {
         expect(response.body.data.posts.map((p: any) => p.id).sort()).toEqual(posts.map((p: any) => p.id).sort());
       });
 
+      it("can create posts", async () => {
+        const params = {
+          title: "Some new title",
+          body: "A little body",
+          communityCallsign: communities[0].callsign,
+          authorId: users[0].id,
+        };
+
+        const response = await query(app).gqlMutation(
+          `
+          mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: String!) {
+            createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
+              id
+              title
+              body
+              url
+              author {
+                id
+                firstName
+              }
+              community {
+                id
+                callsign
+              }
+            }
+          }
+        `,
+          params,
+        );
+
+        expect(response.body?.errors?.length).toBeFalsy();
+        expect(response.body?.data?.createPost?.id).toBeTruthy();
+        expect(response.body?.data?.createPost?.url).toBeTruthy();
+        expect(response.body?.data?.createPost?.author?.id).toBeTruthy();
+        expect(response.body?.data?.createPost?.author?.firstName).toBeTruthy();
+        expect(response.body?.data?.createPost?.community?.id).toBeTruthy();
+        expect(response.body?.data?.createPost?.community?.callsign).toBeTruthy();
+      });
+
       it("can fetch the community and author for a given post", async () => {
         const post = posts[1];
         const expectedAuthor = users.find((u: any) => u.id === post.authorId);

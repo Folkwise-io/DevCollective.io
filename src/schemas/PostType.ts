@@ -1,5 +1,7 @@
 import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
-import { getPostFieldById } from "../data/PostRepo";
+import { getCommunityFieldById } from "../data/CommunityRepo";
+import { getPostFieldById, getPostById } from "../data/PostRepo";
+import slugify from "slugify";
 
 const postFieldHoc = (fieldName: string) => (id: string) => getPostFieldById(id, fieldName);
 
@@ -21,6 +23,19 @@ export default new GraphQLObjectType({
       body: {
         type: GraphQLString,
         resolve: postFieldHoc("body"),
+      },
+      url: {
+        type: GraphQLString,
+        resolve: async (id: string) => {
+          const post = await getPostById(id);
+          const { title, communityId } = post;
+          const callsign = await getCommunityFieldById(communityId, "callsign");
+          const slug = slugify(title, {
+            lower: true,
+            strict: true,
+          });
+          return `/c/${callsign}/${id}/${slug}`;
+        },
       },
       createdAt: {
         type: GraphQLString,

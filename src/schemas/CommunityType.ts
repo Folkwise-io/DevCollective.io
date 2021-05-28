@@ -22,7 +22,10 @@ export default new GraphQLObjectType({
       },
       callsign: {
         type: GraphQLString,
-        resolve: communityFieldHoc("callsign"),
+        resolve: async (id: string) => {
+          const data = await communityFieldHoc("callsign")(id);
+          return data;
+        },
       },
       description: {
         type: GraphQLString,

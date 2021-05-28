@@ -15,6 +15,11 @@ export const getCommunityIdByCallsign = async (communityCallsign: string): Promi
       callsign: communityCallsign,
     })
     .first();
+
+  if (community && community.id) {
+    communityLoader.prime(community.id, community);
+  }
+
   return community.id;
 };
 

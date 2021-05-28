@@ -19,6 +19,7 @@ const CommunityPage = () => {
           posts {
             id
             title
+            url
             author {
               id
               firstName

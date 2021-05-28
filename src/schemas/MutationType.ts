@@ -26,18 +26,19 @@ const MutationType = new GraphQLObjectType({
         communityCallsign: {
           type: GraphQLString,
         },
+        authorId: {
+          type: GraphQLString,
+        },
       },
       resolve: async function (source, args, context) {
-        const { body, title, communityCallsign } = args;
+        const { body, title, communityCallsign, authorId } = args;
         const communityId = await getCommunityIdByCallsign(communityCallsign);
-
-        console.log(context);
 
         if (!communityId) {
           return null;
         }
 
-        const postStub = await createPost(title, body, communityId);
+        const postStub = await createPost({ title, body, communityId, authorId });
 
         if (postStub) {
           return postStub.id;
