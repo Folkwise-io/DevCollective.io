@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import $ from "./PostEditorTray.scss";
 import { Tray, TrayControls, TrayRunway } from "../molecules/Tray";
 import Button from "../elements/Button";
@@ -6,9 +6,11 @@ import MarkdownEditor from "../molecules/MarkdownEditor";
 import { Field, Form, Formik } from "formik";
 
 const PostEditorTray = ({ title, body, headerText, onSubmit }) => {
+  // const [state] = useState({ title: title || "", body: body || "" });
+
   return (
     <Tray>
-      <Formik initialValues={{ title: title || "", body: body || "" }} onSubmit={onSubmit}>
+      <Formik initialValues={{ title: "", body: "" }} onSubmit={onSubmit}>
         <Form className={$.form}>
           <TrayControls>
             {headerText}
@@ -30,7 +32,7 @@ const PostEditorTray = ({ title, body, headerText, onSubmit }) => {
                   <MarkdownEditor
                     value={field.value}
                     onBeforeChange={(val) => {
-                      form.setValues({ body: val });
+                      form.setFieldValue("body", val);
                     }}
                   />
                 </div>
