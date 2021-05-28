@@ -1,20 +1,26 @@
-MVP
+FRIDAY - MUST DO
 
-- join and leave communities
+- Single hardcoded community
+- Sign up + emails
 - Create posts
-- authorization and the permission model https://www.apollographql.com/docs/apollo-server/security/authentication/#authorization-methods
-- Create communities (admin only)
-- Replies to posts
-- Upvotes and downvotes
-- Hot posts, new posts, top posts
-- password reset
-- Community search
-- Community statistics (number of members, total number of posts, number of posts in last 24h / 7d / 30d)
-- basic hardening of graphql endpoint against malicious actors
-- production frontend
+- Threaded discussion
+- Admin functionality - Delete replies, delete posts
 
 LATER
 
+- Upvotes and downvote posts
+- mobile friendly
+- password reset
+- Sidebar - "What is this?" and "Join Discord"
+- Upvotes and downvote replies
+- Community search
+- New posts, top posts
+- Create communities (admin only)
+- join and leave communities
+- basic hardening of graphql endpoint against malicious actors
+- Community statistics (number of members, total number of posts, number of posts in last 24h / 7d / 30d)
+- Hot posts
+- authorization and the permission model https://www.apollographql.com/docs/apollo-server/security/authentication/#authorization-methods
 - Create more beautiful tooling. Datasetgenerator and datasetloader are useful but very raw right now.
 - Clear up "any"s
 
