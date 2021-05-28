@@ -1,7 +1,6 @@
 @import "../variables.scss";
 
 $max-width: 1200px;
-$header-height: 60px;
 
 .root {
   .header {
@@ -16,7 +15,7 @@ $header-height: 60px;
       grid-auto-flow: column;
       justify-content: space-between;
 
-      & * {
+      .text {
         font-size: $font-title-size;
         color: #090909;
         font-weight: bold;

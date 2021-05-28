@@ -1,0 +1,10 @@
+@import "../variables.scss";
+
+.root {
+  .text {
+    font-size: $font-title-size;
+    color: #090909;
+    font-weight: bold;
+    line-height: $header-height;
+  }
+}

@@ -68,7 +68,9 @@ const frontendDevMiddleware = (app: Application) => {
             {
               loader: "css-loader",
               options: {
-                modules: true,
+                modules: {
+                  localIdentName: "[local]__[hash:base64:5]",
+                },
               },
             },
             { loader: "sass-loader" },
