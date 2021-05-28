@@ -4,6 +4,7 @@ import "./index.scss";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import CommunityPage from "./pages/CommunityPage";
 import App from "./layouts/App";
+import { StateProvider } from "./state";
 
 const client = new ApolloClient({
   uri: "http://localhost:8080/graphql",
@@ -11,8 +12,10 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <App></App>
-  </ApolloProvider>,
+  <StateProvider>
+    <ApolloProvider client={client}>
+      <App></App>
+    </ApolloProvider>
+  </StateProvider>,
   document.getElementById("out"),
 );

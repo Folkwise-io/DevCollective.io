@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Modal } from "../layouts/Modal";
 import { Formik, Field, Form } from "formik";
 import Button from "../elements/Button";
+import { post } from "../utils/rest-api";
+import { StateContext } from "../state";
 
 const AuthModal = ({ onClose }) => {
+  const { dispatch } = useContext(StateContext);
+
   const initialValues = {
     email: "",
     password: "",
   };
 
   const onSubmit = async (values) => {
-    console.log(values);
+    const response = await post("/auth/login", values);
+
+    if (response.ok) {
+      dispatch({
+        type: "setUser",
+        payload: response.body,
+      });
+      onClose();
+    } else {
+      alert("failed");
+    }
   };
 
   return (
