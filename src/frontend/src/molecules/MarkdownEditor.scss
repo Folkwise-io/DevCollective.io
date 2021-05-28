@@ -1,4 +1,13 @@
 @import "../variables.scss";
 
 .root {
+  :global(.CodeMirror *) {
+    font-family: $font-family;
+    font-size: 16px;
+  }
+
+  :global(.CodeMirror pre.CodeMirror-placeholder.CodeMirror-line-like) {
+    color: #778;
+    font-size: $font-body-size;
+  }
 }

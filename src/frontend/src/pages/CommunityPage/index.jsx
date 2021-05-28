@@ -16,6 +16,7 @@ const CommunityPage = () => {
         community(callsign: $callsign) {
           title
           description
+          callsign
           posts {
             id
             title
@@ -61,8 +62,8 @@ const CommunityPage = () => {
       </div>
       <div className={$.sidebar}>
         <div className={$.communityInfo}>
-          <div className={$.header}>Community Info</div>
-          <div className={$.body}>Stuff about this community</div>
+          <div className={$.header}>/c/{data.community.callsign}</div>
+          <div className={$.body}>{data.community.description}</div>
         </div>
         <div className={$.relatedCommunities}>
           <div className={$.header}>WARNING - Pre-release</div>
