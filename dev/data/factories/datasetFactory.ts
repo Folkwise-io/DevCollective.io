@@ -32,7 +32,18 @@ const datasetFactory = (params: DatasetFactoryParams) => {
     },
     ...fillArray(totalUsers - 1, userFactory),
   ];
-  const communities = fillArray(totalCommunities, () => communityFactory());
+  const communities: DCommunity[] = [
+    {
+      id: faker.datatype.uuid(),
+      title: "Mintbean",
+      callsign: "mintbean",
+      description:
+        "We help job-seeking coders get ahead in their careers through our learnathons. Wanna get started? Come join our Discord chat: http://discord.com/invite/j7CjBAz",
+      createdAt: new Date("2019-12-12"),
+      updatedAt: new Date(),
+    },
+    ...fillArray(totalCommunities - 1, () => communityFactory()),
+  ];
   const communitiesUsers = communityUserMixer(communities, users, userCommunityProbability);
   const posts = fillArray(totalPosts, () => postFactory(users, communities));
 

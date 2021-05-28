@@ -11,7 +11,7 @@ export async function seed(): Promise<void> {
 
   const { users, communities, communitiesUsers, posts } = datasetFactory({
     totalUsers: 20,
-    totalCommunities: 5,
+    totalCommunities: 1,
     userCommunityProbability: 0.5,
     totalPosts: 100,
   });

@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
-import { getCommunityFieldById } from "../data/CommunityRepo";
+import { getCommunityIdByCallsign, getCommunityFieldById } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
 
 // const {movieType} = require('./types.js');
@@ -17,13 +17,19 @@ const MutationType = new GraphQLObjectType({
         userId: {
           type: GraphQLString,
         },
-        communityId: {
+        communityCallsign: {
           type: GraphQLString,
         },
       },
       resolve: async function (source, args, context) {
-        const { communityId, userId } = args;
-        return args.communityId;
+        const { communityCallsign, userId } = args;
+        const communityId = await getCommunityIdByCallsign(communityCallsign);
+
+        if (!communityId) {
+          return null;
+        }
+
+        return communityId;
         // const { communityId } = args;
         // const { userId } = context;
 

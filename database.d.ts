@@ -14,6 +14,7 @@ interface DUser {
 interface DCommunity {
   id: string;
   title: string;
+  callsign: string;
   description: string;
   createdAt: Date;
   updatedAt: Date;

@@ -9,9 +9,9 @@ const writer = (newDir: string) => (filename: string, data: any) =>
 (function () {
   // modify these to generate.
   const data = datasetFactory({
-    totalCommunities: 2,
-    totalUsers: 10,
-    totalPosts: 25,
+    totalCommunities: 10,
+    totalUsers: 100,
+    totalPosts: 10,
     userCommunityProbability: 0.5,
   });
 

@@ -7,6 +7,17 @@ const communityLoader = new DataLoader<String, DCommunity>(async (ids) => {
   return knex("communities").whereIn("id", ids);
 });
 
+export const getCommunityIdByCallsign = async (communityCallsign: string): Promise<String> => {
+  const knex = await knexProvider();
+  const community = await knex("communities")
+    .select("id")
+    .where({
+      callsign: communityCallsign,
+    })
+    .first();
+  return community.id;
+};
+
 export const getCommunityFieldById = fieldGetterHoc((id) => communityLoader.load(id));
 
 export const getCommunityIdsForUserId = async (authorId: string) => {

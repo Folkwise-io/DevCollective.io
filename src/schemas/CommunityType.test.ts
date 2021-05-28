@@ -29,6 +29,7 @@ describe("Community object", () => {
             {
               communities {
                 id,
+                callsign,
                 title,
                 description
               }
@@ -37,8 +38,35 @@ describe("Community object", () => {
         );
 
         expect(response.body.data.communities).toMatchObject(
-          communities.map((c: any) => ({ id: c.id, title: c.title, description: c.description })),
+          communities.map((c: any) => ({ id: c.id, title: c.title, description: c.description, callsign: c.callsign })),
         );
+      });
+
+      it("can fetch a community by callsign", async () => {
+        const c = communities[0];
+
+        const response = await query(app).gqlQuery(
+          `
+            query Query ($callsign: String!) {
+              community(callsign: $callsign) {
+                id,
+                callsign,
+                title,
+                description
+              }
+            }
+          `,
+          {
+            callsign: c.callsign,
+          },
+        );
+
+        expect(response.body.data.community).toMatchObject({
+          id: c.id,
+          title: c.title,
+          description: c.description,
+          callsign: c.callsign,
+        });
       });
 
       it("Allows users to join communities.", async () => {
@@ -48,8 +76,8 @@ describe("Community object", () => {
         const response = await query(app)
           .gqlMutation(
             `
-            mutation Mutation($userId: String!, $communityId: String!) {
-              joinCommunity(userId: $userId, communityId: $communityId) {
+            mutation Mutation($userId: String!, $communityCallsign: String!) {
+              joinCommunity(userId: $userId, communityCallsign: $communityCallsign) {
                 id,
                 posts {
                   id
@@ -59,7 +87,7 @@ describe("Community object", () => {
             `,
             {
               userId: user.id,
-              communityId: community.id,
+              communityCallsign: community.callsign,
             },
           )
           .expect(200);

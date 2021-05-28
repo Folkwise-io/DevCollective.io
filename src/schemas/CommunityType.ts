@@ -20,6 +20,10 @@ export default new GraphQLObjectType({
         type: GraphQLString,
         resolve: communityFieldHoc("title"),
       },
+      callsign: {
+        type: GraphQLString,
+        resolve: communityFieldHoc("callsign"),
+      },
       description: {
         type: GraphQLString,
         resolve: communityFieldHoc("description"),
