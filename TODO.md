@@ -1,11 +1,9 @@
 CURRENT
 
-- Community handles
-- Single hardcoded community (c/mintbean)
+- Create posts
 
 FRIDAY - MUST DO
 
-- Create posts
 - Threaded discussion
 - Sign up + emails
 - Admin functionality - Delete replies, delete posts
@@ -30,6 +28,8 @@ LATER
 
 DONE
 
+- Community handles
+- Single hardcoded community (c/mintbean)
 - unit tests for api
 - database connection
 - authentication and the user model
