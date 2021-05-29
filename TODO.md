@@ -2,19 +2,24 @@ CURRENT
 
 - Sign up + emails
 
+ROADMAP TO V.01
+
+- SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
+- Threaded comments
+- Password reset
+- production deployment
+- ci/cd
+
 ROADMAP TO V1
 
 Tier 1
 
 - COOL: keyboard shortcut and navigation system
 - COOL: embedded terminal
-- Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
 - mobile friendly
 - Pagination
 - Search posts by title, body or author. This supports special characters.
 - Upvote and downvote posts
-- Threaded comments
-- Password reset
 - Report a post
 - User profiles (CRUD on first name, last name, password, email)
 - authorization and the permission model https://www.apollographql.com/docs/apollo-server/security/authentication/#authorization-methods
@@ -23,8 +28,6 @@ Tier 1
   - slim errors to be returned in the errors array during production
   - we will maintain error codes for more systematic debugging
   - graphql will have an error codes query so that UI can "introspect" possible error codes and messages
-- production deployment
-- ci/cd
 - Hot posts, new posts, top posts
 - basic hardening of graphql endpoint against malicious actors
 - notifications
