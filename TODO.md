@@ -1,8 +1,9 @@
 CURRENT
 
+- confirm account backend
+
 ROADMAP TO V.01
 
-- confirm account backend
 - reset password backend
 - register frontend
 - confirm account frontend
