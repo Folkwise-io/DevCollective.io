@@ -29,7 +29,7 @@ Tier 1
   - we will maintain error codes for more systematic debugging
   - graphql will have an error codes query so that UI can "introspect" possible error codes and messages
 - Hot posts, new posts, top posts
-- basic hardening of graphql endpoint against malicious actors
+- basic hardening of graphql endpoint against malicious actors (cloudflare.. also see https://www.npmjs.com/package/express-rate-limit)
 - notifications
 
 Tier 2 (these depend on at least one Tier 1 ticket)
