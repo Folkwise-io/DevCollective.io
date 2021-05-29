@@ -20,6 +20,8 @@ interface ConfigInstance {
   MB_SESSION_KEY: string;
   MB_ENABLE_GRAPHQL_LOGGER: boolean;
   MB_ENABLE_GRAPHIQL: boolean;
+  SENDGRID_KEY: string;
+  SENDGRID_PRINT_ONLY: boolean;
 }
 let instance: ConfigInstance;
 
@@ -34,8 +36,10 @@ export default () => {
     instance = {
       MB_KNEXFILE: getConfig("MB_KNEXFILE"),
       MB_SESSION_KEY: getConfig("MB_SESSION_KEY"),
+      SENDGRID_KEY: getConfig("SENDGRID_KEY"),
       MB_ENABLE_GRAPHQL_LOGGER: getConfig("MB_ENABLE_GRAPHQL_LOGGER", (val) => val === "true"),
       MB_ENABLE_GRAPHIQL: getConfig("MB_ENABLE_GRAPHIQL", (val) => val === "true"),
+      SENDGRID_PRINT_ONLY: getConfig("SENDGRID_PRINT_ONLY", (val) => val === "true"),
     };
   }
 
