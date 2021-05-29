@@ -1,6 +1,10 @@
 CURRENT
 
 - better error handling and more rainy day cases
+  - verbose errors to be returned in the errors array during test and development
+  - slim errors to be returned in the errors array during production
+  - we will maintain error codes for more systematic debugging
+  - graphql will have an error codes query so that UI can "introspect" possible error codes and messages
 - Pagination
 - Sign up + emails
 - password reset

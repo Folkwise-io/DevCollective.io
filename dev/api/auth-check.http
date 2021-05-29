@@ -1,2 +1,0 @@
-POST http://localhost:8080/auth/check HTTP/1.1
-content-type: application/json

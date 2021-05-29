@@ -8,7 +8,7 @@ import { config } from "dotenv";
 
 import configProvider from "./configProvider";
 
-const { MB_SESSION_KEY } = configProvider();
+const { MB_SESSION_KEY, MB_ENABLE_GRAPHQL_LOGGER, MB_ENABLE_GRAPHIQL } = configProvider();
 
 export default function appFactory() {
   const app = express();
@@ -21,25 +21,27 @@ export default function appFactory() {
   );
   app.use("/auth", authRouter);
 
-  app.use(
-    "/graphql",
-    graphqlHTTP({
-      schema,
-      graphiql: true,
-      validationRules: [depthLimit(3, { ignore: [] })],
-      customFormatErrorFn: (error) => {
-        if (error.stack) {
-          console.error("GraphQL Error:", error.stack);
-        }
-        return {
-          message: error.message,
-          locations: error.locations,
-          stack: error.stack ? error.stack.split("\n") : [],
-          path: error.path,
-        };
-      },
-    }),
-  );
+  const graphqlOptions: OptionsData = {
+    schema,
+    graphiql: MB_ENABLE_GRAPHIQL,
+    validationRules: [depthLimit(3, { ignore: [] })],
+  };
+
+  graphqlOptions.customFormatErrorFn = (error) => {
+    if (error.stack && MB_ENABLE_GRAPHQL_LOGGER) {
+      console.error("GraphQL Error:", error.stack);
+    }
+    return {
+      message: error.message,
+      // @ts-ignore
+      extensions: error?.extensions,
+      locations: error.locations,
+      stack: error.stack ? error.stack.split("\n") : [],
+      path: error.path,
+    };
+  };
+
+  app.use("/graphql", graphqlHTTP(graphqlOptions));
 
   return app;
 }

@@ -94,66 +94,26 @@ describe("Community object", () => {
 
         expect(response?.body.data.joinCommunity).toBeTruthy();
       });
+    });
 
-      //     it("can fetch all posts for a given user", async () => {
-      //       const user = users[1];
-      //       const userPostIds = posts.filter((p: any) => p.authorId === user.id).map((p: any) => ({ id: p.id }));
-      //       const response = await query(app).gql(
-      //         `
-      //         query Query($id: String!) {
-      //           user(id: $id) {
-      //             id,
-      //             posts {
-      //               id
-      //             }
-      //           }
-      //         }
-      //         `,
-      //         {
-      //           id: user.id,
-      //         },
-      //       );
-      //       expect(response.body.data.user.posts).toMatchObject(userPostIds);
-      //     });
-      //   });
+    describe("error cases", () => {
+      describe("query community", () => {
+        it("requires either id and callsign", async () => {
+          const response = await query(app).gqlQuery(
+            `
+            query Query($callsign: String, $id: String) {
+              community(callsign: $callsign, id: $id) {
+                id
+              }
+            }
+          `,
+          );
 
-      //   describe("rainy cases", () => {
-      //     it("does not provide email", async () => {
-      //       const response = await query(app).gql(
-      //         `
-      //         {
-      //           users {
-      //             email
-      //           }
-      //         }
-      //       `,
-      //       );
-      //       expect(response.body.errors[0].message).toEqual('Cannot query field "email" on type "User".');
-      //     });
-      //     it("does not provide password", async () => {
-      //       const response = await query(app).gql(
-      //         `
-      //         {
-      //           users {
-      //             password
-      //           }
-      //         }
-      //       `,
-      //       );
-      //       expect(response.body.errors[0].message).toEqual('Cannot query field "password" on type "User".');
-      //     });
-      //     it("does not provide passwordHash", async () => {
-      //       const response = await query(app).gql(
-      //         `
-      //         {
-      //           users {
-      //             passwordHash
-      //           }
-      //         }
-      //       `,
-      //       );
-      //       expect(response.body.errors[0].message).toEqual('Cannot query field "passwordHash" on type "User".');
-      //     });
+          expect(response.statusCode).toBe(200);
+          expect(response?.body.data.community).toBe(null);
+          expect(response.body.errors[0].extensions.errorCode).toBe(1000);
+        });
+      });
     });
   });
 });

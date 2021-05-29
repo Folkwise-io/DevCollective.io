@@ -29,11 +29,36 @@ export default new GraphQLObjectType({
       community: {
         type: CommunityType,
         args: {
+          id: {
+            type: GraphQLString,
+          },
           callsign: {
             type: GraphQLString,
           },
         },
-        resolve: (_, args) => getCommunityIdByCallsign(args.callsign),
+        resolve: (_, args) => {
+          const { id, callsign } = args;
+
+          // XOR
+          if (id && callsign) {
+            throw new Error("Cannot query Community by both id and callsign.");
+          } else if (!id && !callsign) {
+            const e = new Error("Must query Community by either id or callsign, but neither was provided.");
+            // @ts-ignore
+            e.extensions = {
+              errorCode: 1000,
+            };
+            throw e;
+          }
+
+          // id case
+          if (id) {
+            return id;
+          }
+
+          // callsign case
+          return getCommunityIdByCallsign(callsign);
+        },
       },
       communities: {
         type: GraphQLList(CommunityType),
@@ -45,10 +70,11 @@ export default new GraphQLObjectType({
           id: {
             type: GraphQLString,
           },
+          callsign: {
+            type: GraphQLString,
+          },
         },
-        resolve: (_, args) => {
-          return args.id;
-        },
+        resolve: (_, args) => args.id,
       },
       posts: {
         type: GraphQLList(PostType),
