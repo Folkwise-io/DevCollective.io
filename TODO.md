@@ -1,12 +1,17 @@
 CURRENT
 
-- Sign up + emails.
-- If user email is not confirmed, nag.
-  ROADMAP TO V.01
+ROADMAP TO V.01
 
+- confirm account backend
+- reset password backend
+- register frontend
+- confirm account frontend
+- reset password frontend
+- toast notifications
+- frontend error handling
+- If user email is not confirmed, nag.
 - SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
 - Threaded comments
-- Password reset
 - production deployment
 - ci/cd
 
@@ -32,6 +37,7 @@ Tier 1
 - Hot posts, new posts, top posts
 - basic hardening of graphql endpoint against malicious actors (cloudflare.. also see https://www.npmjs.com/package/express-rate-limit)
 - notifications
+- better email templates
 
 Tier 2 (these depend on at least one Tier 1 ticket)
 
@@ -89,6 +95,7 @@ DONE
 - database connection
 - authentication and the user model
 - Create posts
+- Sign up + emails.
 
 KNOWN ISSUES
 
