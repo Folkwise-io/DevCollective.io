@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node", // change to pwa-node once this issue is fixed. https://github.com/microsoft/vscode/issues/110049
+      "type": "pwa-node", // change to pwa-node once this issue is fixed. https://github.com/microsoft/vscode/issues/110049
       "runtimeExecutable": "node",
       "name": "vscode-jest-tests",
       "request": "launch",
@@ -14,7 +14,7 @@
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
+      // "disableOptimisticBPs": true,
       "env": {
         "MB_ENV_FILE": "dev/test.env"
       },

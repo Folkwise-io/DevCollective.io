@@ -18,17 +18,57 @@ jest.mock("@sendgrid/mail", () => ({
 describe("Authentication", () => {
   let app: Express;
   let user: any;
-  let newUser: any;
+  const newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
   let getAgent = (): MbQueryAgent => query(app);
-  let login: Function;
+  const login = (email: string, password: string, agent?: MbQueryAgent): supertest.Test => {
+    const _agent = agent || getAgent();
+
+    return _agent.post("/auth/login", {
+      email,
+      password,
+    });
+  };
   const login_goodParams = (agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();
     return login(user.email, "password", _agent);
   };
-  let check: Function;
-  let register: Function;
+
+  const check = (agent?: MbQueryAgent) => {
+    const _agent = agent || getAgent();
+    return _agent.post("/auth/check");
+  };
+
+  // these are "any" type to accommodate various bad data in some of the tests
+  interface RegisterParams {
+    firstName: string | any;
+    lastName: string | any;
+    email: string | any;
+    password: string | any;
+  }
+  const register = (opts: RegisterParams, agent?: MbQueryAgent) => {
+    const _agent = agent || getAgent();
+    const { firstName, lastName, email, password } = opts;
+
+    return _agent.post("/auth/register", {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+  };
+
   let expectedUser: any;
-  let submitAccountConfirmationToken: Function;
+  // these are `any` to accomodate bad data requests in the tests
+  interface SubmitAccountConfirmationTokenParams {
+    confirmationToken: string | any;
+    email: string | any;
+  }
+  const submitAccountConfirmationToken = (opts: SubmitAccountConfirmationTokenParams, agent?: MbQueryAgent) => {
+    const _agent = agent || getAgent();
+    const { confirmationToken, email } = opts;
+    return _agent.get("/auth/confirmAccount").query({ confirm: confirmationToken, email });
+  };
+
   const forgotRequest = (email: string, agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();
     return _agent?.post("/auth/forgot/request", { email });
@@ -37,6 +77,7 @@ describe("Authentication", () => {
     const _agent = agent || getAgent();
     return _agent?.get("/auth/forgot/confirm?token=" + token);
   };
+
   const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
 
   beforeAll(async () => {
@@ -51,48 +92,12 @@ describe("Authentication", () => {
   beforeEach(async () => {
     const data = await datasetLoader("simple");
     user = data.users[0];
-    login = (email: string, password: string, agent?: MbQueryAgent): supertest.Test => {
-      const _agent = agent || getAgent();
-
-      return _agent.post("/auth/login", {
-        email,
-        password,
-      });
-    };
-
-    check = (agent?: MbQueryAgent) => {
-      const _agent = agent || getAgent();
-      return _agent.post("/auth/check");
-    };
-
-    register = (
-      opts: { firstName: string; lastName: string; email: string; password: string },
-      agent?: MbQueryAgent,
-    ) => {
-      const _agent = agent || getAgent();
-      const { firstName, lastName, email, password } = opts;
-
-      return _agent.post("/auth/register", {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-    };
-
-    submitAccountConfirmationToken = (opts: { confirmationToken: string; email: string }, agent?: MbQueryAgent) => {
-      const _agent = agent || getAgent();
-      const { confirmationToken, email } = opts;
-      return _agent.get("/auth/confirmAccount").query({ confirm: confirmationToken, email });
-    };
 
     expectedUser = {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
     };
-
-    newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
   });
 
   describe("forgot password", () => {
@@ -125,12 +130,31 @@ describe("Authentication", () => {
         expect(hasForgotPasswordToken).toBeTruthy();
       });
 
-      it("successfully resets a user's password with a good token.", () => {
+      it("successfully resets a user's password with a good token.", async () => {
         // TODO
+        // create a user
+        // check that i can log in with existing password
+        {
+          const login = await login_goodParams();
+          // expect(login.)
+        }
+        // check that i cannot log in with new password
+        // extract the token + email from the email body
+        // instead of visiting the GET url, directly POST to the /forgot/confirm endpoint
+        // check that i cannot log in with existing password
+        // check that i can log in with new password
+        // check that i cannot use the same token to reset again
       });
     });
 
     describe("rainy", () => {
+      it("only allows a token to be used once.", async () => {
+        // TODO
+        // create a user
+        // extract token + email from the email body
+        // instead of visiting the GET url, directly POST to the /forgot/confirm endpoint
+        // check that i can log in with new password
+      });
       it("fails bad request when no email is sent, or when a bad email is sent", async () => {
         // test bad data
         const agent = await getAgent();
