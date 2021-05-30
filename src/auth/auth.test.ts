@@ -7,6 +7,7 @@ import supertest from "supertest";
 import { dataset_oneUser, user } from "../../dev/test/datasets/dataset-one-user";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import mockSgMail from "@sendgrid/mail";
+import { getUserByEmail, getUserById } from "../data/UserRepo";
 
 // disable emails
 jest.mock("@sendgrid/mail", () => ({
@@ -118,17 +119,12 @@ describe("Authentication", () => {
 
       describe("registering a new user", () => {
         it("can register a new user", async () => {
-          const agent = getAgent();
-
-          const registerResponse = await register(
-            {
-              firstName: "New",
-              lastName: "User",
-              email: "new@user.com",
-              password: "newpassword",
-            },
-            agent,
-          );
+          const registerResponse = await register({
+            firstName: "New",
+            lastName: "User",
+            email: "new@user.com",
+            password: "newpassword",
+          });
 
           expect(registerResponse.statusCode).toBe(200);
           expect(registerResponse.body.id).toBeTruthy();
@@ -139,6 +135,38 @@ describe("Authentication", () => {
           expect(registerResponse.body.password).toBeFalsy();
           expect(registerResponse.body.passwordHash).toBeFalsy();
           expect(mockSgMail.send).toHaveBeenCalledTimes(1);
+        });
+
+        it("Successfully sets a confirmation token in the db.", async () => {
+          const response = await register({
+            firstName: "New",
+            lastName: "User",
+            email: "new@user.com",
+            password: "newpassword",
+          });
+
+          expect(response.statusCode).toBe(200);
+
+          const dbUser = await getUserById(response.body.id);
+          expect(dbUser.id).toBeTruthy();
+        });
+
+        it("Successfully sends an email with a password confirmation token.", async () => {
+          const response = await register({
+            firstName: "New",
+            lastName: "User",
+            email: "new@user.com",
+            password: "newpassword",
+          });
+
+          expect(response.statusCode).toBe(200);
+
+          // @ts-expect-error mock is not on the type
+          const sentHtml = mockSgMail.send.mock.calls[0][0].html;
+          const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
+          const hasConfirmationToken = uuidRegex.test(sentHtml);
+
+          expect(hasConfirmationToken).toBe(true);
         });
       });
     });
@@ -179,7 +207,7 @@ describe("Authentication", () => {
           expect(mockSgMail.send).toHaveBeenCalledTimes(0);
         });
 
-        it("validates a password of at least 8 characters in length.", async () => {
+        it("requires a password of at least 8 characters in length.", async () => {
           await register({ ...newUser, password: undefined }).expect(400);
           await register({ ...newUser, password: null }).expect(400);
           await register({ ...newUser, password: {} }).expect(400);
@@ -194,8 +222,10 @@ describe("Authentication", () => {
           await register({ ...newUser, password: "toosho" }).expect(400);
           await register({ ...newUser, password: "tooshor" }).expect(400);
           expect(mockSgMail.send).toHaveBeenCalledTimes(0);
+          expect(await getUserByEmail(newUser.email)).toBeFalsy();
           await register({ ...newUser, password: "NOTshort" }).expect(200);
           expect(mockSgMail.send).toHaveBeenCalledTimes(1);
+          expect(await getUserByEmail(newUser.email)).toBeTruthy();
         });
 
         it("requires a first name", async () => {

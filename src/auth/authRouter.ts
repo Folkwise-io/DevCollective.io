@@ -76,6 +76,7 @@ authRouter.post("/register", async (req, res) => {
     });
   }
 
+  const confirmationToken = v4();
   try {
     const { email, password, firstName, lastName } = params;
     const existingUser = await getUserByEmail(email);
@@ -83,7 +84,7 @@ authRouter.post("/register", async (req, res) => {
       // no need to log, this is not an exception
       return fail("A dev with this email already exists in the database.");
     }
-    const recordsAffected = await createUser({ email, password, firstName, lastName });
+    const recordsAffected = await createUser({ email, password, firstName, lastName, confirmationToken });
     if (!recordsAffected) {
       return fail("Failed to create user.");
     }
@@ -99,8 +100,7 @@ authRouter.post("/register", async (req, res) => {
     const newUser = sanitizeDbUser(dbUser);
 
     // TODO: set hash on user
-    const token = v4();
-    const confirmUrl = `https://devcollective.io/auth/confirm?${token}`;
+    const confirmUrl = `https://devcollective.io/auth/confirm?${confirmationToken}`;
     sendEmail({
       from: "noreply@devcollective.io",
       subject: "Confirm your account",

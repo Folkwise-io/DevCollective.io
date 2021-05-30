@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import { getUserByEmail, insertUser } from "../data/UserRepo";
 
-type CreateUserParams = Omit<DUser, "id" | "createdAt" | "updatedAt" | "passwordHash"> & {
+type CreateUserParams = EUser & {
   password: string;
+  confirmationToken?: string;
 };
 
 export const sanitizeDbUser = (user: DUser): EUser => {
@@ -12,14 +13,16 @@ export const sanitizeDbUser = (user: DUser): EUser => {
   return cleanUser;
 };
 
-export const createUser = async ({ email, firstName, lastName, password }: CreateUserParams) => {
+export const createUser = async ({ email, firstName, lastName, password, confirmationToken }: CreateUserParams) => {
   const passwordHash = await bcrypt.hash(password, 10);
+  let confirmationTokenHash = confirmationToken && (await bcrypt.hash(confirmationToken, 10));
 
   const params = {
     email: email.trim().toLowerCase(),
     firstName,
     lastName,
     passwordHash,
+    confirmationTokenHash,
   };
 
   return insertUser(params);

@@ -27,6 +27,7 @@ const datasetFactory = (params: DatasetFactoryParams) => {
       firstName: "Amy",
       lastName: "Adams",
       passwordHash: "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // "password"
+      confirmationTokenHash: "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // also "password" for convenience
       createdAt: new Date("2019-10-15"),
       updatedAt: new Date(),
     },

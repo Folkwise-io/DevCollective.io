@@ -1,4 +1,17 @@
-CREATE USER mintbean WITH PASSWORD 'password';
+\set ON_ERROR_STOP on
+
+DO
+$do$
+BEGIN
+  IF NOT EXISTS(
+    SELECT FROM pg_catalog.pg_roles
+    WHERE rolname = 'mintbean') 
+  THEN
+    CREATE USER mintbean WITH PASSWORD 'password';
+  END IF;
+END
+$do$;
+
 ALTER USER mintbean CREATEDB;
 ALTER USER mintbean SUPERUSER;
 

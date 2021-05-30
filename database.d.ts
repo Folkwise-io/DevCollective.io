@@ -6,6 +6,7 @@ interface DUser {
   firstName: string;
   lastName: string;
   passwordHash: string;
+  confirmationTokenHash: string;
   createdAt: Date;
   updatedAt: Date;
 }

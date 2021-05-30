@@ -1,5 +1,6 @@
 import { createUser } from "../../../src/service/UserService";
 import { clearDatabase } from "../TestRepo";
+import { v4 } from "uuid";
 
 export const user = {
   email: "test@test.com",
