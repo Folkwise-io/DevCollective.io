@@ -138,7 +138,8 @@ authRouter.post("/register", async (req, res) => {
 
 authRouter.get("/confirmAccount", async (req, res) => {
   const schema = yup
-    .object({
+    .object()
+    .shape({
       email: yup.string().email().required(),
       confirm: yup.string().uuid().required(),
     })
@@ -185,12 +186,15 @@ authRouter.get("/confirmAccount", async (req, res) => {
 authRouter.post("/forgot/request", async (req, res) => {
   // todo: implement
   try {
-    yup
-      .object({
+    const schema = yup
+      .object()
+      .shape({
         email: yup.string().email().required(),
       })
-      .noUnknown(true)
-      .validate(req.body);
+      .strict(true)
+      .noUnknown(true);
+
+    await schema.validate(req.body);
   } catch (e) {
     return res.sendStatus(400);
   }
@@ -200,6 +204,8 @@ authRouter.post("/forgot/request", async (req, res) => {
     // Obscure 200 for security purposes.
     return res.sendStatus(200);
   }
+
+  // user exists. continue.
 
   const forgotPasswordToken = v4();
   const forgotPasswordTokenHash = await bcrypt.hash(forgotPasswordToken, 10);

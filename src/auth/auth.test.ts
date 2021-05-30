@@ -37,6 +37,7 @@ describe("Authentication", () => {
     const _agent = agent || getAgent();
     return _agent?.get("/auth/forgot/confirm?token=" + token);
   };
+  const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
 
   beforeAll(async () => {
     await clearDatabase();
@@ -120,13 +121,57 @@ describe("Authentication", () => {
         expect(mockSgMail.send).toHaveBeenCalledTimes(1);
         // @ts-expect-error mock is not in types
         const sentHtml = mockSgMail.send.mock.calls[0][0].html;
-        const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
         const hasForgotPasswordToken = uuidRegex.test(sentHtml);
         expect(hasForgotPasswordToken).toBeTruthy();
       });
 
       it("successfully resets a user's password with a good token.", () => {
         // TODO
+      });
+    });
+
+    describe("rainy", () => {
+      it("fails bad request when no email is sent, or when a bad email is sent", async () => {
+        // test bad data
+        const agent = await getAgent();
+        await agent.post("/auth/forgot/request").expect(400);
+        await agent.post("/auth/forgot/request", { email: null }).expect(400);
+        await agent.post("/auth/forgot/request", { email: undefined }).expect(400);
+        await agent.post("/auth/forgot/request", { email: true }).expect(400);
+        await agent.post("/auth/forgot/request", { email: false }).expect(400);
+        await agent.post("/auth/forgot/request", 0).expect(400);
+        await agent.post("/auth/forgot/request", 1).expect(400);
+        await agent.post("/auth/forgot/request", { email: "lol" }).expect(400);
+        await agent.post("/auth/forgot/request", {}).expect(400);
+        await agent
+          .post("/auth/forgot/request", { email: "good@email.com", other: "some-unexpected-data" })
+          .expect(400);
+
+        // test bad emails
+        await forgotRequest("bademail").expect(400);
+        await forgotRequest("bademail@").expect(400);
+        await forgotRequest("bademail.com").expect(400);
+        await forgotRequest("@bademail.com").expect(400);
+        await forgotRequest(" @bademail.com").expect(400);
+        await forgotRequest("bademail@something").expect(400);
+        await forgotRequest(" bademail@something").expect(400);
+        await forgotRequest("bademail@something ").expect(400);
+        await forgotRequest("bademail ").expect(400);
+        await forgotRequest("lol@bademail .com").expect(400);
+        expect(mockSgMail.send).toHaveBeenCalledTimes(0);
+      });
+      it("should send a 200 and do nothing when the email does not exist", async () => {
+        const badEmail = "doesnotexist@email.com";
+
+        // this user should not exist
+        const dbUser = await getUserByEmail(badEmail);
+        expect(dbUser).toBeFalsy();
+
+        // request should still look like it succeeded
+        await forgotRequest(badEmail).expect(200);
+
+        // no email should have been sent
+        expect(mockSgMail.send).toHaveBeenCalledTimes(0);
       });
     });
   });
@@ -213,7 +258,6 @@ describe("Authentication", () => {
 
           // @ts-expect-error mock is not on the type
           const sentHtml = mockSgMail.send.mock.calls[0][0].html;
-          const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
           const hasConfirmationToken = uuidRegex.test(sentHtml);
 
           expect(hasConfirmationToken).toBe(true);
