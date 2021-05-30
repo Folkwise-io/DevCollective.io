@@ -103,7 +103,7 @@ const frontendDevMiddleware = (app: Application) => {
       if (err) {
         return res.sendStatus(500);
       } else {
-        res.header("content-type", "text/html").send(data.toString());
+        return res.header("content-type", "text/html").send(data.toString());
       }
     });
   });

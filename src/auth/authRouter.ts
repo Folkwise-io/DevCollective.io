@@ -26,12 +26,12 @@ authRouter.post("/login", async (req, res) => {
     user = await checkPassword({ email, password });
   } catch (e) {
     console.error("Error while logging in", e);
-    res.sendStatus(401);
+    return res.sendStatus(401);
   }
 
   if (user) {
     startSession(req, user);
-    res.send(user);
+    return res.send(user);
   } else {
     return res.sendStatus(401);
   }
@@ -58,6 +58,7 @@ authRouter.post("/register", async (req, res) => {
     const m = message || "Failed to create dev.";
     e && console.log(m, e);
     res.status(401).json({ message: m });
+    return;
   }
 
   if (req.session?.user) {
@@ -124,7 +125,7 @@ authRouter.post("/register", async (req, res) => {
     });
 
     startSession(req, newUser);
-    res.json(newUser);
+    return res.json(newUser);
   } catch (e) {
     return fail(
       "Unexpected failure. User may or may not have been created. Aconfirmation email may not have been sent. Try logging in.",
@@ -142,7 +143,7 @@ authRouter.get("/confirmAccount", async (req, res) => {
     .required();
 
   try {
-    schema.validate(req.query);
+    await schema.validate(req.query);
   } catch (e) {
     if (e.name === "ValidationError") {
       return res.status(400).json({ errors: e.errors });
@@ -156,6 +157,13 @@ authRouter.get("/confirmAccount", async (req, res) => {
   const confirm: string = req.query.confirm as string;
 
   const user = await getUserByEmail(email);
+  if (!user) {
+    return res.status(400).json({ message: "Validation failed" });
+  }
+  if (!user.confirmationTokenHash) {
+    return res.status(409).json({ message: "Account already validated." });
+  }
+
   const isMatch = await bcrypt.compare(confirm, user.confirmationTokenHash);
 
   if (!isMatch) {
@@ -168,7 +176,7 @@ authRouter.get("/confirmAccount", async (req, res) => {
     console.error("Failed to erase the confirmationTokenHash for the user", e);
   }
 
-  res.status(200).send();
+  return res.status(200).send();
 });
 
 export default authRouter;

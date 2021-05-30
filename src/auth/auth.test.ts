@@ -260,7 +260,6 @@ describe("Authentication", () => {
           // confirm the confirmationToken and check the response
           const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
           expect(confirmationResponse.statusCode).toBe(200);
-          expect(confirmationResponse.body.email).toBe(email);
 
           // check that the user no longer has a confirmationTokenHash
           const createdUser2 = await getUserByEmail(email);
@@ -353,7 +352,6 @@ describe("Authentication", () => {
             email: "user@user.com",
           });
           expect(response.statusCode).toBe(400);
-          expect(response.body.errors.length).toBe(1);
         });
 
         it("account confirmation fails if confirmationToken is not uuid", async () => {
@@ -399,14 +397,15 @@ describe("Authentication", () => {
             confirmationToken: undefined,
           });
 
-          // check that the user exists in the db with the confirmationToken
+          // check that the user exists in the db WITHOUT the confirmationToken
           const createdUser = await getUserByEmail(email);
           expect(createdUser).toBeTruthy();
           expect(createdUser.confirmationTokenHash).toBeFalsy();
 
-          // confirm the confirmationToken and check the response
+          // confirm the confirmationToken and check the response.
+          // This is a failing call.
           const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
-          expect(confirmationResponse.statusCode).toBe(401);
+          expect(confirmationResponse.statusCode).toBe(409);
 
           // check that the user still has no confirmationTokenHash
           const createdUser2 = await getUserByEmail(email);
@@ -417,13 +416,13 @@ describe("Authentication", () => {
           const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
           const email = "new@user.com";
 
-          // confirm the user doesnt exist in the db
+          // ensure the user doesnt exist in the db
           const userNotYetCreated = await getUserByEmail(email);
           expect(userNotYetCreated).toBeFalsy();
 
           // confirm the confirmationToken and check the response
           const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
-          expect(confirmationResponse.statusCode).toBe(401);
+          expect(confirmationResponse.statusCode).toBe(400);
 
           // check that the user still does not exist
           const userNotYetCreated2 = await getUserByEmail(email);
