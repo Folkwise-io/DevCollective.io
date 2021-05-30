@@ -6,6 +6,9 @@ import { getUserByEmail, updateUser } from "../data/UserRepo";
 import { v4 } from "uuid";
 import { sendEmail } from "../service/EmailService";
 import bcrypt from "bcrypt";
+import configProvider from "../configProvider";
+const { MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE } = configProvider();
+import add from "date-fns/add";
 
 const authRouter = Router();
 
@@ -176,12 +179,54 @@ authRouter.get("/confirmAccount", async (req, res) => {
     console.error("Failed to erase the confirmationTokenHash for the user", e);
   }
 
-  return res.status(200).send();
+  return res.sendStatus(200);
 });
 
 authRouter.post("/forgot/request", async (req, res) => {
   // todo: implement
-  res.sendStatus(404);
+  try {
+    yup
+      .object({
+        email: yup.string().email().required(),
+      })
+      .noUnknown(true)
+      .validate(req.body);
+  } catch (e) {
+    return res.sendStatus(400);
+  }
+
+  const user = await getUserByEmail(req.body.email as string);
+  if (!user) {
+    // Obscure 200 for security purposes.
+    return res.sendStatus(200);
+  }
+
+  const forgotPasswordToken = v4();
+  const forgotPasswordTokenHash = await bcrypt.hash(forgotPasswordToken, 10);
+
+  await updateUser(user.id, {
+    forgotPasswordTokenHash: forgotPasswordTokenHash,
+    forgotPasswordExpiry: add(new Date(), { days: MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE }),
+  });
+
+  const confirmUrl = `https://devcollective.io/auth/token?${forgotPasswordToken}&email=${encodeURIComponent(
+    user.email,
+  )}`;
+
+  await sendEmail({
+    from: "noreply@devcollective.io",
+    to: user.email,
+    subject: "Your password reset link.",
+    html: `
+      We received a forgot password request from this email.<br/>
+      To reset your password, please click <a href="${confirmUrl}">here</a>, or visit the following URL:<br/>
+      ${confirmUrl}<br/>
+      Thank you,<br/>
+      The DevCollective team.
+    `,
+  });
+
+  res.sendStatus(200);
 });
 
 export default authRouter;

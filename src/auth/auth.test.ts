@@ -31,7 +31,7 @@ describe("Authentication", () => {
   let submitAccountConfirmationToken: Function;
   const forgotRequest = (email: string, agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();
-    return _agent?.post("/auth/forgot/request");
+    return _agent?.post("/auth/forgot/request", { email });
   };
   const forgotConfirm = (token: string, agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();

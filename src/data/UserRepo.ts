@@ -32,14 +32,7 @@ export const getAllUserIds = async () => {
   return pickOne("id")(users.rows);
 };
 
-type InsertOrUpdateUserParams = Partial<{
-  firstName: string;
-  lastName: string;
-  email: string;
-  passwordHash: string;
-  confirmationTokenHash: string | null;
-}>;
-export const insertUser = (user: InsertOrUpdateUserParams) => knexProvider().then((knex) => knex("users").insert(user));
+export const insertUser = (user: Partial<DUser>) => knexProvider().then((knex) => knex("users").insert(user));
 
-export const updateUser = (id: string, userPartial: InsertOrUpdateUserParams) =>
+export const updateUser = (id: string, userPartial: Partial<DUser>) =>
   knexProvider().then((knex) => knex("users").where({ id }).update(userPartial));

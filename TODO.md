@@ -11,6 +11,7 @@ ROADMAP TO V.01
 - FE: reset password frontend
 - FS: error handling / toast notifications
 - FS: c/cd and production deployment
+- BE: make email non-case-sensitive and trimmed
 
 ROADMAP TO V1
 
