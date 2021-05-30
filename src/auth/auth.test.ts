@@ -21,11 +21,22 @@ describe("Authentication", () => {
   let newUser: any;
   let getAgent = (): MbQueryAgent => query(app);
   let login: Function;
-  let login_goodParams: Function;
+  const login_goodParams = (agent?: MbQueryAgent) => {
+    const _agent = agent || getAgent();
+    return login(user.email, "password", _agent);
+  };
   let check: Function;
   let register: Function;
   let expectedUser: any;
   let submitAccountConfirmationToken: Function;
+  const forgotRequest = (email: string, agent?: MbQueryAgent) => {
+    const _agent = agent || getAgent();
+    return _agent?.post("/auth/forgot/request");
+  };
+  const forgotConfirm = (token: string, agent?: MbQueryAgent) => {
+    const _agent = agent || getAgent();
+    return _agent?.get("/auth/forgot/confirm?token=" + token);
+  };
 
   beforeAll(async () => {
     await clearDatabase();
@@ -46,11 +57,6 @@ describe("Authentication", () => {
         email,
         password,
       });
-    };
-
-    login_goodParams = (agent?: MbQueryAgent) => {
-      const _agent = agent || getAgent();
-      return login(user.email, "password", _agent);
     };
 
     check = (agent?: MbQueryAgent) => {
@@ -86,6 +92,43 @@ describe("Authentication", () => {
     };
 
     newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
+  });
+
+  describe("forgot password", () => {
+    describe("sunny", () => {
+      // test cases:
+      // sunny
+      // it can
+      it("successfully sends a forgot password reset email", async () => {
+        // before request, user should not have forgotPasswordTokenHash
+        {
+          const dbUser = await getUserByEmail(user.email);
+          expect(dbUser.forgotPasswordTokenHash).toBeFalsy();
+          expect(dbUser.forgotPasswordExpiry).toBeFalsy();
+        }
+
+        await forgotRequest(user.email).expect(200);
+
+        // after request, user should not have forgotPasswordTokenHash
+        {
+          const dbUser = await getUserByEmail(user.email);
+          expect(dbUser.forgotPasswordTokenHash).toBeTruthy();
+          expect(dbUser.forgotPasswordExpiry).toBeTruthy();
+        }
+
+        // test that email was sent correctly
+        expect(mockSgMail.send).toHaveBeenCalledTimes(1);
+        // @ts-expect-error mock is not in types
+        const sentHtml = mockSgMail.send.mock.calls[0][0].html;
+        const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
+        const hasForgotPasswordToken = uuidRegex.test(sentHtml);
+        expect(hasForgotPasswordToken).toBeTruthy();
+      });
+
+      it("successfully resets a user's password with a good token.", () => {
+        // TODO
+      });
+    });
   });
 
   describe("login", () => {

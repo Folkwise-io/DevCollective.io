@@ -179,4 +179,9 @@ authRouter.get("/confirmAccount", async (req, res) => {
   return res.status(200).send();
 });
 
+authRouter.post("/forgot/request", async (req, res) => {
+  // todo: implement
+  res.sendStatus(404);
+});
+
 export default authRouter;
