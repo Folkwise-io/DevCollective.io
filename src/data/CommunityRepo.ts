@@ -4,7 +4,7 @@ import knexProvider from "./knex-provider";
 
 const communityLoader = new DataLoader<string, DCommunity>(async (ids) => {
   const knex = await knexProvider();
-  return knex("communities").whereIn("id", ids);
+  return knex<DCommunity>("communities").whereIn("id", ids);
 });
 
 export const getCommunityIdByCallsign = async (communityCallsign: string): Promise<string> => {

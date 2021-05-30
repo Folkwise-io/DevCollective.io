@@ -34,8 +34,8 @@ const query = (app: Express.Application) => {
 
       return request;
     },
-    get: (route: string) => {
-      return agent.post(route).set("Accept", "application/json").send();
+    get: (route: string, query?: any) => {
+      return agent.get(route).query(query).set("Accept", "application/json").send();
     },
   };
 };

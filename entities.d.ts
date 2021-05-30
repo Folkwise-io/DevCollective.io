@@ -1,3 +1,11 @@
 // This file contains types for the database layer.
 
-type EUser = Omit<DUser, "passwordHash", "confirmationTokenHash">;
+interface EUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  accountConfirmationPending: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

@@ -5,21 +5,20 @@ CURRENT
 ROADMAP TO V.01
 
 - reset password backend
-- register frontend
+- SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
+- If user email is not confirmed, nag.
+- user registration frontend
+- error handling backend
+- error handling / toast notifications frontend
 - confirm account frontend
 - reset password frontend
-- toast notifications
-- frontend error handling
-- If user email is not confirmed, nag.
-- SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
-- Threaded comments
-- production deployment
-- ci/cd
+- c/cd and production deployment
 
 ROADMAP TO V1
 
 Tier 1
 
+- Threaded comments
 - COOL: keyboard shortcut and navigation system
 - COOL: embedded terminal
 - mobile friendly

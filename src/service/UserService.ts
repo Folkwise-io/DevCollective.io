@@ -1,23 +1,31 @@
 import bcrypt from "bcrypt";
 import { getUserByEmail, insertUser } from "../data/UserRepo";
 
-type CreateUserParams = EUser & {
+export const sanitizeDbUser = (user: DUser): EUser => {
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    accountConfirmationPending: !!user.confirmationTokenHash,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    email: user.email,
+  };
+};
+
+interface CreateUserParams {
+  email: string;
+  firstName: string;
+  lastName: string;
   password: string;
   confirmationToken?: string;
-};
-
-export const sanitizeDbUser = (user: DUser): EUser => {
-  const cleanUser = { ...user };
-  // @ts-expect-error yes, we do indeed want to remove the passwordHash
-  delete cleanUser.passwordHash;
-  return cleanUser;
-};
-
-export const createUser = async ({ email, firstName, lastName, password, confirmationToken }: CreateUserParams) => {
+}
+export const createUser = async (createUserParams: CreateUserParams) => {
+  const { email, firstName, lastName, password, confirmationToken } = createUserParams;
   const passwordHash = await bcrypt.hash(password, 10);
   let confirmationTokenHash = confirmationToken && (await bcrypt.hash(confirmationToken, 10));
 
-  const params = {
+  const insertUserParams = {
     email: email.trim().toLowerCase(),
     firstName,
     lastName,
@@ -25,7 +33,7 @@ export const createUser = async ({ email, firstName, lastName, password, confirm
     confirmationTokenHash,
   };
 
-  return insertUser(params);
+  return insertUser(insertUserParams);
 };
 
 type CheckPasswordParams = { email: string; password: string };

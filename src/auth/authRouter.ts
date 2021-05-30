@@ -2,9 +2,10 @@ import { Router } from "express";
 import { json } from "body-parser";
 import { checkPassword, createUser, sanitizeDbUser } from "../service/UserService";
 import * as yup from "yup";
-import { getUserByEmail } from "../data/UserRepo";
+import { getUserByEmail, updateUser } from "../data/UserRepo";
 import { v4 } from "uuid";
 import { sendEmail } from "../service/EmailService";
+import bcrypt from "bcrypt";
 
 const authRouter = Router();
 
@@ -20,7 +21,13 @@ authRouter.post("/login", async (req, res) => {
   const email: string = req.body.email;
   const password: string = req.body.password;
 
-  const user = await checkPassword({ email, password });
+  let user: EUser | null = null;
+  try {
+    user = await checkPassword({ email, password });
+  } catch (e) {
+    console.error("Error while logging in", e);
+    res.sendStatus(401);
+  }
 
   if (user) {
     startSession(req, user);
@@ -100,7 +107,9 @@ authRouter.post("/register", async (req, res) => {
     const newUser = sanitizeDbUser(dbUser);
 
     // TODO: set hash on user
-    const confirmUrl = `https://devcollective.io/auth/confirm?${confirmationToken}`;
+    const confirmUrl = `https://devcollective.io/auth/token?${confirmationToken}&email=${encodeURIComponent(
+      newUser.email,
+    )}`;
     sendEmail({
       from: "noreply@devcollective.io",
       subject: "Confirm your account",
@@ -121,6 +130,45 @@ authRouter.post("/register", async (req, res) => {
       "Unexpected failure. User may or may not have been created. Aconfirmation email may not have been sent. Try logging in.",
     );
   }
+});
+
+authRouter.get("/confirmAccount", async (req, res) => {
+  const schema = yup
+    .object({
+      email: yup.string().email().required(),
+      confirm: yup.string().uuid().required(),
+    })
+    .noUnknown(true)
+    .required();
+
+  try {
+    schema.validate(req.query);
+  } catch (e) {
+    if (e.name === "ValidationError") {
+      return res.status(400).json({ errors: e.errors });
+    } else {
+      console.error(e);
+      return res.status(400).json({ message: "Validation failed" });
+    }
+  }
+
+  const email: string = req.query.email as string;
+  const confirm: string = req.query.confirm as string;
+
+  const user = await getUserByEmail(email);
+  const isMatch = await bcrypt.compare(confirm, user.confirmationTokenHash);
+
+  if (!isMatch) {
+    return res.status(400).json({ message: "Validation failed" });
+  }
+
+  try {
+    await updateUser(user.id, { confirmationTokenHash: null });
+  } catch (e) {
+    console.error("Failed to erase the confirmationTokenHash for the user", e);
+  }
+
+  res.status(200).send();
 });
 
 export default authRouter;

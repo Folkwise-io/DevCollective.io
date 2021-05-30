@@ -4,11 +4,10 @@ import { Express } from "express";
 import { createUser } from "../service/UserService";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import supertest from "supertest";
-import { dataset_oneUser, user } from "../../dev/test/datasets/dataset-one-user";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import mockSgMail from "@sendgrid/mail";
 import { getUserByEmail, getUserById } from "../data/UserRepo";
-import bcrypt from "bcrypt";
+import { v4 } from "uuid";
 
 // disable emails
 jest.mock("@sendgrid/mail", () => ({
@@ -74,12 +73,10 @@ describe("Authentication", () => {
       });
     };
 
-    submitAccountConfirmationToken = (opts: { confirmationToken: string }, agent?: MbQueryAgent) => {
+    submitAccountConfirmationToken = (opts: { confirmationToken: string; email: string }, agent?: MbQueryAgent) => {
       const _agent = agent || getAgent();
-      const { confirmationToken } = opts;
-      return _agent.post("/auth/confirmAccount", {
-        confirmationToken,
-      });
+      const { confirmationToken, email } = opts;
+      return _agent.get("/auth/confirmAccount").query({ confirm: confirmationToken, email });
     };
 
     expectedUser = {
@@ -179,7 +176,7 @@ describe("Authentication", () => {
           expect(hasConfirmationToken).toBe(true);
         });
 
-        it("Successfully confirms an account with a confirmationToken", async () => {
+        it("accountConfirmation flag behaviour", async () => {
           const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
           const email = "new@user.com";
           const password = "password";
@@ -205,7 +202,8 @@ describe("Authentication", () => {
           // login with an agent and check to see if the response has the flag
           // this agent is only used in a couple of calls this test.
           const agent = getAgent();
-          const loginResponse = await login(user, password, agent).expect(200);
+          const loginResponse = await login(createdUser.email, password, agent);
+          expect(loginResponse.statusCode).toBe(200);
           expect(loginResponse.body.accountConfirmationPending).toBeTruthy();
 
           // check that the "check" response returns a flag.
@@ -213,9 +211,8 @@ describe("Authentication", () => {
           expect(checkResponse1.body.accountConfirmationPending).toBeTruthy();
 
           // confirm the confirmationToken and check the response
-          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
           expect(confirmationResponse.statusCode).toBe(200);
-          expect(confirmationResponse.body.email).toBe(email);
 
           // check that the "check" response no longer returns a flag.
           const checkResponse2 = await check(agent);
@@ -230,12 +227,12 @@ describe("Authentication", () => {
           // login with a new agent and check to confirm the flag is gone
           // this agent is only used in a couple of calls this test.
           const agent2 = getAgent();
-          const loginResponse2 = await login(user, password, agent2).expect(200);
+          const loginResponse2 = await login(email, password, agent2).expect(200);
           expect(loginResponse2.body.accountConfirmationPending).toBeFalsy();
 
           // check that the "check" response on a new session no longer returns a flag.
           const checkResponse3 = await check(agent2);
-          expect(checkResponse3.body.accountConfirmationPending).toBeTruthy();
+          expect(checkResponse3.body.accountConfirmationPending).toBeFalsy();
         });
 
         it("Successfully confirms an account with a confirmationToken", async () => {
@@ -261,7 +258,7 @@ describe("Authentication", () => {
           expect(createdUser.confirmationTokenHash).toBeTruthy();
 
           // confirm the confirmationToken and check the response
-          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
           expect(confirmationResponse.statusCode).toBe(200);
           expect(confirmationResponse.body.email).toBe(email);
 
@@ -349,7 +346,43 @@ describe("Authentication", () => {
           await register({ ...newUser, lastName: "" }).expect(400);
           expect(mockSgMail.send).toHaveBeenCalledTimes(0);
         });
-        it("will not confirm an account that has no confirmationToken", async () => {
+
+        it("account confirmation fails if confirmationToken not in query param.", async () => {
+          const response = await submitAccountConfirmationToken({
+            confirmationToken: undefined,
+            email: "user@user.com",
+          });
+          expect(response.statusCode).toBe(400);
+          expect(response.body.errors.length).toBe(1);
+        });
+
+        it("account confirmation fails if confirmationToken is not uuid", async () => {
+          const response = await submitAccountConfirmationToken({
+            confirmationToken: "not-uuid",
+            email: "user@user.com",
+          });
+          expect(response.body.errors.length).toBe(1);
+        });
+
+        it("account confirmation requires an email in the query param.", async () => {
+          const response = await submitAccountConfirmationToken({
+            email: undefined,
+            confirmationToken: v4(),
+          });
+          expect(response.statusCode).toBe(400);
+          expect(response.body.errors.length).toBe(1);
+        });
+
+        it("account confirmation fails if email string is not email format.", async () => {
+          const response = await submitAccountConfirmationToken({
+            email: "not-email",
+            confirmationToken: v4(),
+          });
+          expect(response.statusCode).toBe(400);
+          expect(response.body.errors.length).toBe(1);
+        });
+
+        it("will not confirm an account that has no confirmationToken in the database", async () => {
           const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
           const email = "new@user.com";
 
@@ -372,7 +405,7 @@ describe("Authentication", () => {
           expect(createdUser.confirmationTokenHash).toBeFalsy();
 
           // confirm the confirmationToken and check the response
-          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
           expect(confirmationResponse.statusCode).toBe(401);
 
           // check that the user still has no confirmationTokenHash
@@ -389,7 +422,7 @@ describe("Authentication", () => {
           expect(userNotYetCreated).toBeFalsy();
 
           // confirm the confirmationToken and check the response
-          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken, email });
           expect(confirmationResponse.statusCode).toBe(401);
 
           // check that the user still does not exist
