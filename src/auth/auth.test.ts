@@ -8,6 +8,7 @@ import { dataset_oneUser, user } from "../../dev/test/datasets/dataset-one-user"
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import mockSgMail from "@sendgrid/mail";
 import { getUserByEmail, getUserById } from "../data/UserRepo";
+import bcrypt from "bcrypt";
 
 // disable emails
 jest.mock("@sendgrid/mail", () => ({
@@ -25,6 +26,7 @@ describe("Authentication", () => {
   let check: Function;
   let register: Function;
   let expectedUser: any;
+  let submitAccountConfirmationToken: Function;
 
   beforeAll(async () => {
     await clearDatabase();
@@ -69,6 +71,14 @@ describe("Authentication", () => {
         lastName,
         email,
         password,
+      });
+    };
+
+    submitAccountConfirmationToken = (opts: { confirmationToken: string }, agent?: MbQueryAgent) => {
+      const _agent = agent || getAgent();
+      const { confirmationToken } = opts;
+      return _agent.post("/auth/confirmAccount", {
+        confirmationToken,
       });
     };
 
@@ -168,6 +178,99 @@ describe("Authentication", () => {
 
           expect(hasConfirmationToken).toBe(true);
         });
+
+        it("Successfully confirms an account with a confirmationToken", async () => {
+          const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
+          const email = "new@user.com";
+          const password = "password";
+
+          // confirm the user doesnt exist in the db
+          const userNotYetCreated = await getUserByEmail(email);
+          expect(userNotYetCreated).toBeFalsy();
+
+          // create the user
+          await createUser({
+            email,
+            firstName: "new",
+            lastName: "user",
+            password,
+            confirmationToken,
+          });
+
+          // check that the user exists in the db with the confirmationToken
+          const createdUser = await getUserByEmail(email);
+          expect(createdUser).toBeTruthy();
+          expect(createdUser.confirmationTokenHash).toBeTruthy();
+
+          // login with an agent and check to see if the response has the flag
+          // this agent is only used in a couple of calls this test.
+          const agent = getAgent();
+          const loginResponse = await login(user, password, agent).expect(200);
+          expect(loginResponse.body.accountConfirmationPending).toBeTruthy();
+
+          // check that the "check" response returns a flag.
+          const checkResponse1 = await check(agent);
+          expect(checkResponse1.body.accountConfirmationPending).toBeTruthy();
+
+          // confirm the confirmationToken and check the response
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          expect(confirmationResponse.statusCode).toBe(200);
+          expect(confirmationResponse.body.email).toBe(email);
+
+          // check that the "check" response no longer returns a flag.
+          const checkResponse2 = await check(agent);
+          expect(checkResponse2.body.accountConfirmationPending).toBeTruthy();
+
+          // check that the user no longer has a confirmationTokenHash
+          const createdUser2 = await getUserByEmail(email);
+          expect(createdUser2).toBeTruthy();
+          expect(createdUser2.id).toEqual(createdUser.id);
+          expect(createdUser2.confirmationTokenHash).toBeFalsy();
+
+          // login with a new agent and check to confirm the flag is gone
+          // this agent is only used in a couple of calls this test.
+          const agent2 = getAgent();
+          const loginResponse2 = await login(user, password, agent2).expect(200);
+          expect(loginResponse2.body.accountConfirmationPending).toBeFalsy();
+
+          // check that the "check" response on a new session no longer returns a flag.
+          const checkResponse3 = await check(agent2);
+          expect(checkResponse3.body.accountConfirmationPending).toBeTruthy();
+        });
+
+        it("Successfully confirms an account with a confirmationToken", async () => {
+          const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
+          const email = "new@user.com";
+
+          // confirm the user doesnt exist in the db
+          const userNotYetCreated = await getUserByEmail(email);
+          expect(userNotYetCreated).toBeFalsy();
+
+          // create the user
+          await createUser({
+            email,
+            firstName: "new",
+            lastName: "user",
+            password: "password",
+            confirmationToken,
+          });
+
+          // check that the user exists in the db with the confirmationToken
+          const createdUser = await getUserByEmail(email);
+          expect(createdUser).toBeTruthy();
+          expect(createdUser.confirmationTokenHash).toBeTruthy();
+
+          // confirm the confirmationToken and check the response
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          expect(confirmationResponse.statusCode).toBe(200);
+          expect(confirmationResponse.body.email).toBe(email);
+
+          // check that the user no longer has a confirmationTokenHash
+          const createdUser2 = await getUserByEmail(email);
+          expect(createdUser2).toBeTruthy();
+          expect(createdUser2.id).toEqual(createdUser.id);
+          expect(createdUser2.confirmationTokenHash).toBeFalsy();
+        });
       });
     });
 
@@ -245,6 +348,53 @@ describe("Authentication", () => {
           await register({ ...newUser, lastName: { lastName: null } }).expect(400);
           await register({ ...newUser, lastName: "" }).expect(400);
           expect(mockSgMail.send).toHaveBeenCalledTimes(0);
+        });
+        it("will not confirm an account that has no confirmationToken", async () => {
+          const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
+          const email = "new@user.com";
+
+          // confirm the user doesnt exist in the db
+          const userNotYetCreated = await getUserByEmail(email);
+          expect(userNotYetCreated).toBeFalsy();
+
+          // create the user
+          await createUser({
+            email,
+            firstName: "new",
+            lastName: "user",
+            password: "password",
+            confirmationToken: undefined,
+          });
+
+          // check that the user exists in the db with the confirmationToken
+          const createdUser = await getUserByEmail(email);
+          expect(createdUser).toBeTruthy();
+          expect(createdUser.confirmationTokenHash).toBeFalsy();
+
+          // confirm the confirmationToken and check the response
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          expect(confirmationResponse.statusCode).toBe(401);
+
+          // check that the user still has no confirmationTokenHash
+          const createdUser2 = await getUserByEmail(email);
+          expect(createdUser2).toBeTruthy();
+          expect(createdUser2.confirmationTokenHash).toBeFalsy();
+        });
+        it("will not confirm an account that does not exist", async () => {
+          const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
+          const email = "new@user.com";
+
+          // confirm the user doesnt exist in the db
+          const userNotYetCreated = await getUserByEmail(email);
+          expect(userNotYetCreated).toBeFalsy();
+
+          // confirm the confirmationToken and check the response
+          const confirmationResponse = await submitAccountConfirmationToken({ confirmationToken });
+          expect(confirmationResponse.statusCode).toBe(401);
+
+          // check that the user still does not exist
+          const userNotYetCreated2 = await getUserByEmail(email);
+          expect(userNotYetCreated2).toBeFalsy();
         });
       });
     });
