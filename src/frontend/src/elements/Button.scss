@@ -2,13 +2,14 @@
 @import "../variables.scss";
 
 .root {
-  color: $white;
+  color: $black;
   cursor: pointer;
   border: none;
   outline: none;
   $height: 48px;
   font-size: $font-header-size;
-  background: linear-gradient(95.52deg, #21c0e3 0%, #1b23de 100%);
+  // background: linear-gradient(95.52deg, #21c0e3 0%, #1b23de 100%);
+  background: $primary;
   min-width: 90px;
   height: $height;
   line-height: $height;

@@ -14,12 +14,13 @@ $max-width: 1200px;
       display: grid;
       grid-auto-flow: column;
       justify-content: space-between;
+      text-decoration: none;
 
       .text {
         font-size: $font-title-size;
         color: $black;
-        font-weight: bold;
         line-height: $header-height;
+        text-decoration: none;
       }
 
       .logo {
