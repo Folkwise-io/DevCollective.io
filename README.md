@@ -10,7 +10,7 @@ You'll need Docker installed to run the development database. This is optional, 
 # install dependencies
 yarn install
 
-# start the server. 
+# start the server on port 8080 and, if not started, the Postgres server on port 10800
 yarn dev
 
 # create (or re-create) the database from scratch
