@@ -9,6 +9,8 @@ import bcrypt from "bcrypt";
 import configProvider from "../configProvider";
 const { MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE } = configProvider();
 import add from "date-fns/add";
+import isBefore from "date-fns/isBefore";
+import { validateEmail, validateFirstName, validateLastName, validatePassword, validateUuid } from "./validators";
 
 const authRouter = Router();
 
@@ -21,8 +23,25 @@ const startSession = (req: any, user: EUser) => {
 };
 
 authRouter.post("/login", async (req, res) => {
-  const email: string = req.body.email;
-  const password: string = req.body.password;
+  let params;
+  try {
+    params = await yup
+      .object()
+      .shape({
+        email: validateEmail,
+        password: validatePassword,
+      })
+      .validate(req.body);
+  } catch (e) {
+    // don't do fail() this time, because it's a special case
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: e.errors,
+    });
+  }
+
+  const email: string = params.email;
+  const password: string = params.password;
 
   let user: EUser | null = null;
   try {
@@ -73,10 +92,10 @@ authRouter.post("/register", async (req, res) => {
     params = await yup
       .object()
       .shape({
-        email: yup.string().email().max(100).required(),
-        password: yup.string().min(8).max(64).required(),
-        firstName: yup.string().max(50).required(),
-        lastName: yup.string().max(50).required(),
+        email: validateEmail,
+        password: validatePassword,
+        firstName: validateFirstName,
+        lastName: validateLastName,
       })
       .validate(req.body);
   } catch (e) {
@@ -140,8 +159,8 @@ authRouter.get("/confirmAccount", async (req, res) => {
   const schema = yup
     .object()
     .shape({
-      email: yup.string().email().required(),
-      confirm: yup.string().uuid().required(),
+      email: validateEmail,
+      confirm: validateUuid,
     })
     .noUnknown(true)
     .required();
@@ -184,12 +203,11 @@ authRouter.get("/confirmAccount", async (req, res) => {
 });
 
 authRouter.post("/forgot/request", async (req, res) => {
-  // todo: implement
   try {
     const schema = yup
       .object()
       .shape({
-        email: yup.string().email().required(),
+        email: validateEmail,
       })
       .strict(true)
       .noUnknown(true);
@@ -231,6 +249,47 @@ authRouter.post("/forgot/request", async (req, res) => {
       The DevCollective team.
     `,
   });
+
+  res.sendStatus(200);
+});
+
+authRouter.post("/forgot/confirm", async (req, res) => {
+  try {
+    const schema = yup
+      .object()
+      .shape({
+        email: validateEmail,
+        token: validateUuid,
+        password: validatePassword,
+      })
+      .strict(true)
+      .noUnknown(true);
+
+    await schema.validate(req.body);
+  } catch (e) {
+    return res.sendStatus(400);
+  }
+
+  const user = await getUserByEmail(req.body.email);
+
+  if (
+    !user ||
+    !user.forgotPasswordTokenHash ||
+    !user.forgotPasswordExpiry ||
+    isBefore(user.forgotPasswordExpiry, new Date())
+  ) {
+    return res.sendStatus(401);
+  }
+
+  const isMatch = await bcrypt.compare(req.body.token, user.forgotPasswordTokenHash);
+
+  if (!isMatch) {
+    return res.sendStatus(401);
+  }
+
+  // success!
+  const passwordHash = await bcrypt.hash(req.body.password, 10);
+  await updateUser(user.id, { passwordHash, forgotPasswordExpiry: null, forgotPasswordTokenHash: null });
 
   res.sendStatus(200);
 });

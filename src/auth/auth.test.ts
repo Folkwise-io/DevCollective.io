@@ -8,6 +8,7 @@ import { datasetLoader } from "../../dev/test/datasetLoader";
 import mockSgMail from "@sendgrid/mail";
 import { getUserByEmail, getUserById } from "../data/UserRepo";
 import { v4 } from "uuid";
+import { PromiseValue } from "type-fest";
 
 // disable emails
 jest.mock("@sendgrid/mail", () => ({
@@ -15,22 +16,30 @@ jest.mock("@sendgrid/mail", () => ({
   setApiKey: jest.fn(),
 }));
 
+function getSentEmail(mailer: typeof mockSgMail) {
+  // @ts-expect-error mock is not officially on the types here.
+  return mailer.send.mock.calls[0]?.[0]?.html;
+}
+
+const getDefaultUser = (dataset: any) => {
+  return dataset.users[0];
+};
+
 describe("Authentication", () => {
   let app: Express;
-  let user: any;
+  let data: PromiseValue<ReturnType<typeof datasetLoader>>;
+  const defaultPassword = "password";
   const newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
   let getAgent = (): MbQueryAgent => query(app);
-  const login = (email: string, password: string, agent?: MbQueryAgent): supertest.Test => {
+
+  // types are "any" to accommodate bad data tests.
+  const login = (email: any, password: any, agent?: MbQueryAgent): supertest.Test => {
     const _agent = agent || getAgent();
 
     return _agent.post("/auth/login", {
       email,
       password,
     });
-  };
-  const login_goodParams = (agent?: MbQueryAgent) => {
-    const _agent = agent || getAgent();
-    return login(user.email, "password", _agent);
   };
 
   const check = (agent?: MbQueryAgent) => {
@@ -56,8 +65,6 @@ describe("Authentication", () => {
       password,
     });
   };
-
-  let expectedUser: any;
   // these are `any` to accomodate bad data requests in the tests
   interface SubmitAccountConfirmationTokenParams {
     confirmationToken: string | any;
@@ -73,9 +80,9 @@ describe("Authentication", () => {
     const _agent = agent || getAgent();
     return _agent?.post("/auth/forgot/request", { email });
   };
-  const forgotConfirm = (token: string, agent?: MbQueryAgent) => {
+  const forgotConfirm = (payload: any, agent?: MbQueryAgent) => {
     const _agent = agent || getAgent();
-    return _agent?.get("/auth/forgot/confirm?token=" + token);
+    return _agent?.post("/auth/forgot/confirm", payload);
   };
 
   const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
@@ -90,64 +97,67 @@ describe("Authentication", () => {
   });
 
   beforeEach(async () => {
-    const data = await datasetLoader("simple");
-    user = data.users[0];
-
-    expectedUser = {
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    };
+    data = await datasetLoader("simple");
   });
 
   describe("forgot password", () => {
     describe("sunny", () => {
-      // test cases:
-      // sunny
-      // it can
       it("successfully sends a forgot password reset email", async () => {
+        const email = getDefaultUser(data).email;
         // before request, user should not have forgotPasswordTokenHash
         {
-          const dbUser = await getUserByEmail(user.email);
+          const dbUser = await getUserByEmail(email);
           expect(dbUser.forgotPasswordTokenHash).toBeFalsy();
           expect(dbUser.forgotPasswordExpiry).toBeFalsy();
         }
 
-        await forgotRequest(user.email).expect(200);
+        await forgotRequest(email).expect(200);
 
         // after request, user should not have forgotPasswordTokenHash
         {
-          const dbUser = await getUserByEmail(user.email);
+          const dbUser = await getUserByEmail(email);
           expect(dbUser.forgotPasswordTokenHash).toBeTruthy();
           expect(dbUser.forgotPasswordExpiry).toBeTruthy();
         }
 
         // test that email was sent correctly
         expect(mockSgMail.send).toHaveBeenCalledTimes(1);
-        // @ts-expect-error mock is not in types
-        const sentHtml = mockSgMail.send.mock.calls[0][0].html;
+        const sentHtml = getSentEmail(mockSgMail);
         const hasForgotPasswordToken = uuidRegex.test(sentHtml);
         expect(hasForgotPasswordToken).toBeTruthy();
       });
 
       it("successfully resets a user's password with a good token.", async () => {
-        // TODO
-        // create a user
         // check that i can log in with existing password
-        {
-          const login = await login_goodParams();
-          // expect(login.)
-        }
+        const { email } = getDefaultUser(data);
+
+        await login(email, defaultPassword).expect(200);
+
         // check that i cannot log in with new password
-        // extract the token + email from the email body
+        await login("bademail@email.com", "somepassword");
+
+        await forgotRequest(email).expect(200);
+        const sentHtml = getSentEmail(mockSgMail);
+        expect(sentHtml).toBeTruthy();
+        const token = sentHtml.match(uuidRegex)[0];
+
         // instead of visiting the GET url, directly POST to the /forgot/confirm endpoint
+        const newPassword = "thisisanewpassword";
+        await forgotConfirm({ email, token, password: newPassword }).expect(200);
+
         // check that i cannot log in with existing password
+        await login(email, defaultPassword).expect(401);
+
         // check that i can log in with new password
+        await login(email, newPassword);
+
         // check that i cannot use the same token to reset again
+        await forgotConfirm({ email: email, token, password: newPassword }).expect(401);
       });
     });
 
     describe("rainy", () => {
+      it("does not allow an expired token to be used.", async () => {});
       it("only allows a token to be used once.", async () => {
         // TODO
         // create a user
@@ -203,12 +213,18 @@ describe("Authentication", () => {
   describe("login", () => {
     describe("sunny cases", () => {
       it("can log in", async () => {
-        const response = await login_goodParams().expect(200);
-        expect(response.body).toMatchObject(expectedUser);
+        const { firstName, lastName, email } = getDefaultUser(data);
+        const response = await login(email, defaultPassword).expect(200);
+        expect(response.body).toMatchObject({
+          email,
+          firstName,
+          lastName,
+        });
       });
 
       it("does not send back password or passwordHash", async () => {
-        const response = await login_goodParams().expect(200);
+        const { firstName, lastName, email } = getDefaultUser(data);
+        const response = await login(email, defaultPassword).expect(200);
         expect(response.body.password).toBeFalsy();
         expect(response.body.passwordHash).toBeFalsy();
       });
@@ -219,18 +235,22 @@ describe("Authentication", () => {
 
       it("can successfully check its own sessions", async () => {
         const agent = getAgent();
-        await login_goodParams(agent).expect(200);
+        const { firstName, lastName, email } = getDefaultUser(data);
+        await login(email, defaultPassword, agent).expect(200);
         const response = await agent.post("/auth/check");
-        expect(response.body).toMatchObject(expectedUser);
+        expect(response.body).toMatchObject({ firstName, lastName, email });
       });
 
       it("can perform a full login flow", async () => {
         const agent = getAgent();
         await agent.post("/auth/check").expect(401);
-        const loginResponse = await login_goodParams(agent).expect(200);
-        expect(loginResponse.body).toMatchObject(expectedUser);
+
+        const { firstName, lastName, email } = getDefaultUser(data);
+        const loginResponse = await login(email, defaultPassword, agent).expect(200);
+
+        expect(loginResponse.body).toMatchObject({ firstName, lastName, email });
         const checkResponse = await agent.post("/auth/check").expect(200);
-        expect(checkResponse.body).toMatchObject(expectedUser);
+        expect(checkResponse.body).toMatchObject({ firstName, lastName, email });
         await agent.post("/auth/logout").expect(200);
         const checkResponseAfterLogout = await agent.post("/auth/check").expect(401);
         expect(checkResponseAfterLogout.body).toMatchObject({});
@@ -280,8 +300,7 @@ describe("Authentication", () => {
 
           expect(response.statusCode).toBe(200);
 
-          // @ts-expect-error mock is not on the type
-          const sentHtml = mockSgMail.send.mock.calls[0][0].html;
+          const sentHtml = getSentEmail(mockSgMail);
           const hasConfirmationToken = uuidRegex.test(sentHtml);
 
           expect(hasConfirmationToken).toBe(true);
@@ -383,10 +402,11 @@ describe("Authentication", () => {
 
     describe("rainy cases", () => {
       it("can't log in with the wrong password", async () => {
-        await login(user.email, "wrongpassword").expect(401);
+        const { email } = getDefaultUser(data);
+        await login(email, "wrongpassword").expect(401);
       });
       it("can't log in with the wrong email", async () => {
-        await login("wrongemail@test.com", user.password).expect(401);
+        await login("wrongemail@test.com", defaultPassword).expect(401);
       });
       it("can't log in with the wrong email and wrong password", async () => {
         await login("wrongemail@test.com", "wrongpassword").expect(401);
@@ -394,6 +414,50 @@ describe("Authentication", () => {
       it("gets 401 when checking without logged in", async () => {
         const response = await check();
         expect(response.body).toEqual({});
+      });
+
+      describe("login", () => {
+        it("validates email", async () => {
+          await login(null, defaultPassword).expect(400);
+          await login(undefined, defaultPassword).expect(400);
+          await login(0, defaultPassword).expect(400);
+          await login(1, defaultPassword).expect(400);
+          await login({ email: "lol" }, defaultPassword).expect(400);
+          await login({}, defaultPassword).expect(400);
+          await login("bademail", defaultPassword).expect(400);
+          await login("bademail@", defaultPassword).expect(400);
+          await login("bademail.com", defaultPassword).expect(400);
+          await login("@bademail.com", defaultPassword).expect(400);
+          await login(" @bademail.com", defaultPassword).expect(400);
+          await login("bademail@something", defaultPassword).expect(400);
+          await login(" bademail@something", defaultPassword).expect(400);
+          await login("bademail@something ", defaultPassword).expect(400);
+          await login("bademail ", defaultPassword).expect(400);
+          await login("lol@bademail .com", defaultPassword).expect(400);
+          expect(mockSgMail.send).toHaveBeenCalledTimes(0);
+        });
+
+        it("requires a password of at least 8 characters in length.", async () => {
+          const user = newUser;
+
+          await login(user.email, undefined).expect(400);
+          await login(user.email, null).expect(400);
+          await login(user.email, {}).expect(400);
+          await login(user.email, "lol").expect(400);
+          await login(user.email, null).expect(400);
+          await login(user.email, "").expect(400);
+          await login(user.email, "t").expect(400);
+          await login(user.email, "to").expect(400);
+          await login(user.email, "too").expect(400);
+          await login(user.email, "toos").expect(400);
+          await login(user.email, "toosh").expect(400);
+          await login(user.email, "toosho").expect(400);
+          await login(user.email, "tooshor").expect(400);
+
+          // the next one has the right length. but again, it's not a valid user email...
+          // so we expect a 401 instead of a 400.
+          await login(user.email, "NOTshort").expect(401);
+        });
       });
 
       describe("registration", () => {
