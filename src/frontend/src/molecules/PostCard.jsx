@@ -26,10 +26,21 @@ const PostCard = ({ post }) => {
     }
   }
 
+  function toggleFavorite(e) {
+    e.preventDefault()
+    const heart = e.target
+    console.log(heart.className)
+    if (heart.className === "far fa-heart") {
+      heart.className = "fas fa-heart"
+    } else if (heart.className === "fas fa-heart") {
+      heart.className = "far fa-heart"
+    }
+  }
+
   return (
     <div className={$.root}>
       <div className={$.like}>
-        <div className={$.heart}>&lt;3</div>
+        <div className={$.heart}><i onClick={toggleFavorite} class="far fa-heart"></i></div>
         <div className={$.likeCount}>29</div>
       </div>
       <div className={$.main}>
