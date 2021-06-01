@@ -6,9 +6,13 @@ import { clearDatabase } from "../../dev/test/TestRepo";
 import supertest from "supertest";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import mockSgMail from "@sendgrid/mail";
-import { getUserByEmail, getUserById } from "../data/UserRepo";
+import { getUserByEmail, getUserById, updateUser } from "../data/UserRepo";
 import { v4 } from "uuid";
 import { PromiseValue } from "type-fest";
+import bcrypt from "bcrypt";
+import subDays from "date-fns/subDays";
+import addDays from "date-fns/addDays";
+import configProvider from "../configProvider";
 
 // disable emails
 jest.mock("@sendgrid/mail", () => ({
@@ -157,13 +161,43 @@ describe("Authentication", () => {
     });
 
     describe("rainy", () => {
-      it("does not allow an expired token to be used.", async () => {});
+      it("does not allow an expired token to be used.", async () => {
+        const user = getDefaultUser(data);
+        const token = v4();
+        const hash = await bcrypt.hash(token, 10);
+        await updateUser(user.id, {
+          forgotPasswordTokenHash: hash,
+          forgotPasswordExpiry: subDays(new Date(), 1),
+        });
+
+        await forgotConfirm({ email: user.email, token, password: "someNewPassword" }).expect(401);
+      });
       it("only allows a token to be used once.", async () => {
-        // TODO
-        // create a user
-        // extract token + email from the email body
-        // instead of visiting the GET url, directly POST to the /forgot/confirm endpoint
-        // check that i can log in with new password
+        const user = getDefaultUser(data);
+
+        // update user with a forgotPassword token.
+        const token = v4();
+        const hash = await bcrypt.hash(token, 10);
+        await updateUser(user.id, {
+          forgotPasswordTokenHash: hash,
+          forgotPasswordExpiry: addDays(new Date(), 1),
+        });
+
+        const newPassword = "someNewPassword";
+        // confirm that login works with old password
+        await login(user.email, defaultPassword, getAgent()).expect(200);
+        // change the password
+        await forgotConfirm({ email: user.email, token, password: newPassword }).expect(200);
+        // old password no longer works
+        await login(user.email, defaultPassword, getAgent()).expect(401);
+        // new password works
+        await login(user.email, newPassword, getAgent()).expect(200);
+        // old token no longer resets the password
+        await forgotConfirm({ email: user.email, token, password: "someNewPassword" }).expect(401);
+        // confirm old password still does not work
+        await login(user.email, defaultPassword, getAgent()).expect(401);
+        // confirm new password still works.
+        await login(user.email, newPassword, getAgent()).expect(200);
       });
       it("fails bad request when no email is sent, or when a bad email is sent", async () => {
         // test bad data
