@@ -1,23 +1,23 @@
 CURRENT
 
-- reset password backend
+- BE: make email non-case-sensitive and trimmed
+- BE: if user email is not confirmed, `user.accountConfirmed` flag on the `/auth` calls should be `true`
+- BE: SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
 
 ROADMAP TO V.01
 
-- BE: SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
 - FE: If user email is not confirmed, nag.
 - FE: user registration frontend
 - FE: confirm account frontend
 - FE: reset password frontend
 - FS: error handling / toast notifications
 - FS: c/cd and production deployment
-- BE: make email non-case-sensitive and trimmed
+- Threaded comments
 
 ROADMAP TO V1
 
 Tier 1
 
-- Threaded comments
 - COOL: keyboard shortcut and navigation system
 - COOL: embedded terminal
 - mobile friendly
@@ -96,6 +96,7 @@ DONE
 - Create posts
 - Sign up + emails.
 - confirm account backend
+- reset password backend
 
 KNOWN ISSUES
 
