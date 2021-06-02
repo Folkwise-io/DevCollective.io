@@ -3,7 +3,9 @@ import { useHistory, useParams } from "react-router-dom";
 
 import Button from "../elements/Button";
 import PostCard from "../molecules/PostCard";
-import { Tray, TrayControls, TrayRunway } from "../molecules/Tray";
+import Tray from "../molecules/Tray";
+import TrayControls from "../molecules/TrayControls";
+import TrayRunway from "../molecules/TrayRunway";
 
 const PostTray = ({ posts }) => {
   const history = useHistory();
