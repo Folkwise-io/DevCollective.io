@@ -16,7 +16,11 @@ yarn dev
 # create (or re-create) the database from scratch
 yarn pristine
 ```
-
+# Windows Users
+If you see this error:
+    The command 'docker-compose' could not be found in this WSL 2 distro. 
+Make sure in your docker desktop under Settings/General that
+"Use the WSL 2 based engine" is checked.
 ## Production config
 
 If deploying to production, first place your config files in `/etc/mintbean-v4/config/*`.
