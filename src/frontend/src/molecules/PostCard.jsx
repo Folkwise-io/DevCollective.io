@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import $ from "./PostCard.scss";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   const { title, author, community, url, id } = post;
+  const [isLiked, setLiked] = useState(false);
 
   const summaryFragments = [];
   if (author) {
@@ -26,20 +27,19 @@ const PostCard = ({ post }) => {
     }
   }
 
-  function toggleFavorite(e) {
-    e.preventDefault()
-    const heart = e.target
-    if (heart.className === "far fa-heart") {
-      heart.className = "fas fa-heart"
-    } else if (heart.className === "fas fa-heart") {
-      heart.className = "far fa-heart"
-    }
-  }
+  const heartIconClasses = isLiked ? "fas fa-heart" : "far fa-heart";
 
   return (
     <div className={$.root}>
       <div className={$.like}>
-        <div className={$.heart}><i onClick={toggleFavorite} class="far fa-heart"></i></div>
+        <div className={$.heart}>
+          <i
+            className={heartIconClasses}
+            onClick={() => {
+              setLiked(!isLiked);
+            }}
+          ></i>
+        </div>
         <div className={$.likeCount}>29</div>
       </div>
       <div className={$.main}>
