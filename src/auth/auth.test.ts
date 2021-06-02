@@ -11,18 +11,10 @@ import { PromiseValue } from "type-fest";
 import bcrypt from "bcrypt";
 import subDays from "date-fns/subDays";
 import addDays from "date-fns/addDays";
+import { extractUuidTokenFromEmail, getDefaultUser, getSentEmail } from "../test/utils";
 
 // disable emails
 jest.mock("@sendgrid/mail");
-
-function getSentEmail(mailer: typeof sgMail) {
-  // @ts-expect-error mock is not officially on the types here.
-  return mailer.send.mock.calls[0]?.[0]?.html;
-}
-
-const getDefaultUser = (dataset: any) => {
-  return dataset.users[0];
-};
 
 describe("Authentication", () => {
   let tm: TestManager;
@@ -31,8 +23,6 @@ describe("Authentication", () => {
 
   const defaultPassword = "password";
   const newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
-
-  const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/i;
 
   beforeAll(async () => {
     await clearDatabase();
@@ -71,8 +61,8 @@ describe("Authentication", () => {
         // test that email was sent correctly
         expect(sgMail.send).toHaveBeenCalledTimes(1);
         const sentHtml = getSentEmail(sgMail);
-        const hasForgotPasswordToken = uuidRegex.test(sentHtml);
-        expect(hasForgotPasswordToken).toBeTruthy();
+        const confirmationToken = extractUuidTokenFromEmail(sentHtml);
+        expect(confirmationToken).toBeTruthy();
       });
 
       it("successfully resets a user's password with a good token.", async () => {
@@ -87,7 +77,7 @@ describe("Authentication", () => {
         await tm.forgotRequest(email).expect(200);
         const sentHtml = getSentEmail(sgMail);
         expect(sentHtml).toBeTruthy();
-        const token = sentHtml.match(uuidRegex)[0];
+        const token = extractUuidTokenFromEmail(sentHtml);
 
         // instead of visiting the GET url, directly POST to the /forgot/confirm endpoint
         const newPassword = "thisisanewpassword";
@@ -276,9 +266,8 @@ describe("Authentication", () => {
           expect(response.statusCode).toBe(200);
 
           const sentHtml = getSentEmail(sgMail);
-          const hasConfirmationToken = uuidRegex.test(sentHtml);
-
-          expect(hasConfirmationToken).toBe(true);
+          const confirmationToken = extractUuidTokenFromEmail(sentHtml);
+          expect(confirmationToken).toBeTruthy();
         });
 
         it("accountConfirmation flag behaviour", async () => {
