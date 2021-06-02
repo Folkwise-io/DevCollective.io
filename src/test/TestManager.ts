@@ -15,20 +15,13 @@ interface SubmitAccountConfirmationTokenParams {
 }
 
 export default class TestManager {
-  private agent?: MbQueryAgent;
-  constructor(private app: Express) {}
-  getAgent(): MbQueryAgent {
-    if (!this.agent) {
-      this.agent = query(this.app);
-    }
-
-    return this.agent;
+  private agent: MbQueryAgent;
+  constructor(private app: Express) {
+    this.agent = query(this.app);
   }
 
-  login(email: any, password: any, agent?: MbQueryAgent): supertest.Test {
-    const _agent = agent || this.getAgent();
-
-    return _agent.post("/auth/login", {
+  login(email: any, password: any, agent = this.agent): supertest.Test {
+    return agent.post("/auth/login", {
       email,
       password,
     });
@@ -36,11 +29,10 @@ export default class TestManager {
 
   // these are "any" type to accommodate various bad data in some of the tests
 
-  register(opts: RegisterParams, agent?: MbQueryAgent) {
-    const _agent = agent || this.getAgent();
+  register(opts: RegisterParams, agent = this.agent) {
     const { firstName, lastName, email, password } = opts;
 
-    return _agent.post("/auth/register", {
+    return agent.post("/auth/register", {
       firstName,
       lastName,
       email,
@@ -48,24 +40,28 @@ export default class TestManager {
     });
   }
 
-  submitAccountConfirmationToken(opts: SubmitAccountConfirmationTokenParams, agent?: MbQueryAgent) {
-    const _agent = agent || this.getAgent();
+  submitAccountConfirmationToken(opts: SubmitAccountConfirmationTokenParams, agent = this.agent) {
     const { confirmationToken, email } = opts;
-    return _agent.get("/auth/confirmAccount").query({ confirm: confirmationToken, email });
+    return agent.get("/auth/confirmAccount").query({ confirm: confirmationToken, email });
   }
 
-  forgotRequest(email: string, agent?: MbQueryAgent) {
-    const _agent = agent || this.getAgent();
-    return _agent?.post("/auth/forgot/request", { email });
+  forgotRequest(email: string, agent = this.agent) {
+    return agent.post("/auth/forgot/request", { email });
   }
-  forgotConfirm(payload: any, agent?: MbQueryAgent) {
-    const _agent = agent || this.getAgent();
-    return _agent?.post("/auth/forgot/confirm", payload);
+  forgotConfirm(payload: any, agent = this.agent) {
+    return agent.post("/auth/forgot/confirm", payload);
   }
 
-  check(agent?: MbQueryAgent) {
-    const _agent = agent || this.getAgent();
-    return _agent.post("/auth/check");
+  check(agent = this.agent) {
+    return agent.post("/auth/check");
+  }
+
+  logout(agent = this.agent) {
+    return agent.post("/auth/logout");
+  }
+
+  raw() {
+    return this.agent;
   }
 
   fork(): TestManager {

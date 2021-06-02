@@ -129,35 +129,33 @@ describe("Authentication", () => {
 
         const newPassword = "someNewPassword";
         // confirm that login works with old password
-        await tm.login(user.email, defaultPassword, tm.getAgent()).expect(200);
+        await tm.login(user.email, defaultPassword).expect(200);
         // change the password
         await tm.forgotConfirm({ email: user.email, token, password: newPassword }).expect(200);
         // old password no longer works
-        await tm.login(user.email, defaultPassword, tm.getAgent()).expect(401);
+        await tm.login(user.email, defaultPassword).expect(401);
         // new password works
-        await tm.login(user.email, newPassword, tm.getAgent()).expect(200);
+        await tm.login(user.email, newPassword).expect(200);
         // old token no longer resets the password
         await tm.forgotConfirm({ email: user.email, token, password: "someNewPassword" }).expect(401);
         // confirm old password still does not work
-        await tm.login(user.email, defaultPassword, tm.getAgent()).expect(401);
+        await tm.login(user.email, defaultPassword).expect(401);
         // confirm new password still works.
-        await tm.login(user.email, newPassword, tm.getAgent()).expect(200);
+        await tm.login(user.email, newPassword).expect(200);
       });
       it("fails bad request when no email is sent, or when a bad email is sent", async () => {
         // test bad data
-        const agent = await tm.getAgent();
-        await agent.post("/auth/forgot/request").expect(400);
-        await agent.post("/auth/forgot/request", { email: null }).expect(400);
-        await agent.post("/auth/forgot/request", { email: undefined }).expect(400);
-        await agent.post("/auth/forgot/request", { email: true }).expect(400);
-        await agent.post("/auth/forgot/request", { email: false }).expect(400);
-        await agent.post("/auth/forgot/request", 0).expect(400);
-        await agent.post("/auth/forgot/request", 1).expect(400);
-        await agent.post("/auth/forgot/request", { email: "lol" }).expect(400);
-        await agent.post("/auth/forgot/request", {}).expect(400);
-        await agent
-          .post("/auth/forgot/request", { email: "good@email.com", other: "some-unexpected-data" })
-          .expect(400);
+        const forgotPasswordUrl = "/auth/forgot/request";
+        await tm.raw().post(forgotPasswordUrl).expect(400);
+        await tm.raw().post(forgotPasswordUrl, { email: null }).expect(400);
+        await tm.raw().post(forgotPasswordUrl, { email: undefined }).expect(400);
+        await tm.raw().post(forgotPasswordUrl, { email: true }).expect(400);
+        await tm.raw().post(forgotPasswordUrl, { email: false }).expect(400);
+        await tm.raw().post(forgotPasswordUrl, 0).expect(400);
+        await tm.raw().post(forgotPasswordUrl, 1).expect(400);
+        await tm.raw().post(forgotPasswordUrl, { email: "lol" }).expect(400);
+        await tm.raw().post(forgotPasswordUrl, {}).expect(400);
+        await tm.raw().post(forgotPasswordUrl, { email: "good@email.com", other: "some-unexpected-data" }).expect(400);
 
         // test bad emails
         await tm.forgotRequest("bademail").expect(400);
@@ -220,17 +218,16 @@ describe("Authentication", () => {
       });
 
       it("can perform a full login flow", async () => {
-        const agent = tm.getAgent();
-        await agent.post("/auth/check").expect(401);
+        await tm.check().expect(401);
 
         const { firstName, lastName, email } = getDefaultUser(data);
-        const loginResponse = await tm.login(email, defaultPassword, agent).expect(200);
+        const loginResponse = await tm.login(email, defaultPassword).expect(200);
 
         expect(loginResponse.body).toMatchObject({ firstName, lastName, email });
-        const checkResponse = await agent.post("/auth/check").expect(200);
+        const checkResponse = await tm.check().expect(200);
         expect(checkResponse.body).toMatchObject({ firstName, lastName, email });
-        await agent.post("/auth/logout").expect(200);
-        const checkResponseAfterLogout = await agent.post("/auth/check").expect(401);
+        await tm.logout().expect(200);
+        const checkResponseAfterLogout = await tm.check().expect(401);
         expect(checkResponseAfterLogout.body).toMatchObject({});
       });
 
@@ -307,15 +304,13 @@ describe("Authentication", () => {
           expect(createdUser).toBeTruthy();
           expect(createdUser.confirmationTokenHash).toBeTruthy();
 
-          // login with an agent and check to see if the response has the flag
-          // this agent is only used in a couple of calls this test.
-          const agent = tm.getAgent();
-          const loginResponse = await tm.login(createdUser.email, password, agent);
+          // login and check to see if the response has the flag
+          const loginResponse = await tm.login(createdUser.email, password);
           expect(loginResponse.statusCode).toBe(200);
           expect(loginResponse.body.accountConfirmationPending).toBeTruthy();
 
           // check that the "check" response returns a flag.
-          const checkResponse1 = await tm.check(agent);
+          const checkResponse1 = await tm.check();
           expect(checkResponse1.body.accountConfirmationPending).toBeTruthy();
 
           // confirm the confirmationToken and check the response
@@ -323,7 +318,7 @@ describe("Authentication", () => {
           expect(confirmationResponse.statusCode).toBe(200);
 
           // check that the "check" response no longer returns a flag.
-          const checkResponse2 = await tm.check(agent);
+          const checkResponse2 = await tm.check();
           expect(checkResponse2.body.accountConfirmationPending).toBeTruthy();
 
           // check that the user no longer has a confirmationTokenHash
@@ -333,13 +328,13 @@ describe("Authentication", () => {
           expect(createdUser2.confirmationTokenHash).toBeFalsy();
 
           // login with a new agent and check to confirm the flag is gone
-          // this agent is only used in a couple of calls this test.
-          const agent2 = tm.getAgent();
-          const loginResponse2 = await tm.login(email, password, agent2).expect(200);
+          // this fork is only used in a couple of calls this test.
+          const tm2 = tm.fork();
+          const loginResponse2 = await tm2.login(email, password).expect(200);
           expect(loginResponse2.body.accountConfirmationPending).toBeFalsy();
 
           // check that the "check" response on a new session no longer returns a flag.
-          const checkResponse3 = await tm.check(agent2);
+          const checkResponse3 = await tm2.check();
           expect(checkResponse3.body.accountConfirmationPending).toBeFalsy();
         });
 
