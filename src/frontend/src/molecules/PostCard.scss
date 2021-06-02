@@ -11,6 +11,10 @@ $vertical-space: 10px;
     .heart {
       color: #be1931;
       margin-bottom: 2px;
+
+      i {
+        cursor: pointer;
+      }
     }
     .likeCount {
       font-weight: bold;
