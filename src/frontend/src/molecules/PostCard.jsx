@@ -29,7 +29,6 @@ const PostCard = ({ post }) => {
   function toggleFavorite(e) {
     e.preventDefault()
     const heart = e.target
-    console.log(heart.className)
     if (heart.className === "far fa-heart") {
       heart.className = "fas fa-heart"
     } else if (heart.className === "fas fa-heart") {
