@@ -1,9 +1,8 @@
 import React from "react";
-import $ from "./PostCard.scss";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
-  const { title, author, community, url, id } = post;
+  const { title, author, community, url } = post;
 
   const summaryFragments = [];
   if (author) {
@@ -11,8 +10,8 @@ const PostCard = ({ post }) => {
     summaryFragments.push(<div key={fullName}>{fullName}</div>);
   }
   if (community) {
-    const { title } = community;
-    fragments.push(<div key={title}>{title}</div>);
+    // const { title } = community;
+    // fragments.push(<div key={title}>{title}</div>);
   }
 
   const writableFragments = [];
@@ -27,22 +26,20 @@ const PostCard = ({ post }) => {
   }
 
   return (
-    <div className={$.root}>
-      <div className={$.like}>
-        <div className={$.heart}>&lt;3</div>
-        <div className={$.likeCount}>29</div>
+    <div>
+      <div>
+        <div>&lt;3</div>
+        <div>29</div>
       </div>
-      <div className={$.main}>
-        <Link className={$.header} to={url}>
-          {title}
-        </Link>
-        <div className={$.body}>
-          <div className={$.preview}>
+      <div>
+        <Link to={url}>{title}</Link>
+        <div>
+          <div>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi quo, excepturi animi exercitationem eaque
             cum impedit voluptates nemo praesentium dicta veniam. A reiciendis veniam provident sint porro. Quod, non
             illo?
           </div>
-          <div className={$.summary}>{writableFragments}</div>
+          <div>{writableFragments}</div>
         </div>
       </div>
     </div>

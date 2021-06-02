@@ -1,10 +1,9 @@
 import React from "react";
-import $ from "./PostTray.scss";
-import PostCard from "../molecules/PostCard";
+import { useHistory, useParams } from "react-router-dom";
+
 import Button from "../elements/Button";
+import PostCard from "../molecules/PostCard";
 import { Tray, TrayControls, TrayRunway } from "../molecules/Tray";
-import { useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
 const PostTray = ({ posts }) => {
   const history = useHistory();
@@ -14,7 +13,7 @@ const PostTray = ({ posts }) => {
   return (
     <Tray>
       <TrayControls>
-        <div className={$.controls}>
+        <div>
           <div>New Posts</div>
           <Button onClick={() => history.push(`/c/${callsign}/new`)}>New Post</Button>
         </div>

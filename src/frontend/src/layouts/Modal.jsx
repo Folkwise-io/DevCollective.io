@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import $ from "./Modal.scss";
 
 export const Modal = ({ title, children, onClose }) => {
   const overlay = useRef();
@@ -14,16 +13,16 @@ export const Modal = ({ title, children, onClose }) => {
   };
 
   return (
-    <div className={$.root} ref={overlay} onClick={handleClose}>
-      <div className={$.main}>
-        <div className={$.header}>
-          <div className={$.title}>{title}</div>
-          <a className={$.closeButton} ref={closeButton} href="#" onClick={handleClose}>
+    <div ref={overlay} onClick={handleClose}>
+      <div>
+        <div>
+          <div>{title}</div>
+          <a ref={closeButton} href="#" onClick={handleClose}>
             Close
           </a>
         </div>
-        <div className={$.body}>
-          <div className={$.bodyContent}>{children}</div>
+        <div>
+          <div>{children}</div>
         </div>
       </div>
     </div>

@@ -1,12 +1,5 @@
-import React from "react";
-import $ from "./Button.scss";
+import styled from "styled-components";
 
-const Button = ({ children, className, ...props }) => {
-  return (
-    <button className={$.root} {...props}>
-      {children}
-    </button>
-  );
-};
+const Button = styled.button``;
 
 export default Button;

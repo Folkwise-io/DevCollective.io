@@ -1,13 +1,24 @@
-import React from "react";
 import { gql, useQuery } from "@apollo/client";
+import React from "react";
+import { Route, Switch, useParams } from "react-router-dom";
+import styled from "styled-components";
+
+import BorderBox from "../../elements/BorderBox";
 import PostTray from "../../organisms/PostTray";
-import PostEditorTray from "../../organisms/PostEditorTray";
-import $ from "./CommunityPage.scss";
-import { useParams } from "react-router-dom";
-import { Switch, Route } from "react-router-dom";
 import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
 import ViewPostFragment from "./ViewPostFragment";
+
+const Container = styled.div`
+  display: grid;
+  max-width: 80rem;
+  margin: 0px auto;
+  padding: 2rem;
+  grid-template: min-content 1fr / 1fr 50% 1fr;
+  grid-template-areas: ". main a" ". main b";
+  grid-gap: 1rem;
+  align-items: start;
+`;
 
 const CommunityPage = () => {
   const { callsign } = useParams();
@@ -35,20 +46,14 @@ const CommunityPage = () => {
       variables: {
         callsign: callsign,
       },
-    },
+    }
   );
 
-  if (loading) {
-    return <div>"Loading"</div>;
-  }
-
-  if (error) {
-    return <div>Error</div>;
-  }
-
+  if (loading) return <div>Loading</div>;
+  if (error) return <div>Error</div>;
   return (
-    <div className={$.root}>
-      <div className={$.main}>
+    <Container>
+      <BorderBox style={{ gridArea: `main` }}>
         <Switch>
           <Route path="/c/:callsign" exact>
             <PostTray posts={data.community.posts} />
@@ -63,23 +68,21 @@ const CommunityPage = () => {
             <EditPostFragment />
           </Route>
         </Switch>
-      </div>
-      <div className={$.sidebar}>
-        <div className={$.communityInfo}>
-          <div className={$.header}>/c/{data.community.callsign}</div>
-          <div className={$.body}>{data.community.description}</div>
+      </BorderBox>
+      <BorderBox style={{ gridArea: `a` }}>
+        <div>/c/{data.community.callsign}</div>
+        <div>{data.community.description}</div>
+      </BorderBox>
+      <BorderBox style={{ gridArea: `b` }}>
+        <div>WARNING - Pre-release</div>
+        <div>
+          This app is still in pre-release form. Please expect bugs and, if you find one, I&apos;d appreciate it if you
+          reported it to me -- chances are I&apos;m unaware of it. Also, if you&apos;re currently using a version of the
+          platform that&apos;s deployed to a server of some sort, your data will be wiped during development every few
+          days. Expect a production release in June. -Monarch
         </div>
-        <div className={$.relatedCommunities}>
-          <div className={$.header}>WARNING - Pre-release</div>
-          <div className={$.body}>
-            This app is still in pre-release form. Please expect bugs and, if you find one, I'd appreciate it if you
-            reported it to me -- chances are I'm unaware of it. Also, if you're currently using a version of the
-            platform that's deployed to a server of some sort, your data will be wiped during development every few
-            days. Expect a production release in June. -Monarch
-          </div>
-        </div>
-      </div>
-    </div>
+      </BorderBox>
+    </Container>
   );
 };
 
