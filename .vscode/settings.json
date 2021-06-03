@@ -1,0 +1,11 @@
+{
+  "files.exclude": {
+    "/wishing-wall/**/*": true
+  },
+  "search.exclude": {
+    "/wishing-wall/**/*": true
+  },
+  "files.watcherExclude": {
+    "/wishing-well/**/*": true
+  }
+}
