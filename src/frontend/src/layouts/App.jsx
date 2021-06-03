@@ -2,10 +2,12 @@ import React from "react";
 import { Redirect, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import styled from "styled-components";
 
-import NavBar from "../organisms/NavBar";
+import NavBar, { NavbarHeight } from "../organisms/NavBar";
 import CommunityPage from "../pages/CommunityPage";
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding-top: ${NavbarHeight};
+`;
 
 const App = () => {
   return (

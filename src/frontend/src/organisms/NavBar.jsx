@@ -4,13 +4,21 @@ import styled from "styled-components";
 
 import AuthButton from "../molecules/AuthButton";
 
+export const NavbarHeight = "70px";
+
 const Container = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: ${NavbarHeight};
+  padding: 0px 30px;
+
   display: grid;
   grid-auto-flow: column;
   justify-content: space-between;
   align-items: center;
   background: var(--space-900);
-  padding: 1rem 2rem;
   border-bottom: 1px solid var(--space-500);
   box-shadow: 0px 2px 10px 2px var(--space-500);
 
@@ -21,7 +29,7 @@ const Container = styled.div`
 
 const Logo = styled.span`
   font-size: 2em;
-  color: var(--brand-400);
+  color: var(--brand-300);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -33,7 +41,7 @@ const NavBar = () => {
     <Container>
       <Logo>
         <Link to="/" style={{ textDecoration: "inherit", color: "inherit" }}>
-          DevCollective.io
+          Dev Collective
         </Link>
       </Logo>
       <AuthButton />
