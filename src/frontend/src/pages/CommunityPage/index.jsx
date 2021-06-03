@@ -11,11 +11,10 @@ import ViewPostFragment from "./ViewPostFragment";
 
 const Container = styled.div`
   display: grid;
-  max-width: 80rem;
   margin: 0px auto;
   padding: 2rem;
-  grid-template: min-content 1fr / 1fr 50% 1fr;
-  grid-template-areas: ". main a" ". main b";
+  grid-template: min-content 1fr / 80% 1fr;
+  grid-template-areas: "main a" "main b";
   grid-gap: 1rem;
   align-items: start;
 `;
@@ -53,7 +52,7 @@ const CommunityPage = () => {
   if (error) return <div>Error</div>;
   return (
     <Container>
-      <BorderBox style={{ gridArea: `main` }}>
+      <div style={{ gridArea: `main` }}>
         <Switch>
           <Route path="/c/:callsign" exact>
             <PostTray posts={data.community.posts} />
@@ -68,7 +67,7 @@ const CommunityPage = () => {
             <EditPostFragment />
           </Route>
         </Switch>
-      </BorderBox>
+      </div>
       <BorderBox style={{ gridArea: `a` }}>
         <div>/c/{data.community.callsign}</div>
         <div>{data.community.description}</div>

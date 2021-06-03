@@ -3,22 +3,19 @@ import React from "react";
 
 import Button from "../elements/Button";
 import MarkdownEditor from "../molecules/MarkdownEditor";
-import Tray from "../molecules/Tray";
-import TrayControls from "../molecules/TrayControls";
-import TrayRunway from "../molecules/TrayRunway";
 
 const PostEditorTray = ({ headerText, onSubmit }) => {
   return (
-    <Tray>
+    <div>
       <Formik initialValues={{ title: ``, body: `` }} onSubmit={onSubmit}>
         <Form>
-          <TrayControls>
+          <div>
             {headerText}
             <Button style={{ float: `right` }} type="submit">
               Submit
             </Button>
-          </TrayControls>
-          <TrayRunway>
+          </div>
+          <div>
             <label htmlFor="title">Title</label>
             <Field id="title" name="title" placeholder="Title" />
             <label htmlFor="body">Body</label>
@@ -34,10 +31,10 @@ const PostEditorTray = ({ headerText, onSubmit }) => {
                 </div>
               )}
             </Field>
-          </TrayRunway>
+          </div>
         </Form>
       </Formik>
-    </Tray>
+    </div>
   );
 };
 

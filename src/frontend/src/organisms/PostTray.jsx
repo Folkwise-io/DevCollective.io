@@ -3,9 +3,17 @@ import { useHistory, useParams } from "react-router-dom";
 
 import Button from "../elements/Button";
 import PostCard from "../molecules/PostCard";
-import Tray from "../molecules/Tray";
-import TrayControls from "../molecules/TrayControls";
-import TrayRunway from "../molecules/TrayRunway";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-template: 1fr auto / 1fr;
+  grid-gap: 1rem;
+`;
+
+const PostWrapper = styled.div`
+  /* border: 2px solid var(--space-400); */
+`;
 
 const PostTray = ({ posts }) => {
   const history = useHistory();
@@ -13,19 +21,19 @@ const PostTray = ({ posts }) => {
   const { callsign } = useParams();
 
   return (
-    <Tray>
-      <TrayControls>
-        <div>
-          <div>New Posts</div>
-          <Button onClick={() => history.push(`/c/${callsign}/new`)}>New Post</Button>
-        </div>
-      </TrayControls>
-      <TrayRunway>
+    <Wrapper>
+      <PostWrapper>
+        <div style={{ float: "left" }}>New Posts</div>
+        <Button style={{ float: "right" }} onClick={() => history.push(`/c/${callsign}/new`)}>
+          New Post
+        </Button>
+      </PostWrapper>
+      <PostWrapper>
         {posts.map((post) => {
           return <PostCard post={post} key={post.id} />;
         })}
-      </TrayRunway>
-    </Tray>
+      </PostWrapper>
+    </Wrapper>
   );
 };
 
