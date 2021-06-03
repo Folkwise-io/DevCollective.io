@@ -12,6 +12,11 @@ const Container = styled.div`
   background: var(--space-900);
   padding: 1rem 2rem;
   border-bottom: 1px solid var(--space-500);
+  box-shadow: 0px 2px 10px 2px var(--space-500);
+
+  &:hover {
+    background-color: var(--space-700);
+  }
 `;
 
 const Logo = styled.span`

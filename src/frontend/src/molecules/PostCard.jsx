@@ -54,12 +54,19 @@ const Wrapper = styled.div`
     [row2-start] "like-count preview" auto [row2-end]
     [row3-start] ". summary" auto [row3-end]
     / auto 1fr;
+  cursor: pointer;
 
+  background-color: var(--space-600);
   &:nth-child(even) {
     background-color: var(--space-700);
   }
-  background-color: var(--space-600);
-  cursor: pointer;
+
+  &:hover {
+    background-color: var(--brand-700);
+    &:nth-child(even) {
+      background-color: var(--brand-800);
+    }
+  }
 `;
 
 const PostCard = ({ post }) => {

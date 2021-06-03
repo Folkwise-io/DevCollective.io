@@ -3,7 +3,7 @@ import React from "react";
 import { Route, Switch, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import BorderBox from "../../elements/BorderBox";
+import Card from "../../elements/Card";
 import PostTray from "../../organisms/PostTray";
 import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
@@ -68,11 +68,11 @@ const CommunityPage = () => {
           </Route>
         </Switch>
       </div>
-      <BorderBox style={{ gridArea: `a` }}>
+      <Card style={{ gridArea: `a` }}>
         <div>/c/{data.community.callsign}</div>
         <div>{data.community.description}</div>
-      </BorderBox>
-      <BorderBox style={{ gridArea: `b` }}>
+      </Card>
+      <Card style={{ gridArea: `b` }}>
         <div>WARNING - Pre-release</div>
         <div>
           This app is still in pre-release form. Please expect bugs and, if you find one, I&apos;d appreciate it if you
@@ -80,7 +80,7 @@ const CommunityPage = () => {
           platform that&apos;s deployed to a server of some sort, your data will be wiped during development every few
           days. Expect a production release in June. -Monarch
         </div>
-      </BorderBox>
+      </Card>
     </Container>
   );
 };

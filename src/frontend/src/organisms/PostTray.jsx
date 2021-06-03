@@ -11,9 +11,7 @@ const Wrapper = styled.div`
   grid-gap: 1rem;
 `;
 
-const PostWrapper = styled.div`
-  /* border: 2px solid var(--space-400); */
-`;
+const PostWrapper = styled.div``;
 
 const PostTray = ({ posts }) => {
   const history = useHistory();
