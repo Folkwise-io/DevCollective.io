@@ -8,7 +8,11 @@ const Card = styled.div`
   padding: 1rem;
   height: fit-content;
   width: fit-content;
-  grid-area: none;
+  display: grid;
+  grid-template:
+    [header-row] "header action" [header-row-end]
+    [body-row] "body body" [body-row-end]
+    / auto 1fr;
 
   &:hover {
     background-color: var(--space-700);
@@ -19,13 +23,20 @@ const Card = styled.div`
 export const CardHeader = styled.div`
   font-size: 1.4em;
   color: var(--brand-300);
+  grid-area: header;
+  align-self: center;
 `;
 
 export const CardHeaderAction = styled.div`
   height: fit-content;
   width: fit-content;
+  grid-area: action;
+  justify-self: end;
+  align-self: center;
 `;
 
-export const CardBody = styled.div``;
+export const CardBody = styled.div`
+  grid-area: body;
+`;
 
 export default Card;

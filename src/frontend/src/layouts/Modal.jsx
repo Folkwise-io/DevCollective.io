@@ -31,7 +31,7 @@ export const Modal = ({ title, children, onClose }) => {
 
   return (
     <Overlay ref={overlay} onClick={handleClose}>
-      <Card>
+      <Card style={{ gridArea: "none" }}>
         <CardHeader>{title}</CardHeader>
         <CardHeaderAction>
           <a ref={closeButton} href="#" onClick={handleClose}>
