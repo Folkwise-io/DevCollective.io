@@ -23,7 +23,6 @@ interface ConfigInstance {
   MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: number;
   SENDGRID_KEY: string;
   SENDGRID_PRINT_ONLY: boolean;
-  MB_AUTO_OPEN_BROWSER: boolean;
 }
 let instance: ConfigInstance;
 
@@ -43,7 +42,6 @@ export default () => {
       MB_ENABLE_GRAPHIQL: getConfig("MB_ENABLE_GRAPHIQL", (val) => val === "true"),
       SENDGRID_PRINT_ONLY: getConfig("SENDGRID_PRINT_ONLY", (val) => val === "true"),
       MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig("MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE", (val) => +val),
-      MB_AUTO_OPEN_BROWSER: getConfig("MB_AUTO_OPEN_BROWSER", (val) => val === "true"),
     };
   }
 

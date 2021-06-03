@@ -73,7 +73,6 @@
     "graphql-depth-limit": "^1.1.0",
     "graphql-tools": "^7.0.5",
     "knex": "^0.95.6",
-    "open": "^8.2.0",
     "pg": "^8.6.0",
     "react": "^17.0.2",
     "react-codemirror2": "^7.2.1",
