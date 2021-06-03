@@ -3,7 +3,9 @@ import React from "react";
 
 import Button from "../elements/Button";
 import MarkdownEditor from "../molecules/MarkdownEditor";
-import { Tray, TrayControls, TrayRunway } from "../molecules/Tray";
+import Tray from "../molecules/Tray";
+import TrayControls from "../molecules/TrayControls";
+import TrayRunway from "../molecules/TrayRunway";
 
 const PostEditorTray = ({ headerText, onSubmit }) => {
   return (
