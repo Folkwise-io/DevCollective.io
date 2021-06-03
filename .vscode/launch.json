@@ -5,9 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Server",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["dev"],
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
       "type": "pwa-node", // change to pwa-node once this issue is fixed. https://github.com/microsoft/vscode/issues/110049
       "runtimeExecutable": "node",
-      "name": "vscode-jest-tests",
+      "name": "TDD",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": ["--runInBand", "--no-cache", "--watchAll", "--forceExit", "--detectOpenHandles", "--colors"],
@@ -21,14 +29,6 @@
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }
-    },
-    {
-      "type": "pwa-node",
-      "request": "launch",
-      "name": "Backend",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["dev"],
-      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

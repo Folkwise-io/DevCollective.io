@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import $ from "./AuthButton.scss";
+import React, { useContext, useEffect, useState } from "react";
+
 import AuthModal, { pages } from "../modals/AuthModal";
 import { StateContext } from "../state";
 import { post } from "../utils/rest-api";
@@ -9,40 +9,42 @@ const AuthButton = () => {
   const [modalPage, setModalPage] = useState(null);
   const { user } = state;
 
-  useEffect(async () => {
-    const response = await post("/auth/check");
-    if (response.ok) {
-      dispatch({
-        type: "setUser",
-        payload: response.body,
-      });
-    }
-  }, []);
+  useEffect(() => {
+    (async () => {
+      const response = await post(`/auth/check`);
+      if (response.ok) {
+        dispatch({
+          type: `setUser`,
+          payload: response.body,
+        });
+      }
+    })();
+  }, [dispatch]);
 
   const signOut = async () => {
-    const response = await post("/auth/logout");
+    const response = await post(`/auth/logout`);
 
     if (response.ok) {
       dispatch({
-        type: "unsetUser",
+        type: `unsetUser`,
       });
     }
   };
 
   return (
-    <div className={$.root}>
+    <div>
       {modalPage && <AuthModal page={modalPage} onClose={() => setModalPage(null)} />}
       {user && (
-        <a href="#" onClick={() => signOut()} className={$.text}>
+        <a href="#" onClick={() => signOut()}>
           Sign Out
         </a>
       )}
       {!user && (
         <>
-          <a href="#" onClick={() => setModalPage(pages.signin)} className={$.text}>
+          <a href="#" onClick={() => setModalPage(pages.signin)}>
             Sign In
           </a>
-          <a href="#" onClick={() => setModalPage(pages.signup)} className={$.text}>
+          <a href="#" onClick={() => setModalPage(pages.signup)}>
             Sign Up
           </a>
         </>

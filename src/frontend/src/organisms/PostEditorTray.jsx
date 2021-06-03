@@ -1,47 +1,40 @@
-import React, { useState, useEffect } from "react";
-import $ from "./PostEditorTray.scss";
-import { Tray, TrayControls, TrayRunway } from "../molecules/Tray";
+import { Field, Form, Formik } from "formik";
+import React from "react";
+
 import Button from "../elements/Button";
 import MarkdownEditor from "../molecules/MarkdownEditor";
-import { Field, Form, Formik } from "formik";
 
-const PostEditorTray = ({ title, body, headerText, onSubmit }) => {
-  // const [state] = useState({ title: title || "", body: body || "" });
-
+const PostEditorTray = ({ headerText, onSubmit }) => {
   return (
-    <Tray>
-      <Formik initialValues={{ title: "", body: "" }} onSubmit={onSubmit}>
-        <Form className={$.form}>
-          <TrayControls>
+    <div>
+      <Formik initialValues={{ title: ``, body: `` }} onSubmit={onSubmit}>
+        <Form>
+          <div>
             {headerText}
-            <Button style={{ float: "right" }} type="submit">
+            <Button style={{ float: `right` }} type="submit">
               Submit
             </Button>
-          </TrayControls>
-          <TrayRunway>
-            <label htmlFor="title" className={$.label}>
-              Title
-            </label>
-            <Field id="title" name="title" placeholder="Title" className={$.input} />
-            <label htmlFor="body" className={$.label}>
-              Body
-            </label>
+          </div>
+          <div>
+            <label htmlFor="title">Title</label>
+            <Field id="title" name="title" placeholder="Title" />
+            <label htmlFor="body">Body</label>
             <Field name="body" id="body">
-              {({ field, form, meta }) => (
-                <div className={$.editorWrapper}>
+              {({ field, form }) => (
+                <div>
                   <MarkdownEditor
                     value={field.value}
                     onBeforeChange={(val) => {
-                      form.setFieldValue("body", val);
+                      form.setFieldValue(`body`, val);
                     }}
                   />
                 </div>
               )}
             </Field>
-          </TrayRunway>
+          </div>
         </Form>
       </Formik>
-    </Tray>
+    </div>
   );
 };
 

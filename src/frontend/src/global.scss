@@ -1,0 +1,54 @@
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap");
+
+$space: #474747;
+$colors: (
+  brand: hsl(268, 97%, 65%),
+  green: hsl(76, 100%, 66%),
+  red: hsl(0, 79%, 55%),
+  aqua: hsl(184, 100%, 66%),
+  blue: hsl(221, 100%, 69%),
+);
+
+:root {
+  @each $colorName, $value in $colors {
+    --#{"" + $colorName}-100: #{color.scale($value, $lightness: 90%)};
+    --#{"" + $colorName}-200: #{color.scale($value, $lightness: 70%)};
+    --#{"" + $colorName}-300: #{color.scale($value, $lightness: 40%)};
+    --#{"" + $colorName}-400: #{color.scale($value, $lightness: 20%)};
+    --#{"" + $colorName}-500: #{$value};
+    --#{"" + $colorName}-600: #{color.scale($value, $blackness: 10%)};
+    --#{"" + $colorName}-700: #{color.scale($value, $blackness: 30%)};
+    --#{"" + $colorName}-800: #{color.scale($value, $blackness: 50%)};
+    --#{"" + $colorName}-900: #{color.scale($value, $blackness: 80%)};
+  }
+
+  --space-100: #{color.scale($space, $lightness: 100%)};
+  --space-200: #{color.scale($space, $lightness: 80%)};
+  --space-300: #{color.scale($space, $lightness: 40%)};
+  --space-400: #{color.scale($space, $lightness: 20%)};
+  --space-500: #{color.scale($space, $lightness: 0%)};
+  --space-600: #{color.scale($space, $blackness: 5%)};
+  --space-700: #{color.scale($space, $blackness: 35%)};
+  --space-800: #{color.scale($space, $blackness: 50%)};
+  --space-900: #{color.scale($space, $blackness: 90%)};
+}
+
+body {
+  margin: 0px;
+  font-family: "Source Sans Pro";
+  background: var(--space-600);
+  color: var(--space-200);
+  ::selection {
+    background-color: var(--brand-200);
+    color: var(--brand-900);
+  }
+}
+
+a {
+  color: var(--red-300);
+  &:visited {
+    color: var(--blue-400);
+  }
+  text-decoration: underline;
+}

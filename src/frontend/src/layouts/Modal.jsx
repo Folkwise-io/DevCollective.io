@@ -1,5 +1,21 @@
 import React, { useRef } from "react";
-import $ from "./Modal.scss";
+import styled from "styled-components";
+import Card, { CardHeader, CardHeaderAction, CardBody } from "../elements/Card";
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 70%);
+  display: grid;
+  justify-content: center;
+  grid-column: 1fr;
+  grid-row: 1fr;
+  /* grid-area: nothing; */
+`;
 
 export const Modal = ({ title, children, onClose }) => {
   const overlay = useRef();
@@ -14,18 +30,16 @@ export const Modal = ({ title, children, onClose }) => {
   };
 
   return (
-    <div className={$.root} ref={overlay} onClick={handleClose}>
-      <div className={$.main}>
-        <div className={$.header}>
-          <div className={$.title}>{title}</div>
-          <a className={$.closeButton} ref={closeButton} href="#" onClick={handleClose}>
+    <Overlay ref={overlay} onClick={handleClose}>
+      <Card style={{ gridArea: "none" }}>
+        <CardHeader>{title}</CardHeader>
+        <CardHeaderAction>
+          <a ref={closeButton} href="#" onClick={handleClose}>
             Close
           </a>
-        </div>
-        <div className={$.body}>
-          <div className={$.bodyContent}>{children}</div>
-        </div>
-      </div>
-    </div>
+        </CardHeaderAction>
+        <CardBody>{children}</CardBody>
+      </Card>
+    </Overlay>
   );
 };

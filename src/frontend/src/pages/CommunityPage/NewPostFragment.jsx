@@ -18,7 +18,7 @@ const NewPostFragment = () => {
           url
         }
       }
-    `,
+    `
   );
 
   const handleSubmit = async ({ title, body }) => {
