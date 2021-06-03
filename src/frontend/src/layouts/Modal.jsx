@@ -1,4 +1,20 @@
 import React, { useRef } from "react";
+import styled from "styled-components";
+import Card, { CardHeader } from "../elements/Card";
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 70%);
+`;
+
+const Body = styled(Card)`
+  margin: auto auto;
+`;
 
 export const Modal = ({ title, children, onClose }) => {
   const overlay = useRef();
@@ -13,10 +29,10 @@ export const Modal = ({ title, children, onClose }) => {
   };
 
   return (
-    <div ref={overlay} onClick={handleClose}>
-      <div>
+    <Overlay ref={overlay} onClick={handleClose}>
+      <Body>
         <div>
-          <div>{title}</div>
+          <CardHeader>{title}</CardHeader>
           <a ref={closeButton} href="#" onClick={handleClose}>
             Close
           </a>
@@ -24,7 +40,7 @@ export const Modal = ({ title, children, onClose }) => {
         <div>
           <div>{children}</div>
         </div>
-      </div>
-    </div>
+      </Body>
+    </Overlay>
   );
 };
