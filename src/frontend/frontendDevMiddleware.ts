@@ -3,11 +3,11 @@ import webpack from "webpack";
 import path from "path";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
-// @ts-expect-error no types found
+// @ts-ignore
 import reactRefresh from "react-refresh/babel";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import fs from "fs";
-// @ts-expect-error no types found
+// @ts-ignore
 import babelTransformRuntime from "@babel/plugin-transform-runtime";
 
 const frontendDevMiddleware = (app: Application) => {
@@ -68,11 +68,6 @@ const frontendDevMiddleware = (app: Application) => {
             { loader: "style-loader" },
             {
               loader: "css-loader",
-              options: {
-                modules: {
-                  localIdentName: "[local]__[hash:base64:5]",
-                },
-              },
             },
             { loader: "sass-loader" },
           ],

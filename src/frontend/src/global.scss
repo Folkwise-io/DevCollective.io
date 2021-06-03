@@ -11,16 +11,16 @@ $colors: (
 );
 
 :root {
-  @each $color, $value in $colors {
-    --#{$color}-100: #{color.scale($value, $lightness: 90%)};
-    --#{$color}-200: #{color.scale($value, $lightness: 70%)};
-    --#{$color}-300: #{color.scale($value, $lightness: 40%)};
-    --#{$color}-400: #{color.scale($value, $lightness: 20%)};
-    --#{$color}-500: #{$value};
-    --#{$color}-600: #{color.scale($value, $blackness: 10%)};
-    --#{$color}-700: #{color.scale($value, $blackness: 30%)};
-    --#{$color}-800: #{color.scale($value, $blackness: 50%)};
-    --#{$color}-900: #{color.scale($value, $blackness: 80%)};
+  @each $colorName, $value in $colors {
+    --#{"" + $colorName}-100: #{color.scale($value, $lightness: 90%)};
+    --#{"" + $colorName}-200: #{color.scale($value, $lightness: 70%)};
+    --#{"" + $colorName}-300: #{color.scale($value, $lightness: 40%)};
+    --#{"" + $colorName}-400: #{color.scale($value, $lightness: 20%)};
+    --#{"" + $colorName}-500: #{$value};
+    --#{"" + $colorName}-600: #{color.scale($value, $blackness: 10%)};
+    --#{"" + $colorName}-700: #{color.scale($value, $blackness: 30%)};
+    --#{"" + $colorName}-800: #{color.scale($value, $blackness: 50%)};
+    --#{"" + $colorName}-900: #{color.scale($value, $blackness: 80%)};
   }
 
   --space-100: #{color.scale($space, $lightness: 90%)};
