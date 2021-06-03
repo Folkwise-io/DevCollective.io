@@ -5,6 +5,53 @@ import Button from "../elements/Button";
 import { Modal } from "../layouts/Modal";
 import { StateContext } from "../state";
 import { post } from "../utils/rest-api";
+import styled from "styled-components";
+
+const FormWrapper = styled.div`
+  form {
+    display: grid;
+  }
+  input {
+    padding: 1em;
+    outline: none;
+    width: 100%;
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+`;
+
+const SigninFormWrapper = styled(FormWrapper)`
+  form {
+    grid-template:
+      [row2-start] "email" [row2-end]
+      [row3-start] "password" [row3-end]
+      [row4-start] "submit" [row4-end]
+      / 1fr;
+    grid-gap: 1em;
+  }
+`;
+
+const SignupFormWrapper = styled(FormWrapper)`
+  form {
+    grid-template:
+      [row1-start] "firstName lastName" auto [row1-end]
+      [row2-start] "email email" [row2-end]
+      [row3-start] "password password" [row3-end]
+      [row4-start] "submit submit" [row4-end]
+      / 1fr 1fr;
+    grid-gap: 1em;
+  }
+`;
+
+const makeField = ({ label, id, type = "input" }) => (
+  <label htmlFor={id} style={{ gridArea: id }}>
+    First Name
+    <Field id={id} name={id} type={type} placeholder={label} />
+  </label>
+);
 
 export const pages = {
   signup: `SIGNUP`,
@@ -35,37 +82,33 @@ const AuthModal = ({ onClose, page }) => {
   if (pageMode === pages.signup) {
     return (
       <Modal title="Sign Up" onClose={() => onClose()}>
-        <div>
+        <SignupFormWrapper>
           <Formik initialValues={{ firstName: ``, lastName: ``, email: ``, password: `` }} onSubmit={onSubmit}>
             <Form>
-              <label htmlFor="firstName">First Name</label>
-              <Field id="firstName" name="firstName" placeholder="First Name" />
-              <label htmlFor="lastName">Last Name</label>
-              <Field id="lastName" name="lastName" placeholder="Last Name" />
-              <label htmlFor="email">Email</label>
-              <Field id="email" name="email" placeholder="Email" />
-              <label htmlFor="password">Password</label>
-              <Field id="password" name="password" placeholder="Password" />
-              <Button type="submit">Submit</Button>
+              {makeField({ id: "firstName", label: "First Name" })}
+              {makeField({ id: "lastName", label: "Last Name" })}
+              {makeField({ id: "email", label: "Email" })}
+              {makeField({ id: "password", label: "Password", type: "password" })}
+              <Button type="submit" style={{ gridArea: "submit" }}>
+                Submit
+              </Button>
             </Form>
           </Formik>
-        </div>
+        </SignupFormWrapper>
       </Modal>
     );
   } else {
     return (
       <Modal title="Sign In" onClose={() => onClose()}>
-        <div>
+        <SigninFormWrapper>
           <Formik initialValues={{ email: ``, password: `` }} onSubmit={onSubmit}>
             <Form>
-              <label htmlFor="email">Email</label>
-              <Field id="email" name="email" placeholder="Email" />
-              <label htmlFor="password">Password</label>
-              <Field id="password" name="password" placeholder="Password" />
+              {makeField({ id: "email", label: "Email" })}
+              {makeField({ id: "password", label: "Password", type: "password" })}
               <Button type="submit">Submit</Button>
             </Form>
           </Formik>
-        </div>
+        </SigninFormWrapper>
       </Modal>
     );
   }

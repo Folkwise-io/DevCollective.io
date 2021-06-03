@@ -8,7 +8,7 @@ import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
 import ViewPostFragment from "./ViewPostFragment";
 
-import Card, { CardHeader } from "../../elements/Card";
+import Card, { CardHeader, CardBody } from "../../elements/Card";
 
 const Container = styled.div`
   display: grid;
@@ -71,16 +71,16 @@ const CommunityPage = () => {
       </div>
       <Card style={{ gridArea: `a` }}>
         <CardHeader>/c/{data.community.callsign}</CardHeader>
-        <div>{data.community.description}</div>
+        <CardBody>{data.community.description}</CardBody>
       </Card>
       <Card style={{ gridArea: `b` }}>
         <CardHeader>WARNING - Pre-release</CardHeader>
-        <div>
+        <CardBody>
           This app is still in pre-release form. Please expect bugs and, if you find one, I&apos;d appreciate it if you
           reported it to me -- chances are I&apos;m unaware of it. Also, if you&apos;re currently using a version of the
           platform that&apos;s deployed to a server of some sort, your data will be wiped during development every few
           days. Expect a production release in June. -Monarch
-        </div>
+        </CardBody>
       </Card>
     </Container>
   );

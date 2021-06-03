@@ -4,6 +4,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "baseUrl": ".",
-    "paths": {"@app/*": ["src/*"]}
+    "paths": { "@app/*": ["src/*"] },
+    "jsx": "react-jsx"
   }
 }
