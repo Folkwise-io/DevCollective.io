@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
@@ -70,8 +70,9 @@ const Wrapper = styled.div`
 `;
 
 const PostCard = ({ post }) => {
-  const { title, author, community, url } = post;
   const history = useHistory();
+  const { title, author, community, url, id } = post;
+  const [isLiked, setLiked] = useState(false);
 
   const summaryFragments = [];
   if (author) {
@@ -94,9 +95,20 @@ const PostCard = ({ post }) => {
     }
   }
 
+  const heartIconClasses = isLiked ? "fas fa-heart" : "far fa-heart";
+
   return (
     <Wrapper onClick={() => history.push(url)}>
-      <Heart>&lt;3</Heart>
+      <Heart>
+        <i
+          className={heartIconClasses}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setLiked(!isLiked);
+          }}
+        ></i>
+      </Heart>
       <LikeCount>29</LikeCount>
       <Title>
         <Link to={url}>{title}</Link>
