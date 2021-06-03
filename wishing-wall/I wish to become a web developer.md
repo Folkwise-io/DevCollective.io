@@ -1,7 +1,7 @@
 # Wish of a wandering mind
 
      Emsad Ahmetašević
- [Website](https://emsad87.github.io/) | [LinkedIn](https://www.linkedin.com/in/emsad/) | [Twitter]([LinkedIn](https://www.linkedin.com/in/emsad/))
+ [Website](https://emsad87.github.io/) | [LinkedIn](https://www.linkedin.com/in/emsad/) | [Twitter](https://twitter.com/emsad87)
 
 ## I wish to become a web developer
 
