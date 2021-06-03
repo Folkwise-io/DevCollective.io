@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import Button from "../elements/Button";
 import PostCard from "../molecules/PostCard";
 import styled from "styled-components";
+import Card from "../elements/Card";
 
 const Wrapper = styled.div`
   display: grid;
@@ -11,7 +12,15 @@ const Wrapper = styled.div`
   grid-gap: 1rem;
 `;
 
-const PostWrapper = styled.div``;
+const LeftButtons = styled.div`
+  height: 100%;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1em;
+  font-weight: bold;
+`;
 
 const PostTray = ({ posts }) => {
   const history = useHistory();
@@ -20,17 +29,17 @@ const PostTray = ({ posts }) => {
 
   return (
     <Wrapper>
-      <PostWrapper>
-        <div style={{ float: "left" }}>New Posts</div>
+      <Card>
+        <LeftButtons>New Posts</LeftButtons>
         <Button style={{ float: "right" }} onClick={() => history.push(`/c/${callsign}/new`)}>
           New Post
         </Button>
-      </PostWrapper>
-      <PostWrapper>
+      </Card>
+      <Card>
         {posts.map((post) => {
           return <PostCard post={post} key={post.id} />;
         })}
-      </PostWrapper>
+      </Card>
     </Wrapper>
   );
 };
