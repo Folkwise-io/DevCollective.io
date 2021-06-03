@@ -3,11 +3,28 @@ import React from "react";
 import { Route, Switch, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import Card from "../../elements/Card";
 import PostTray from "../../organisms/PostTray";
 import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
 import ViewPostFragment from "./ViewPostFragment";
+
+const Card = styled.div`
+  background-color: var(--space-800);
+  border: 1px solid var(--space-900);
+  box-shadow: 0px 2px 10px 2px var(--space-500);
+  border-radius: 3px;
+  padding: 1rem;
+
+  &:hover {
+    background-color: var(--space-700);
+    box-shadow: 0px 2px 10px 2px var(--space-400);
+  }
+`;
+
+const CardHeader = styled.div`
+  font-size: 1.4em;
+  color: var(--brand-300);
+`;
 
 const Container = styled.div`
   display: grid;
@@ -69,11 +86,11 @@ const CommunityPage = () => {
         </Switch>
       </div>
       <Card style={{ gridArea: `a` }}>
-        <div>/c/{data.community.callsign}</div>
+        <CardHeader>/c/{data.community.callsign}</CardHeader>
         <div>{data.community.description}</div>
       </Card>
       <Card style={{ gridArea: `b` }}>
-        <div>WARNING - Pre-release</div>
+        <CardHeader>WARNING - Pre-release</CardHeader>
         <div>
           This app is still in pre-release form. Please expect bugs and, if you find one, I&apos;d appreciate it if you
           reported it to me -- chances are I&apos;m unaware of it. Also, if you&apos;re currently using a version of the

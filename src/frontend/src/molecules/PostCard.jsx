@@ -12,7 +12,7 @@ const Heart = styled.div`
 const Title = styled.div`
   grid-area: title;
   padding: 0px 20px;
-  font-size: 18px;
+  font-size: 1.2em;
   font-weight: bold;
 
   & a {
@@ -24,14 +24,14 @@ const Title = styled.div`
 
 const LikeCount = styled.div`
   grid-area: like-count;
-  padding: 0 20px;
+  padding: 0 1.2em;
   color: var(--space-200);
   font-weight: bold;
 `;
 
 const Preview = styled.div`
   grid-area: preview;
-  font-size: 14px;
+  font-size: 0.95em;
   color: var(--space-200);
   padding: 0px 20px;
 `;
