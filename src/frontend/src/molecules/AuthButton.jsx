@@ -31,7 +31,7 @@ const AuthButton = () => {
     }
   };
 
-const btn = "btn btn-outline-secondary m-1"
+  const btn = "btn btn-outline-secondary m-1"
 
   return (
     <div>
