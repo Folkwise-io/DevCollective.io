@@ -105,7 +105,7 @@
 ###### 8. <span style="color: dodgerblue">Then you can <strong style="color: orange">RUN:</strong></span>
 ```git add .```
 ###### 9. <span style="color: dodgerblue">Next you can <strong style="color: orange">RUN:</strong></span>
-```git commit -m "a new name for this new commit```
+```git commit -m "a new name for this new commit"```
 
 ###### 10. <span style="color: dodgerblue">Then you can <strong style="color: orange">RUN:</strong></span> 
 ```git push -u origin exampleCategory/exampleName```
