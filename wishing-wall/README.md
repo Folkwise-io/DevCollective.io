@@ -9,4 +9,4 @@ When your wish comes true, open a PR to delete your file.
 
 May you discover all that you're looking for.
 
-The fortune you seek is in another cookie. 
+> The fortune you seek is in another cookie. --Rahul Jain
