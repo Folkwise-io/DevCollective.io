@@ -31,20 +31,22 @@ const AuthButton = () => {
     }
   };
 
+const btn = "btn btn-outline-secondary m-1"
+
   return (
     <div>
       {modalPage && <AuthModal page={modalPage} onClose={() => setModalPage(null)} />}
       {user && (
-        <a href="#" onClick={() => signOut()}>
+        <a className={btn} href="#" onClick={() => signOut()}>
           Sign Out
         </a>
       )}
       {!user && (
         <>
-          <a href="#" onClick={() => setModalPage(pages.signin)}>
+          <a className={btn} href="#" onClick={() => setModalPage(pages.signin)}>
             Sign In
           </a>
-          <a href="#" onClick={() => setModalPage(pages.signup)}>
+          <a className={btn} href="#" onClick={() => setModalPage(pages.signup)}>
             Sign Up
           </a>
         </>
