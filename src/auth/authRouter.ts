@@ -131,7 +131,7 @@ authRouter.post("/register", async (req, res) => {
 
     // TODO: set hash on user
     const confirmUrl = `https://devcollective.io/auth/token?${confirmationToken}&email=${encodeURIComponent(
-      newUser.email,
+      newUser.email
     )}`;
     sendEmail({
       from: "noreply@devcollective.io",
@@ -150,7 +150,7 @@ authRouter.post("/register", async (req, res) => {
     return res.json(newUser);
   } catch (e) {
     return fail(
-      "Unexpected failure. User may or may not have been created. Aconfirmation email may not have been sent. Try logging in.",
+      "Unexpected failure. User may or may not have been created. Aconfirmation email may not have been sent. Try logging in."
     );
   }
 });
@@ -234,7 +234,7 @@ authRouter.post("/forgot/request", async (req, res) => {
   });
 
   const confirmUrl = `https://devcollective.io/auth/token?${forgotPasswordToken}&email=${encodeURIComponent(
-    user.email,
+    user.email
   )}`;
 
   await sendEmail({

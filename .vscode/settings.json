@@ -7,5 +7,6 @@
   },
   "files.watcherExclude": {
     "/wishing-well/**/*": true
-  }
+  },
+  "jest.jestCommandLine": "yarn test"
 }

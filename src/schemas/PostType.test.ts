@@ -26,7 +26,7 @@ describe("Post object", () => {
     describe("sunny cases", () => {
       it("can fetch all posts", async () => {
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
             {
               posts {
                 id,
@@ -34,7 +34,7 @@ describe("Post object", () => {
                 body,
               }
             }
-          `,
+          `
         );
 
         expect(response.body.data.posts.map((p: any) => p.id).sort()).toEqual(posts.map((p: any) => p.id).sort());
@@ -49,7 +49,7 @@ describe("Post object", () => {
         };
 
         const response = await query(app).gqlMutation(
-          `
+          `#graphql
           mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: String!) {
             createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
               id
@@ -67,7 +67,7 @@ describe("Post object", () => {
             }
           }
         `,
-          params,
+          params
         );
 
         expect(response.body?.errors?.length).toBeFalsy();
@@ -85,7 +85,7 @@ describe("Post object", () => {
         const expectedCommunity = communities.find((c: any) => c.id === post.communityId);
 
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
           query Query($id: String!) {
             post(id: $id) {
               id,
@@ -100,7 +100,7 @@ describe("Post object", () => {
           `,
           {
             id: post.id,
-          },
+          }
         );
 
         const responsePost = response.body.data.post;
@@ -113,37 +113,37 @@ describe("Post object", () => {
     describe("rainy cases", () => {
       it("does not provide email", async () => {
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
           {
             users {
               email
             }
           }
-        `,
+        `
         );
         expect(response.body.errors[0].message).toEqual('Cannot query field "email" on type "User".');
       });
       it("does not provide password", async () => {
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
           {
             users {
               password
             }
           }
-        `,
+        `
         );
         expect(response.body.errors[0].message).toEqual('Cannot query field "password" on type "User".');
       });
       it("does not provide passwordHash", async () => {
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
           {
             users {
               passwordHash
             }
           }
-        `,
+        `
         );
         expect(response.body.errors[0].message).toEqual('Cannot query field "passwordHash" on type "User".');
       });
