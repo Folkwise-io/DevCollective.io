@@ -22,7 +22,6 @@ describe("Forgot Password", () => {
   let data: PromiseValue<ReturnType<typeof datasetLoader>>;
 
   const defaultPassword = "password";
-  const newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
 
   beforeAll(async () => {
     await clearDatabase();

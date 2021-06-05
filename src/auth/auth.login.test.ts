@@ -1,17 +1,11 @@
 import appFactory from "../appFactory";
 import { Express } from "express";
 import TestManager from "../test/TestManager";
-import { createUser } from "../service/UserService";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import sgMail from "@sendgrid/mail";
-import { getUserByEmail, getUserById, updateUser } from "../data/UserRepo";
-import { v4 } from "uuid";
 import { PromiseValue } from "type-fest";
-import bcrypt from "bcrypt";
-import subDays from "date-fns/subDays";
-import addDays from "date-fns/addDays";
-import { extractUuidTokenFromEmail, getDefaultUser, getSentEmail } from "../test/utils";
+import { getDefaultUser } from "../test/utils";
 
 // disable emails
 jest.mock("@sendgrid/mail");

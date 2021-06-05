@@ -5,13 +5,10 @@ import { createUser } from "../service/UserService";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import sgMail from "@sendgrid/mail";
-import { getUserByEmail, getUserById, updateUser } from "../data/UserRepo";
+import { getUserByEmail, getUserById } from "../data/UserRepo";
 import { v4 } from "uuid";
 import { PromiseValue } from "type-fest";
-import bcrypt from "bcrypt";
-import subDays from "date-fns/subDays";
-import addDays from "date-fns/addDays";
-import { extractUuidTokenFromEmail, getDefaultUser, getSentEmail } from "../test/utils";
+import { extractUuidTokenFromEmail, getSentEmail } from "../test/utils";
 
 // disable emails
 jest.mock("@sendgrid/mail");
@@ -21,7 +18,6 @@ describe("Authentication", () => {
   let app: Express;
   let data: PromiseValue<ReturnType<typeof datasetLoader>>;
 
-  const defaultPassword = "password";
   const newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
 
   beforeAll(async () => {
