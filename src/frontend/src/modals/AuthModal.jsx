@@ -46,9 +46,11 @@ const SignupFormWrapper = styled(FormWrapper)`
   }
 `;
 
+
+
 const makeField = ({ label, id, type = "input" }) => (
   <label htmlFor={id} style={{ gridArea: id }}>
-    First Name
+      {label}
     <Field id={id} name={id} type={type} placeholder={label} />
   </label>
 );

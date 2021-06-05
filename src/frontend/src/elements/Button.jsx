@@ -8,6 +8,7 @@ const Button = styled.button`
   font: 1.2em;
   cursor: pointer;
   box-shadow: 0px 2px 10px 2px var(--space-400);
+  margin: 2px;
 
   &:hover {
     background-color: var(--blue-300);
