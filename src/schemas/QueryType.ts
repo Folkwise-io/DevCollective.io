@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList, GraphQLString } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLID } from "graphql";
 import { getAllUserIds } from "../data/UserRepo";
 import { getAllCommunityIds, getCommunityIdByCallsign } from "../data/CommunityRepo";
 import { getAllPostIds } from "../data/PostRepo";
@@ -15,7 +15,7 @@ export default new GraphQLObjectType({
         type: UserType,
         args: {
           id: {
-            type: GraphQLString,
+            type: GraphQLID,
           },
         },
         resolve: (_, args) => {
@@ -30,7 +30,7 @@ export default new GraphQLObjectType({
         type: CommunityType,
         args: {
           id: {
-            type: GraphQLString,
+            type: GraphQLID,
           },
           callsign: {
             type: GraphQLString,
@@ -68,7 +68,7 @@ export default new GraphQLObjectType({
         type: PostType,
         args: {
           id: {
-            type: GraphQLString,
+            type: GraphQLID,
           },
           callsign: {
             type: GraphQLString,

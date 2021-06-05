@@ -38,7 +38,12 @@ describe("Community object", () => {
         );
 
         expect(response.body.data.communities).toMatchObject(
-          communities.map((c: any) => ({ id: c.id, title: c.title, description: c.description, callsign: c.callsign }))
+          communities.map((c: any) => ({
+            id: "" + c.id, // graphql always returns string for id fields, as per spec
+            title: c.title,
+            description: c.description,
+            callsign: c.callsign,
+          }))
         );
       });
 
@@ -62,7 +67,7 @@ describe("Community object", () => {
         );
 
         expect(response.body.data.community).toMatchObject({
-          id: c.id,
+          id: "" + c.id,
           title: c.title,
           description: c.description,
           callsign: c.callsign,
@@ -101,7 +106,7 @@ describe("Community object", () => {
         it("requires either id and callsign", async () => {
           const response = await query(app).gqlQuery(
             `#graphql
-            query Query($callsign: String, $id: Number) {
+            query Query($callsign: String, $id: ID) {
               community(callsign: $callsign, id: $id) {
                 id
               }

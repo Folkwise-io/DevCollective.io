@@ -31,12 +31,15 @@ export const datasetLoader = async (datasetName: string, verbose = false) => {
   };
 
   const seqReset = async (tableName: string) => {
-    log(`Resetting ID sequence for table ${tableName}`);
+    log(`Resetting ID sequence for table ${tableName}...`);
     const maxIdQuery = await knex(tableName).max("id as maxId").first();
-    if (!maxIdQuery || maxIdQuery.maxId === undefined) {
+    const maxId = maxIdQuery?.maxId;
+    if (maxId === undefined) {
       throw new Error("Did not receive maxIdQuery for table " + tableName);
     }
-    await knex.raw(`ALTER SEQUENCE ${tableName}_id_seq RESTART WITH ${maxIdQuery.maxId}`);
+    const newAmount = maxId + 1;
+    log(`Resetting ID sequence for table ${tableName} to ${newAmount}`);
+    await knex.raw(`ALTER SEQUENCE ${tableName}_id_seq RESTART WITH ${newAmount}`);
   };
 
   await k("users", users);
