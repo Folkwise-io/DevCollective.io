@@ -144,7 +144,10 @@ describe("Forgot Password", () => {
       await tm.raw().post(forgotPasswordUrl, { email: "lol" }).expect(400);
       await tm.raw().post(forgotPasswordUrl, {}).expect(400);
       await tm.raw().post(forgotPasswordUrl, { email: "good@email.com", other: "some-unexpected-data" }).expect(400);
+      expect(sgMail.send).toHaveBeenCalledTimes(0);
+    });
 
+    it("validates email", async () => {
       // test bad emails
       await tm.forgotRequest("bademail").expect(400);
       await tm.forgotRequest("bademail@").expect(400);
@@ -156,8 +159,16 @@ describe("Forgot Password", () => {
       await tm.forgotRequest("bademail@something ").expect(400);
       await tm.forgotRequest("bademail ").expect(400);
       await tm.forgotRequest("lol@bademail .com").expect(400);
+
+      // capitals
+      await tm.forgotRequest("UPPERCASE@EMAIL.COM").expect(400);
+      await tm.forgotRequest("lowerCamel@email.com").expect(400);
+      await tm.forgotRequest("UpperCamel@email.com").expect(400);
+      await tm.forgotRequest("user@EMAIL.com").expect(400);
+      await tm.forgotRequest("user@email.COM").expect(400);
       expect(sgMail.send).toHaveBeenCalledTimes(0);
     });
+
     it("should send a 200 and do nothing when the email does not exist", async () => {
       const badEmail = "doesnotexist@email.com";
 

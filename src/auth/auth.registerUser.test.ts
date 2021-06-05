@@ -102,6 +102,14 @@ describe("Authentication", () => {
       await tm.register({ ...newUser, email: "bademail@something " }).expect(400);
       await tm.register({ ...newUser, email: "bademail " }).expect(400);
       await tm.register({ ...newUser, email: "lol@bademail .com" }).expect(400);
+
+      // lowercase only
+      await tm.register({ ...newUser, email: "UPPERCASE@EMAIL.COM" }).expect(400);
+      await tm.register({ ...newUser, email: "lowerCamel@email.com" }).expect(400);
+      await tm.register({ ...newUser, email: "UpperCamel@email.com" }).expect(400);
+      await tm.register({ ...newUser, email: "user@EMAIL.com" }).expect(400);
+      await tm.register({ ...newUser, email: "user@email.COM" }).expect(400);
+
       expect(sgMail.send).toHaveBeenCalledTimes(0);
     });
 

@@ -96,6 +96,14 @@ describe("Authentication", () => {
         await tm.login("bademail@something ", defaultPassword).expect(400);
         await tm.login("bademail ", defaultPassword).expect(400);
         await tm.login("lol@bademail .com", defaultPassword).expect(400);
+
+        // capitals
+        await tm.login("UPPERCASE@EMAIL.COM", defaultPassword).expect(400);
+        await tm.login("lowerCamel@email.com", defaultPassword).expect(400);
+        await tm.login("UpperCamel@email.com", defaultPassword).expect(400);
+        await tm.login("user@EMAIL.com", defaultPassword).expect(400);
+        await tm.login("user@email.COM", defaultPassword).expect(400);
+
         expect(sgMail.send).toHaveBeenCalledTimes(0);
       });
 

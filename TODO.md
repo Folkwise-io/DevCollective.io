@@ -1,11 +1,5 @@
 CURRENT
 
-- BE: make email non-case-sensitive
-
-  - Login: It does not accept emails with whitespaces around them. (i.e. " email@email.com" and "email@email.com " are rejected)
-  - All endpoints: It stores emails as lowercase, regardless of source casing.
-  - All endpoints: It retrieves emails as lowercase, regardless of source casing.
-
 - BE: if user email is not confirmed, `user.accountConfirmed` flag on the `/auth` calls should be `true`
 - BE: SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
 
@@ -102,6 +96,7 @@ DONE
 - Sign up + emails.
 - confirm account backend
 - reset password backend
+- BE: make email lowercase-only
 
 KNOWN ISSUES
 
