@@ -46,9 +46,11 @@ const SignupFormWrapper = styled(FormWrapper)`
   }
 `;
 
+
+
 const makeField = ({ label, id, type = "input" }) => (
   <label htmlFor={id} style={{ gridArea: id }}>
-    First Name
+      {label}
     <Field id={id} name={id} type={type} placeholder={label} />
   </label>
 );
@@ -103,7 +105,7 @@ const AuthModal = ({ onClose, page }) => {
         <SigninFormWrapper>
           <Formik initialValues={{ email: ``, password: `` }} onSubmit={onSubmit}>
             <Form>
-              {makeField({ id: "email", label: "Email" })}
+              {makeField({ title: "Email", id: "email", label: "Email" })}
               {makeField({ id: "password", label: "Password", type: "password" })}
               <Button type="submit">Submit</Button>
             </Form>
