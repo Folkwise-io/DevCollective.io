@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-regular-svg-icons/faHeart";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons/faHeart";
 
 const Heart = styled.div`
   grid-area: heart;
@@ -95,19 +98,19 @@ const PostCard = ({ post }) => {
     }
   }
 
-  const heartIconClasses = isLiked ? "fas fa-heart" : "far fa-heart";
+  const icon = isLiked ? faHeartSolid : faHeart;
 
   return (
     <Wrapper onClick={() => history.push(url)}>
       <Heart>
-        <i
-          className={heartIconClasses}
+        <FontAwesomeIcon
+          icon={icon}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             setLiked(!isLiked);
           }}
-        ></i>
+        />
       </Heart>
       <LikeCount>29</LikeCount>
       <Title>
