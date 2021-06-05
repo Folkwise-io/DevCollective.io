@@ -1,7 +1,6 @@
 CURRENT
 
-- BE: if user email is not confirmed, `user.accountConfirmed` flag on the `/auth` calls should be `true`
-- BE: SEO: Move all records from UUID to numeric incremented IDs and expose a 6key Base36 ID in the URL. This can be done using (100).toString(36) and parseInt("2s"). For convenience, this can be done directly in the DAO layer... doing this will prevent the need to replace String types with Number types across much of the service layer.
+- BE: SEO: Move all records from UUID to numeric incremented IDs, except Users.
 
 ROADMAP TO V.01
 
@@ -97,6 +96,7 @@ DONE
 - confirm account backend
 - reset password backend
 - BE: make email lowercase-only
+- BE: if user email is not confirmed, `user.accountConfirmationPending` flag on the `/auth` calls should be `true`
 
 KNOWN ISSUES
 
