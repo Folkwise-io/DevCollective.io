@@ -11,7 +11,7 @@ const writer = (newDir: string) => (filename: string, data: any) =>
   const data = datasetFactory({
     totalCommunities: 10,
     totalUsers: 100,
-    totalPosts: 10,
+    totalPosts: 1000,
     userCommunityProbability: 0.5,
   });
 

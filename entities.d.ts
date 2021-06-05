@@ -1,7 +1,7 @@
 // This file contains types for the database layer.
 
 interface EUser {
-  id: string;
+  id: number;
   email: string;
   firstName: string;
   lastName: string;

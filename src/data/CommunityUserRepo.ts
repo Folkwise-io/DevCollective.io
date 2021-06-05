@@ -3,8 +3,8 @@ import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 
 interface CommunityUserParams {
-  userId: string;
-  communityId: string;
+  userId: number;
+  communityId: number;
 }
 
 export const createCommunityUser = async ({ userId, communityId }: CommunityUserParams): Promise<void> => {
@@ -33,7 +33,7 @@ export const getCommunityUser = async ({ userId, communityId }: CommunityUserPar
 
 // export const getCommunityFieldById = fieldGetterHoc((id) => communityLoader.load(id));
 
-// export const getCommunityIdsForUserId = async (authorId: string) => {
+// export const getCommunityIdsForUserId = async (authorId: number) => {
 //   const knex = await knexProvider();
 //   const communities = await knex.raw(
 //     `

@@ -5,3 +5,8 @@ export const fillArray = <T>(num = 0, cb: (i: number) => T): T[] => {
   }
   return arr;
 };
+
+export const autoIncrement = () => {
+  let i = 1;
+  return () => i++;
+};

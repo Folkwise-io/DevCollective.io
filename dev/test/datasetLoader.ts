@@ -30,10 +30,25 @@ export const datasetLoader = async (datasetName: string, verbose = false) => {
     return await knex(tableName).insert(data);
   };
 
+  const seqReset = async (tableName: string) => {
+    log(`Resetting ID sequence for table ${tableName}...`);
+    const maxIdQuery = await knex(tableName).max("id as maxId").first();
+    const maxId = maxIdQuery?.maxId;
+    if (maxId === undefined) {
+      throw new Error("Did not receive maxIdQuery for table " + tableName);
+    }
+    const newAmount = maxId + 1;
+    log(`Resetting ID sequence for table ${tableName} to ${newAmount}`);
+    await knex.raw(`ALTER SEQUENCE ${tableName}_id_seq RESTART WITH ${newAmount}`);
+  };
+
   await k("users", users);
+  seqReset("users");
   await k("communities", communities);
+  seqReset("communities");
   await k("communitiesUsers", communitiesUsers);
   await k("posts", posts);
+  seqReset("posts");
 
   return { users, communities, communitiesUsers, posts };
 };

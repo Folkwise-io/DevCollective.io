@@ -1,12 +1,15 @@
 {
   "files.exclude": {
-    "/wishing-wall/**/*": true
+    "/wishing-wall/**/*": true,
+    "/yarn.lock": true
   },
   "search.exclude": {
-    "/wishing-wall/**/*": true
+    "/wishing-wall/**/*": true,
+    "/yarn.lock": true
   },
   "files.watcherExclude": {
-    "/wishing-well/**/*": true
+    "/wishing-well/**/*": true,
+    "/yarn.lock": true
   },
   "jest.jestCommandLine": "yarn test"
 }

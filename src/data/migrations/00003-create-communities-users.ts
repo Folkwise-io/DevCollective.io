@@ -2,8 +2,8 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("communitiesUsers", (table) => {
-    table.uuid("communityId").notNullable();
-    table.uuid("userId").notNullable();
+    table.integer("communityId").notNullable();
+    table.integer("userId").notNullable();
     table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now());
     table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
 

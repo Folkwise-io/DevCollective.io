@@ -1,7 +1,7 @@
 // This file contains types for the database layer.
 
 interface DUser {
-  id: string;
+  id: number;
   email: string;
   firstName: string;
   lastName: string;
@@ -15,7 +15,7 @@ interface DUser {
 
 // This file contains types for the database layer.
 interface DCommunity {
-  id: string;
+  id: number;
   title: string;
   callsign: string;
   description: string;
@@ -24,9 +24,9 @@ interface DCommunity {
 }
 
 interface DPost {
-  id: string;
-  authorId: string;
-  communityId: string;
+  id: number;
+  authorId: number;
+  communityId: number;
   title: string;
   body: string;
   createdAt: Date;
@@ -34,8 +34,8 @@ interface DPost {
 }
 
 interface DCommunitiesUsers {
-  userId: string;
-  communityId: string;
+  userId: number;
+  communityId: number;
   createdAt: Date;
   updatedAt: Date;
 }

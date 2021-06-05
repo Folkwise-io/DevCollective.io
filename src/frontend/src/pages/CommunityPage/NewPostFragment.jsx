@@ -11,7 +11,7 @@ const NewPostFragment = () => {
 
   const [submitPost, { data }] = useMutation(
     gql`
-      mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: String!) {
+      mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: ID!) {
         createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
           title
           body

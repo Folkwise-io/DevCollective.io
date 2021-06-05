@@ -45,12 +45,12 @@ describe("Post object", () => {
           title: "Some new title",
           body: "A little body",
           communityCallsign: communities[0].callsign,
-          authorId: users[0].id,
+          authorId: "" + users[0].id,
         };
 
         const response = await query(app).gqlMutation(
           `#graphql
-          mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: String!) {
+          mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: ID!) {
             createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
               id
               title
@@ -86,7 +86,7 @@ describe("Post object", () => {
 
         const response = await query(app).gqlQuery(
           `#graphql
-          query Query($id: String!) {
+          query Query($id: ID!) {
             post(id: $id) {
               id,
               author {
@@ -105,8 +105,8 @@ describe("Post object", () => {
 
         const responsePost = response.body.data.post;
 
-        expect(responsePost.author.id).toEqual(expectedAuthor.id);
-        expect(responsePost.community.id).toEqual(expectedCommunity.id);
+        expect(responsePost.author.id).toEqual("" + expectedAuthor.id);
+        expect(responsePost.community.id).toEqual("" + expectedCommunity.id);
       });
     });
 

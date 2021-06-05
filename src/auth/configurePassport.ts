@@ -24,14 +24,14 @@ export default () => {
         console.error("Error duing login: ", e);
         done(FAILURE_MESSAGE);
       }
-    }),
+    })
   );
 
   passport.serializeUser((user: any, done) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser((id: string, done) => {
+  passport.deserializeUser((id: number, done) => {
     getUserById(id)
       .then((user) => done(null, user))
       .catch((err) => done(err));

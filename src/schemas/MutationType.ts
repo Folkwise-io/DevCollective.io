@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
 import { getCommunityIdByCallsign, getCommunityFieldById } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
 import { getUserById, getUserFieldById } from "../data/UserRepo";
@@ -27,7 +27,7 @@ const MutationType = new GraphQLObjectType({
           type: GraphQLString,
         },
         authorId: {
-          type: GraphQLString,
+          type: GraphQLID,
         },
       },
       resolve: async function (source, args, context) {
@@ -49,7 +49,7 @@ const MutationType = new GraphQLObjectType({
       type: CommunityType,
       args: {
         userId: {
-          type: GraphQLString,
+          type: GraphQLID,
         },
         communityCallsign: {
           type: GraphQLString,
