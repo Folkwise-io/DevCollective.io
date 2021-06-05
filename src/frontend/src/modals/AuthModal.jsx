@@ -105,7 +105,7 @@ const AuthModal = ({ onClose, page }) => {
         <SigninFormWrapper>
           <Formik initialValues={{ email: ``, password: `` }} onSubmit={onSubmit}>
             <Form>
-              {makeField({ title: "Email", id: "email", label: "Email" })}
+              {makeField({ id: "email", label: "Email" })}
               {makeField({ id: "password", label: "Password", type: "password" })}
               <Button type="submit">Submit</Button>
             </Form>
