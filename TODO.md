@@ -1,14 +1,13 @@
 CURRENT
 
-- BE: SEO: Move all records from UUID to numeric incremented IDs.
+- FS: error handling / toast notifications
+- FE: If user email is not confirmed, nag.
 
 ROADMAP TO V.01
 
-- FE: If user email is not confirmed, nag.
 - FE: user registration frontend
 - FE: confirm account frontend
 - FE: reset password frontend
-- FS: error handling / toast notifications
 - FS: c/cd and production deployment
 - Threaded comments
 
@@ -97,6 +96,7 @@ DONE
 - reset password backend
 - BE: make email lowercase-only
 - BE: if user email is not confirmed, `user.accountConfirmationPending` flag on the `/auth` calls should be `true`
+- BE: SEO: Move all records from UUID to numeric incremented IDs.
 
 KNOWN ISSUES
 
