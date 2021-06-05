@@ -67,4 +67,8 @@ export default class TestManager {
   fork(): TestManager {
     return new TestManager(this.app);
   }
+
+  gql(query: string, variables?: any, agent = this.agent) {
+    return agent.post("/graphql", { query, variables });
+  }
 }

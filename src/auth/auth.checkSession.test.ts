@@ -5,6 +5,7 @@ import { clearDatabase } from "../../dev/test/TestRepo";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import { PromiseValue } from "type-fest";
 import { getDefaultUser } from "../test/utils";
+import { createUser } from "../service/UserService";
 
 // disable emails
 jest.mock("@sendgrid/mail");
