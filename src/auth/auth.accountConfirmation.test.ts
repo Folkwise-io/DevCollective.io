@@ -105,7 +105,7 @@ describe("Account Confirmation", () => {
   //   test("user resolver does not return confirmationToken or confirmationTokenHash", async () => {
   //     // can retrieve user
   //     {
-  //       const response = await tm.gql(`
+  //       const response = await tm.gql(`#graphql
   //         query Query($id: String!) {
   //           user(id: $id) {
   //             email

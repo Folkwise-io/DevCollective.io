@@ -25,7 +25,7 @@ describe("Community object", () => {
     describe("sunny cases", () => {
       it("can fetch all communities", async () => {
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
             {
               communities {
                 id,
@@ -34,11 +34,11 @@ describe("Community object", () => {
                 description
               }
             }
-          `,
+          `
         );
 
         expect(response.body.data.communities).toMatchObject(
-          communities.map((c: any) => ({ id: c.id, title: c.title, description: c.description, callsign: c.callsign })),
+          communities.map((c: any) => ({ id: c.id, title: c.title, description: c.description, callsign: c.callsign }))
         );
       });
 
@@ -46,7 +46,7 @@ describe("Community object", () => {
         const c = communities[0];
 
         const response = await query(app).gqlQuery(
-          `
+          `#graphql
             query Query ($callsign: String!) {
               community(callsign: $callsign) {
                 id,
@@ -58,7 +58,7 @@ describe("Community object", () => {
           `,
           {
             callsign: c.callsign,
-          },
+          }
         );
 
         expect(response.body.data.community).toMatchObject({
@@ -75,7 +75,7 @@ describe("Community object", () => {
 
         const response = await query(app)
           .gqlMutation(
-            `
+            `#graphql
             mutation Mutation($userId: String!, $communityCallsign: String!) {
               joinCommunity(userId: $userId, communityCallsign: $communityCallsign) {
                 id,
@@ -88,7 +88,7 @@ describe("Community object", () => {
             {
               userId: user.id,
               communityCallsign: community.callsign,
-            },
+            }
           )
           .expect(200);
 
@@ -100,13 +100,13 @@ describe("Community object", () => {
       describe("query community", () => {
         it("requires either id and callsign", async () => {
           const response = await query(app).gqlQuery(
-            `
+            `#graphql
             query Query($callsign: String, $id: String) {
               community(callsign: $callsign, id: $id) {
                 id
               }
             }
-          `,
+          `
           );
 
           expect(response.statusCode).toBe(200);
