@@ -92,4 +92,85 @@ describe("Forgot Password", () => {
       await tm.forgotConfirm({ email: email, token, password: newPassword }).expect(401);
     });
   });
+
+  describe("rainy", () => {
+    it("does not allow an expired token to be used.", async () => {
+      const user = getDefaultUser(data);
+      const token = v4();
+      const hash = await bcrypt.hash(token, 10);
+      await updateUser(user.id, {
+        forgotPasswordTokenHash: hash,
+        forgotPasswordExpiry: subDays(new Date(), 1),
+      });
+
+      await tm.forgotConfirm({ email: user.email, token, password: "someNewPassword" }).expect(401);
+    });
+    it("only allows a token to be used once.", async () => {
+      const user = getDefaultUser(data);
+
+      // update user with a forgotPassword token.
+      const token = v4();
+      const hash = await bcrypt.hash(token, 10);
+      await updateUser(user.id, {
+        forgotPasswordTokenHash: hash,
+        forgotPasswordExpiry: addDays(new Date(), 1),
+      });
+
+      const newPassword = "someNewPassword";
+      // confirm that login works with old password
+      await tm.login(user.email, defaultPassword).expect(200);
+      // change the password
+      await tm.forgotConfirm({ email: user.email, token, password: newPassword }).expect(200);
+      // old password no longer works
+      await tm.login(user.email, defaultPassword).expect(401);
+      // new password works
+      await tm.login(user.email, newPassword).expect(200);
+      // old token no longer resets the password
+      await tm.forgotConfirm({ email: user.email, token, password: "someNewPassword" }).expect(401);
+      // confirm old password still does not work
+      await tm.login(user.email, defaultPassword).expect(401);
+      // confirm new password still works.
+      await tm.login(user.email, newPassword).expect(200);
+    });
+    it("fails bad request when no email is sent, or when a bad email is sent", async () => {
+      // test bad data
+      const forgotPasswordUrl = "/auth/forgot/request";
+      await tm.raw().post(forgotPasswordUrl).expect(400);
+      await tm.raw().post(forgotPasswordUrl, { email: null }).expect(400);
+      await tm.raw().post(forgotPasswordUrl, { email: undefined }).expect(400);
+      await tm.raw().post(forgotPasswordUrl, { email: true }).expect(400);
+      await tm.raw().post(forgotPasswordUrl, { email: false }).expect(400);
+      await tm.raw().post(forgotPasswordUrl, 0).expect(400);
+      await tm.raw().post(forgotPasswordUrl, 1).expect(400);
+      await tm.raw().post(forgotPasswordUrl, { email: "lol" }).expect(400);
+      await tm.raw().post(forgotPasswordUrl, {}).expect(400);
+      await tm.raw().post(forgotPasswordUrl, { email: "good@email.com", other: "some-unexpected-data" }).expect(400);
+
+      // test bad emails
+      await tm.forgotRequest("bademail").expect(400);
+      await tm.forgotRequest("bademail@").expect(400);
+      await tm.forgotRequest("bademail.com").expect(400);
+      await tm.forgotRequest("@bademail.com").expect(400);
+      await tm.forgotRequest(" @bademail.com").expect(400);
+      await tm.forgotRequest("bademail@something").expect(400);
+      await tm.forgotRequest(" bademail@something").expect(400);
+      await tm.forgotRequest("bademail@something ").expect(400);
+      await tm.forgotRequest("bademail ").expect(400);
+      await tm.forgotRequest("lol@bademail .com").expect(400);
+      expect(sgMail.send).toHaveBeenCalledTimes(0);
+    });
+    it("should send a 200 and do nothing when the email does not exist", async () => {
+      const badEmail = "doesnotexist@email.com";
+
+      // this user should not exist
+      const dbUser = await getUserByEmail(badEmail);
+      expect(dbUser).toBeFalsy();
+
+      // request should still look like it succeeded
+      await tm.forgotRequest(badEmail).expect(200);
+
+      // no email should have been sent
+      expect(sgMail.send).toHaveBeenCalledTimes(0);
+    });
+  });
 });
