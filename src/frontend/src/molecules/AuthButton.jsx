@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 import AuthModal, { pages } from "../modals/AuthModal";
 import { StateContext } from "../state";
 import { post } from "../utils/rest-api";
+import Button from "../elements/Button";
+  
 
 const AuthButton = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -31,24 +33,19 @@ const AuthButton = () => {
     }
   };
 
-  const btn = "btn btn-outline-secondary m-1"
-
+  
   return (
     <div>
       {modalPage && <AuthModal page={modalPage} onClose={() => setModalPage(null)} />}
       {user && (
-        <a className={btn} href="#" onClick={() => signOut()}>
+        <Button onClick={() => signOut()}>
           Sign Out
-        </a>
+        </Button>
       )}
       {!user && (
         <>
-          <a className={btn} href="#" onClick={() => setModalPage(pages.signin)}>
-            Sign In
-          </a>
-          <a className={btn} href="#" onClick={() => setModalPage(pages.signup)}>
-            Sign Up
-          </a>
+          <Button onClick={() => setModalPage(pages.signin)}>Sign In</Button>
+          <Button onClick={() => setModalPage(pages.signup)}>Sign Up</Button>
         </>
       )}
     </div>
