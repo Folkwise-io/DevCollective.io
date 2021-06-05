@@ -2,10 +2,10 @@ CURRENT
 
 - FS: error handling / toast notifications
 - FE: If user email is not confirmed, nag.
+- FE: user registration frontend
 
 ROADMAP TO V.01
 
-- FE: user registration frontend
 - FE: confirm account frontend
 - FE: reset password frontend
 - FS: c/cd and production deployment

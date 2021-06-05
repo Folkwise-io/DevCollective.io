@@ -64,7 +64,7 @@
     "dataloader": "^2.0.0",
     "date-fns": "^2.22.1",
     "dotenv": "^10.0.0",
-    "eslint": "^7.27.0",
+    "eslint": "^7.28.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",

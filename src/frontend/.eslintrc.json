@@ -1,12 +1,22 @@
 {
   "root": true,
   "parser": "@babel/eslint-parser",
-  "plugins": ["import"],
-  "extends": ["eslint:recommended", "plugin:import/recommended"],
+  "plugins": ["import", "react", "react-hooks", "jsx"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
   "env": {
     "es6": true,
-    "browser": false,
-    "node": true
+    "browser": true,
+    "node": false
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "rules": {
     "import/no-duplicates": 2,

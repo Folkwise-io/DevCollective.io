@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import NavBar, { NavbarHeight } from "../organisms/NavBar";
 import CommunityPage from "../pages/CommunityPage";
+import Toasts, { ToastTypes } from "./Toasts";
 
 const Container = styled.div`
   padding-top: ${NavbarHeight};
@@ -30,6 +31,25 @@ const App = () => {
             }}
           />
         </Switch>
+        <Toasts
+          toasts={[
+            {
+              type: ToastTypes.info,
+              title: "Test Toast",
+              body: "This is a test toast. It should say some things. Then it should disappear.",
+            },
+            {
+              type: ToastTypes.danger,
+              title: "Test Toast",
+              body: "This is a test toast. It should say some things. Then it should disappear.",
+            },
+            {
+              type: ToastTypes.success,
+              title: "Test Toast",
+              body: "This is a test toast. It should say some things. Then it should disappear.",
+            },
+          ]}
+        ></Toasts>
       </Container>
     </Router>
   );

@@ -9,6 +9,8 @@
       "request": "launch",
       "name": "Server",
       "runtimeExecutable": "yarn",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
       "runtimeArgs": ["dev"],
       "skipFiles": ["<node_internals>/**"]
     },
