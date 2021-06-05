@@ -76,7 +76,7 @@ describe("Community object", () => {
         const response = await query(app)
           .gqlMutation(
             `#graphql
-            mutation Mutation($userId: String!, $communityCallsign: String!) {
+            mutation Mutation($userId: ID!, $communityCallsign: String!) {
               joinCommunity(userId: $userId, communityCallsign: $communityCallsign) {
                 id,
                 posts {
@@ -101,7 +101,7 @@ describe("Community object", () => {
         it("requires either id and callsign", async () => {
           const response = await query(app).gqlQuery(
             `#graphql
-            query Query($callsign: String, $id: String) {
+            query Query($callsign: String, $id: Number) {
               community(callsign: $callsign, id: $id) {
                 id
               }

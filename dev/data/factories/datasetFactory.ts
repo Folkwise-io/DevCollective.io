@@ -1,9 +1,10 @@
 import faker from "faker";
 import { fillArray } from "../utils";
-import communityFactory from "./communityFactory";
+import communityFactory, { nextCommunityId } from "./communityFactory";
 import postFactory from "./postFactory";
 import communityUserMixer from "./communityUserFactory";
-import userFactory from "./userFactory";
+import userFactory, { nextUserId } from "./userFactory";
+import { autoIncrement } from "../utils";
 
 interface DatasetFactoryParams {
   totalUsers: number;
@@ -22,7 +23,7 @@ const datasetFactory = (params: DatasetFactoryParams) => {
 
   const users: DUser[] = [
     {
-      id: faker.datatype.uuid(),
+      id: nextUserId(),
       email: "a@a.com",
       firstName: "Amy",
       lastName: "Adams",
@@ -37,7 +38,7 @@ const datasetFactory = (params: DatasetFactoryParams) => {
   ];
   const communities: DCommunity[] = [
     {
-      id: faker.datatype.uuid(),
+      id: nextCommunityId(),
       title: "Mintbean",
       callsign: "mintbean",
       description:

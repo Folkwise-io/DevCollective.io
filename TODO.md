@@ -1,6 +1,6 @@
 CURRENT
 
-- BE: SEO: Move all records from UUID to numeric incremented IDs, except Users.
+- BE: SEO: Move all records from UUID to numeric incremented IDs.
 
 ROADMAP TO V.01
 

@@ -1,8 +1,11 @@
 import faker from "faker";
+import { autoIncrement } from "../utils";
+
+const n = autoIncrement();
 
 export default function postFactory(users: DUser[], communities: DCommunity[]): DPost {
   return {
-    id: faker.datatype.uuid(),
+    id: n(),
     title: faker.lorem.sentence(),
     body: faker.lorem.paragraphs(faker.datatype.number(3)),
     createdAt: faker.datatype.datetime(),

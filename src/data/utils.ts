@@ -10,8 +10,8 @@ export const pickOne =
     }
   };
 
-export const fieldGetterHoc = (cb: (id: string) => Promise<any>) => {
-  return async (id: string, fieldName: string) => {
+export const fieldGetterHoc = (cb: (id: number) => Promise<any>) => {
+  return async (id: number, fieldName: string) => {
     const community = await cb(id);
     if (!community) {
       return null;

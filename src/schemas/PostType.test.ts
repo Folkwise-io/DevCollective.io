@@ -50,7 +50,7 @@ describe("Post object", () => {
 
         const response = await query(app).gqlMutation(
           `#graphql
-          mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: String!) {
+          mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: ID!) {
             createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
               id
               title
@@ -86,7 +86,7 @@ describe("Post object", () => {
 
         const response = await query(app).gqlQuery(
           `#graphql
-          query Query($id: String!) {
+          query Query($id: ID!) {
             post(id: $id) {
               id,
               author {

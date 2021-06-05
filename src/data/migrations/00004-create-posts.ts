@@ -2,10 +2,10 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("posts", (table) => {
-    table.uuid("id").notNullable().defaultTo(knex.raw("uuid_generate_v4()")).unique();
+    table.increments("id").primary();
 
-    table.uuid("authorId").notNullable();
-    table.uuid("communityId").notNullable();
+    table.integer("authorId").notNullable();
+    table.integer("communityId").notNullable();
 
     table.text("title").notNullable();
     table.text("body").notNullable();
@@ -13,7 +13,6 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now());
 
     // Constraints and indices
-    table.primary(["id"]);
     table.foreign("authorId").references("users.id").onDelete("CASCADE");
     table.foreign("communityId").references("communities.id").onDelete("CASCADE");
   });

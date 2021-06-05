@@ -1,9 +1,9 @@
 import { getUserFieldById } from "../data/UserRepo";
 import { getPostIdsForUserId } from "../data/PostRepo";
 
-import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
+import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID } from "graphql";
 
-const userFieldHoc = (fieldName: string) => (id: string) => getUserFieldById(id, fieldName);
+const userFieldHoc = (fieldName: string) => (id: number) => getUserFieldById(id, fieldName);
 
 export default new GraphQLObjectType({
   name: "User",
@@ -12,7 +12,7 @@ export default new GraphQLObjectType({
 
     return {
       id: {
-        type: GraphQLString,
+        type: GraphQLID,
         resolve: (id) => id,
       },
       firstName: {

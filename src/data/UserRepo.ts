@@ -2,7 +2,7 @@ import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 
-const userLoader = new DataLoader<string, DUser>(async (ids) => {
+const userLoader = new DataLoader<number, DUser>(async (ids) => {
   const knex = await knexProvider();
   return knex("users").whereIn("id", ids);
 });
@@ -16,7 +16,7 @@ export const getUserByEmail = async (email: string): Promise<DUser> => {
     .first();
 };
 
-export const getUserById = async (id: string): Promise<DUser> => {
+export const getUserById = async (id: number): Promise<DUser> => {
   const knex = await knexProvider();
   return knex("users").where({ id }).first();
 };
@@ -34,5 +34,5 @@ export const getAllUserIds = async () => {
 
 export const insertUser = (user: Partial<DUser>) => knexProvider().then((knex) => knex("users").insert(user));
 
-export const updateUser = (id: string, userPartial: Partial<DUser>) =>
+export const updateUser = (id: number, userPartial: Partial<DUser>) =>
   knexProvider().then((knex) => knex("users").where({ id }).update(userPartial));

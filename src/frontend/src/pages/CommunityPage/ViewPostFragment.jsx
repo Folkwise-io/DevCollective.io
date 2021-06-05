@@ -8,7 +8,7 @@ const ViewPostFragment = () => {
   const { callsign: communityCallsign, postId } = useParams();
   const { loading, error, data } = useQuery(
     gql`
-      query Query($id: String!) {
+      query Query($id: ID!) {
         post(id: $id) {
           title
           body
@@ -29,7 +29,7 @@ const ViewPostFragment = () => {
       variables: {
         id: postId,
       },
-    },
+    }
   );
 
   if (loading) {

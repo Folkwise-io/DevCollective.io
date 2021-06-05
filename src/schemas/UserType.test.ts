@@ -45,7 +45,7 @@ describe("User object", () => {
         const userPostIds = posts.filter((p: any) => p.authorId === user.id).map((p: any) => ({ id: p.id }));
         const response = await query(app).gqlQuery(
           `#graphql
-          query Query($id: String!) {
+          query Query($id: ID!) {
             user(id: $id) {
               id,
               posts {

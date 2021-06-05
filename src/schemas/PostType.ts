@@ -3,7 +3,7 @@ import { getCommunityFieldById } from "../data/CommunityRepo";
 import { getPostFieldById, getPostById } from "../data/PostRepo";
 import slugify from "slugify";
 
-const postFieldHoc = (fieldName: string) => (id: string) => getPostFieldById(id, fieldName);
+const postFieldHoc = (fieldName: string) => (id: number) => getPostFieldById(id, fieldName);
 
 export default new GraphQLObjectType({
   name: "Post",
@@ -13,7 +13,7 @@ export default new GraphQLObjectType({
 
     return {
       id: {
-        type: GraphQLString,
+        type: GraphQLInt,
         resolve: (id) => id,
       },
       title: {
@@ -26,7 +26,7 @@ export default new GraphQLObjectType({
       },
       url: {
         type: GraphQLString,
-        resolve: async (id: string) => {
+        resolve: async (id: number) => {
           const post = await getPostById(id);
           const { title, communityId } = post;
           const callsign = await getCommunityFieldById(communityId, "callsign");
