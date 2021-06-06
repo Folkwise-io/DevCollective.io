@@ -33,6 +33,11 @@ Highly recommended for any backend work.
 [VSCode GraphQL](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) enables graphql syntax highlighting.
 Highly recommended for any backend work.
 
+## Useful docs
+
+[How to make your first pull request](./docs/FirstPullRequest.md) - Thank you, Julio Alcantara!
+[How to create new entities](./docs/HowToCreateNewEntities.md)
+
 # Production config
 
 If deploying to production, first place your config files in `/etc/mintbean-v4/config/*`.
