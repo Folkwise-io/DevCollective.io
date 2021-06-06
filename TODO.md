@@ -1,15 +1,20 @@
 CURRENT
 
-- FS: error handling / toast notifications
-- FE: If user email is not confirmed, nag.
-- FE: user registration frontend
+- Threaded comments
+
+then
 
 ROADMAP TO V.01
 
+- FS: error handling / toast notifications
+- FE: If user email is not confirmed, nag.
+- FE: user registration frontend
 - FE: confirm account frontend
 - FE: reset password frontend
+- FE: Create Post
+- FE: Create Comment
+- FE: Like
 - FS: c/cd and production deployment
-- Threaded comments
 
 ROADMAP TO V1
 
