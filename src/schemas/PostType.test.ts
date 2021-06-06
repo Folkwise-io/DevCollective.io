@@ -16,7 +16,7 @@ describe("Post object", () => {
   });
 
   beforeEach(async () => {
-    const data = await datasetLoader("complex");
+    const data = await datasetLoader();
     users = data.users;
     posts = data.posts;
     communities = data.communities;

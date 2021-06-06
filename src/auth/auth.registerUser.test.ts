@@ -30,7 +30,7 @@ describe("Authentication", () => {
   });
 
   beforeEach(async () => {
-    data = await datasetLoader("simple");
+    data = await datasetLoader();
     tm = new TestManager(app);
   });
 

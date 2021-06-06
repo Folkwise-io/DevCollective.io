@@ -19,7 +19,7 @@ describe("Post object", () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    const data = await datasetLoader("complex");
+    const data = await datasetLoader();
     tm = new TestManager(app);
     users = data.users;
     posts = data.posts;
@@ -28,10 +28,29 @@ describe("Post object", () => {
 
   describe("queries", () => {
     describe("sunny", () => {
-      it("can get all comments for a post.", () => {
+      it("can get all comments for a post.", async () => {
         // directly create 3 comments for a post
+        // TODO
+
         // query for those 3 comments
+        const response = await tm.gql(`
+          query Query($id: ID!) {
+            post(id: $id) {
+              comments {
+                id
+                body
+                author {
+                  id
+                  firstName
+                  lastName
+                }
+              }
+            }
+          }
+        `);
+
         // expect 3 comments to match
+        // TODO
       });
 
       it("can get all comments for a user.", () => {

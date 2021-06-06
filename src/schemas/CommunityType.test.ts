@@ -15,7 +15,7 @@ describe("Community object", () => {
   });
 
   beforeEach(async (done) => {
-    const data = await datasetLoader("simple");
+    const data = await datasetLoader();
     communities = data.communities;
     users = data.users;
     done();

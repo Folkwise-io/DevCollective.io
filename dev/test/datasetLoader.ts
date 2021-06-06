@@ -2,20 +2,20 @@ import knexProvider from "../../src/data/knex-provider";
 import { clearDatabase } from "./TestRepo";
 import fs from "fs";
 import path from "path";
+import { FOLDER_PATH } from "./constants";
 
-const FOLDER_PATH = path.join(__dirname, "datasets");
-const reader = (datasetName: string) => (filename: string) =>
-  JSON.parse(fs.readFileSync(path.join(FOLDER_PATH, datasetName, filename + ".json"), "utf-8"));
+const reader = () => (filename: string) =>
+  JSON.parse(fs.readFileSync(path.join(FOLDER_PATH, filename + ".json"), "utf-8"));
 
-export const datasetLoader = async (datasetName: string, verbose = false) => {
+export const datasetLoader = async (verbose = false) => {
   const log = (...args: any[]) => verbose && console.log(...args);
-  const stat = fs.statSync(path.join(FOLDER_PATH, datasetName));
+  const stat = fs.statSync(path.join(FOLDER_PATH));
   if (!stat.isDirectory) {
-    throw new Error(`Dataset ${datasetName} does not exist.`);
+    throw new Error(`Dataset does not exist.`);
   }
 
   log("Generating data...");
-  const r = reader(datasetName);
+  const r = reader();
   const users = r("users");
   const communities = r("communities");
   const communitiesUsers = r("communitiesUsers");
