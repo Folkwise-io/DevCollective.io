@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "title": "Mintbean",
+    "callsign": "mintbean",
+    "description": "We help job-seeking coders get ahead in their careers through our learnathons. Wanna get started? Come join our Discord chat: http://discord.com/invite/j7CjBAz",
+    "createdAt": "2019-12-12T00:00:00.000Z",
+    "updatedAt": "2021-06-06T15:55:33.619Z"
+  },
+  {
+    "id": 2,
+    "title": "Hettinger LLC",
+    "callsign": "hettingerGraphic",
+    "description": "facilitate frictionless initiatives",
+    "createdAt": "2020-08-26T19:56:46.837Z",
+    "updatedAt": "2021-06-06T15:55:33.619Z"
+  },
+  {
+    "id": 3,
+    "title": "Mayer - Daugherty",
+    "callsign": "mayerFunctionality",
+    "description": "cultivate B2C ROI",
+    "createdAt": "2020-12-11T10:07:07.277Z",
+    "updatedAt": "2021-06-06T15:55:33.619Z"
+  },
+  {
+    "id": 4,
+    "title": "Rolfson, MacGyver and Yundt",
+    "callsign": "rolfson,primary",
+    "description": "transition extensible blockchains",
+    "createdAt": "2020-10-18T02:23:28.550Z",
+    "updatedAt": "2021-06-06T15:55:33.619Z"
+  },
+  {
+    "id": 5,
+    "title": "Harris and Sons",
+    "callsign": "harrisCotton",
+    "description": "repurpose vertical supply-chains",
+    "createdAt": "2021-02-15T13:24:49.985Z",
+    "updatedAt": "2021-06-06T15:55:33.620Z"
+  },
+  {
+    "id": 6,
+    "title": "Lebsack Group",
+    "callsign": "lebsackExtended",
+    "description": "maximize viral applications",
+    "createdAt": "2021-05-20T08:53:00.590Z",
+    "updatedAt": "2021-06-06T15:55:33.620Z"
+  },
+  {
+    "id": 7,
+    "title": "West and Sons",
+    "callsign": "westRSS",
+    "description": "extend frictionless mindshare",
+    "createdAt": "2021-04-08T22:17:29.441Z",
+    "updatedAt": "2021-06-06T15:55:33.620Z"
+  },
+  {
+    "id": 8,
+    "title": "Cormier - Reilly",
+    "callsign": "cormierBall",
+    "description": "integrate granular eyeballs",
+    "createdAt": "2020-09-08T08:38:53.351Z",
+    "updatedAt": "2021-06-06T15:55:33.620Z"
+  },
+  {
+    "id": 9,
+    "title": "McDermott and Sons",
+    "callsign": "mcdermottZloty",
+    "description": "repurpose global interfaces",
+    "createdAt": "2020-10-16T19:07:41.581Z",
+    "updatedAt": "2021-06-06T15:55:33.621Z"
+  },
+  {
+    "id": 10,
+    "title": "Sporer Inc",
+    "callsign": "sporerbandwidth",
+    "description": "exploit B2B niches",
+    "createdAt": "2020-08-19T23:06:54.135Z",
+    "updatedAt": "2021-06-06T15:55:33.621Z"
+  }
+]
