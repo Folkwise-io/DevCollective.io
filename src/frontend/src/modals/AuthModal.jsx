@@ -10,7 +10,6 @@ import styled from "styled-components";
 const FormWrapper = styled.div`
   form {
     display: grid;
-    overflow: hidden;
   }
   input {
     padding: 1em;
