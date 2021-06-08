@@ -20,6 +20,7 @@ ROADMAP TO V1
 
 Tier 1
 
+- IMPORTANT REFACTOR: Isolate number/string ID conversions at the DAO level. And ffs, just call them DAOs.
 - COOL: keyboard shortcut and navigation system
 - COOL: embedded terminal
 - mobile friendly
