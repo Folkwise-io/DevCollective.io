@@ -2,6 +2,7 @@ import { getUserFieldById } from "../data/UserRepo";
 import { getPostIdsForUserId } from "../data/PostRepo";
 
 import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID } from "graphql";
+import { getCommentIdsForUserId } from "../data/CommentRepo";
 
 const userFieldHoc = (fieldName: string) => (id: string) => getUserFieldById(id, fieldName);
 
@@ -9,6 +10,7 @@ export default new GraphQLObjectType({
   name: "User",
   fields: () => {
     const PostType = require("./PostType").default;
+    const CommentType = require("./CommentType").default;
 
     return {
       id: {
@@ -25,6 +27,10 @@ export default new GraphQLObjectType({
       posts: {
         type: GraphQLList(PostType),
         resolve: (id) => getPostIdsForUserId(id),
+      },
+      comments: {
+        type: GraphQLList(CommentType),
+        resolve: (id) => getCommentIdsForUserId(id),
       },
     };
   },

@@ -31,7 +31,6 @@ describe("Post object", () => {
     describe("sunny", () => {
       it("can get all comments for a post.", async () => {
         const user = users[0];
-        const community = communities[0];
         const post = posts.find((p: DPost) => p.authorId === user.id);
 
         const comments = [
@@ -81,7 +80,7 @@ describe("Post object", () => {
 
         expect(response.body.errors).toBeUndefined();
         response.body.data.post.comments.forEach((comment: any) => {
-          expect(comment.id);
+          expect(comment.id).toBeTruthy();
         });
 
         for (let i = 0; i < response.body.data.post.comments; i++) {
@@ -92,15 +91,112 @@ describe("Post object", () => {
         }
       });
 
-      it("can get all comments for a user.", () => {
+      it("can get all comments for a user.", async () => {
         // directly create 3 comments for a user
+        const user = users[0];
+        const post = posts.find((p: DPost) => p.authorId === user.id);
+
+        const comments = [
+          {
+            body: "This is comment number 1",
+            authorId: "" + user.id,
+            postId: post.id,
+          },
+          {
+            body: "This is comment number 2",
+            authorId: "" + user.id,
+            postId: post.id,
+          },
+          {
+            body: "This is comment number 3",
+            authorId: "" + user.id,
+            postId: post.id,
+          },
+        ];
+
+        // directly create 3 comments for a post
+        // TODO: Fix types
+        // @ts-expect-error number/string mismatch
+        await Promise.all(comments.map((c) => createComment(c)));
+
+        // query for those 3 comments
+        const response = await tm.gql(
+          `
+          query Query($id: ID!) {
+            user(id: $id) {
+              comments {
+                id
+                body
+                post {
+                  id
+                }
+              }
+            }
+          }
+        `,
+          {
+            id: user.id,
+          }
+        );
+
         // query for those 3 comments
         // expect 3 comments to match
+        expect(response.body.errors).toBeUndefined();
+
+        response.body.data.user.comments.forEach((comment: any) => {
+          expect(comment.id).toBeTruthy();
+        });
+
+        for (let i = 0; i < response.body.data.user.comments; i++) {
+          const actual = response.body.data.user.comments[i];
+          const expected = comments[i];
+          expect(actual.post.id).toMatch(expected.postId);
+          expect(actual.body).toMatch(expected.body);
+        }
       });
 
-      it("returns an empty array if a user or post does not have comments", () => {
-        // query comments for an empty post
-        // expect []
+      it("returns an empty array if a user does not have comments", async () => {
+        // no comments have been created.
+        const response = await tm.gql(
+          `
+          query Query($id: ID!) {
+            user(id: $id) {
+              comments {
+                id
+                body
+              }
+            }
+          }
+        `,
+          {
+            id: users[0].id,
+          }
+        );
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.data.user.comments).toMatchObject([]);
+      });
+
+      it("returns an empty array if a post does not have comments", async () => {
+        // no comments have been created.
+        const response = await tm.gql(
+          `
+          query Query($id: ID!) {
+            post(id: $id) {
+              comments {
+                id
+                body
+              }
+            }
+          }
+        `,
+          {
+            id: posts[0].id,
+          }
+        );
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.data.post.comments).toMatchObject([]);
       });
     });
   });

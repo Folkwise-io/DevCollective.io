@@ -22,6 +22,19 @@ export const getCommentIdsForPostId = async (postId: string) => {
   return comments.map((c) => "" + c.id);
 };
 
+export const getCommentIdsForUserId = async (authorId: string) => {
+  const knex = await knexProvider();
+  const comments: DComment[] = await knex("comments").where({
+    authorId,
+  });
+
+  // TODO: Straighten up types
+  comments.forEach((c: DComment) => commentLoader.prime("" + c.id, c));
+
+  // TODO: Straighten up types
+  return comments.map((c) => "" + c.id);
+};
+
 type CreateCommentParams = Pick<DComment, "body" | "postId" | "authorId">;
 export const createComment = async (params: CreateCommentParams): Promise<DComment | void> => {
   const knex = await knexProvider();
