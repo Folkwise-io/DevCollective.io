@@ -6,6 +6,7 @@ then
 
 ROADMAP TO V.01
 
+- BE: Authorization - user should only be able to do things on their own behalf.
 - FS: error handling / toast notifications
 - FE: If user email is not confirmed, nag.
 - FE: user registration frontend

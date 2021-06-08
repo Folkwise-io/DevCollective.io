@@ -8,10 +8,10 @@ import { createComment } from "../data/CommentRepo";
 
 describe("Post object", () => {
   let app: Express;
-  let users: any;
+  let users: DUser[];
   let tm: TestManager;
-  let posts: any;
-  let communities: any;
+  let posts: DPost[];
+  let communities: DCommunity[];
 
   beforeAll(async () => {
     await clearDatabase();
@@ -31,23 +31,23 @@ describe("Post object", () => {
     describe("sunny", () => {
       it("can get all comments for a post.", async () => {
         const user = users[0];
-        const post = posts.find((p: DPost) => p.authorId === user.id);
+        const post = posts.find((p: DPost) => p.authorId === user.id)!;
 
         const comments = [
           {
             body: "This is comment number 1",
             authorId: "" + user.id,
-            postId: post.id,
+            postId: post?.id,
           },
           {
             body: "This is comment number 2",
             authorId: "" + user.id,
-            postId: post.id,
+            postId: post?.id,
           },
           {
             body: "This is comment number 3",
             authorId: "" + user.id,
-            postId: post.id,
+            postId: post?.id,
           },
         ];
 
@@ -100,17 +100,17 @@ describe("Post object", () => {
           {
             body: "This is comment number 1",
             authorId: "" + user.id,
-            postId: post.id,
+            postId: post?.id,
           },
           {
             body: "This is comment number 2",
             authorId: "" + user.id,
-            postId: post.id,
+            postId: post?.id,
           },
           {
             body: "This is comment number 3",
             authorId: "" + user.id,
-            postId: post.id,
+            postId: post?.id,
           },
         ];
 
@@ -150,7 +150,7 @@ describe("Post object", () => {
         for (let i = 0; i < response.body.data.user.comments; i++) {
           const actual = response.body.data.user.comments[i];
           const expected = comments[i];
-          expect(actual.post.id).toMatch(expected.postId);
+          expect(actual.post.id).toEqual(expected.postId);
           expect(actual.body).toMatch(expected.body);
         }
       });
@@ -203,7 +203,44 @@ describe("Post object", () => {
 
   describe("mutations", () => {
     describe("sunny", () => {
-      it("can create top-level comment for a post.", () => {
+      it("can create top-level comment for a post.", async () => {
+        const user = users[0];
+        const post = posts[0];
+
+        await tm.login(user.email, "password").expect(200);
+
+        const body = "Happy Holidays!";
+
+        {
+          const response = await tm
+            .gql(
+              `
+            mutation Mutation($postId: ID!, $body: String!) {
+              createComment(postId: $postId, body: $body) {
+                  body,
+                  post {
+                    id
+                  }
+                  author {
+                    id
+                  }
+                }
+              }
+            }
+          `,
+              {
+                postId: post.id,
+                body,
+              }
+            )
+            .expect(200);
+
+          expect(response.body.errors).toMatchObject([]);
+          expect(response.body.data.createComment.body).toStrictEqual(body);
+          expect(response.body.data.createComment.post.id).toStrictEqual("" + post.id);
+          expect(response.body.data.createComment.user.id).toStrictEqual("" + user.id);
+        }
+
         // login as a user
         // comment on a post
         // query post comments

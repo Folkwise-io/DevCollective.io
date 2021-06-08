@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
 import { getCommunityIdByCallsign, getCommunityFieldById } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
 import { getUserById, getUserFieldById } from "../data/UserRepo";
-import { createPost } from "../data/PostRepo";
+import { createPost, getPostById } from "../data/PostRepo";
 
 // const {movieType} = require('./types.js');
 // const {inputMovieType} = require('./inputtypes.js');
@@ -10,6 +10,8 @@ import { createPost } from "../data/PostRepo";
 
 import CommunityType from "./CommunityType";
 import PostType from "./PostType";
+import CommentType from "./CommentType";
+import { createComment } from "../data/CommentRepo";
 
 const MutationType = new GraphQLObjectType({
   name: "Mutation",
@@ -80,6 +82,38 @@ const MutationType = new GraphQLObjectType({
             return null;
           }
         }
+      },
+    },
+    createComment: {
+      type: CommentType,
+      args: {
+        userId: {
+          type: GraphQLID,
+        },
+        postId: {
+          type: GraphQLID,
+        },
+        body: {
+          type: GraphQLString,
+        },
+      },
+      resolve: async (source, args, context) => {
+        const postId: string = args.postId;
+        const userId: string = args.userId;
+        const body: string = args.body;
+
+        const post = await getPostById(postId);
+        const user = await getUserById(userId);
+
+        if (!post || !user) {
+          return null;
+        }
+
+        return createComment({
+          authorId: user.id,
+          body,
+          postId: post.id,
+        });
       },
     },
   },
