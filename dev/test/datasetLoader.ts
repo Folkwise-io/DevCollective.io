@@ -16,10 +16,10 @@ export const datasetLoader = async (verbose = false) => {
 
   log("Generating data...");
   const r = reader();
-  const users = r("users");
-  const communities = r("communities");
-  const communitiesUsers = r("communitiesUsers");
-  const posts = r("posts");
+  const users: DUser[] = r("users");
+  const communities: DCommunity[] = r("communities");
+  const communitiesUsers: DCommunitiesUsers[] = r("communitiesUsers");
+  const posts: DPost[] = r("posts");
 
   const knex = await knexProvider();
   log("Clearing database...");

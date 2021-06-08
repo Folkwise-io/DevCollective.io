@@ -39,3 +39,13 @@ interface DCommunitiesUsers {
   createdAt: Date;
   updatedAt: Date;
 }
+
+interface DComment {
+  id: number;
+  authorId: number;
+  postId: number;
+  parentCommentId?: number;
+  body: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

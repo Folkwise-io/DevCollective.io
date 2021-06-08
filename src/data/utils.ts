@@ -10,8 +10,9 @@ export const pickOne =
     }
   };
 
-export const fieldGetterHoc = (cb: (id: number) => Promise<any>) => {
-  return async (id: number, fieldName: string) => {
+// TODO: Tighten up types. This should just accept a string... i think.
+export const fieldGetterHoc = (cb: (id: string) => Promise<any>) => {
+  return async (id: string, fieldName: string) => {
     const community = await cb(id);
     if (!community) {
       return null;

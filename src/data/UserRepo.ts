@@ -2,7 +2,7 @@ import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 
-const userLoader = new DataLoader<number, DUser>(async (ids) => {
+const userLoader = new DataLoader<string, DUser>(async (ids) => {
   const knex = await knexProvider();
   return knex("users").whereIn("id", ids);
 });
@@ -27,7 +27,8 @@ export const getAllUserIds = async () => {
   const knex = await knexProvider();
   const users = await knex.raw("SELECT * FROM users");
   users.rows.forEach((u: DUser) => {
-    userLoader.prime(u.id, u);
+    // TODO: Straighten up types so that "" + is not required
+    userLoader.prime("" + u.id, u);
   });
   return pickOne("id")(users.rows);
 };

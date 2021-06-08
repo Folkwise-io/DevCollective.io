@@ -2,14 +2,15 @@ import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 
-const postLoader = new DataLoader<number, DPost>(async (ids) => {
+const postLoader = new DataLoader<string, DPost>(async (ids) => {
   const response = await knexProvider().then((knex) => knex<DPost>("posts").whereIn("id", ids));
   return response;
 });
 
 const prime = (posts: DPost[]) => {
   posts.forEach((p: DPost) => {
-    postLoader.prime(p.id, p);
+    // TODO: Straighten up types so that "" + is not required
+    postLoader.prime("" + p.id, p);
   });
   return pickOne("id")(posts);
 };
@@ -44,7 +45,7 @@ export const getPostIdsForUserId = async (userId: number) => {
   return pickOne("id")(posts.rows);
 };
 
-export const getPostById = async (id: number) => postLoader.load(id);
+export const getPostById = async (id: string) => postLoader.load(id);
 
 interface CreatePostParams {
   title: string;
@@ -57,7 +58,8 @@ export const createPost = async (params: CreatePostParams): Promise<DPost | void
   const posts: DPost[] = (await knex<DPost>("posts").insert(params).returning("*")) as any;
   if (posts && posts.length) {
     posts.forEach((p) => {
-      postLoader.prime(p.id, p);
+      getPostById;
+      postLoader.prime("" + p.id, p);
     });
     return posts[0];
   }

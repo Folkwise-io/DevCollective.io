@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
 
     table.integer("authorId").notNullable();
     table.integer("postId").notNullable();
-    table.integer("parentCommentId").notNullable();
+    table.integer("parentCommentId");
 
     table.text("body").notNullable();
 

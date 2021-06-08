@@ -2,8 +2,10 @@ import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from "graph
 import { getCommunityFieldById } from "../data/CommunityRepo";
 import { getPostFieldById, getPostById } from "../data/PostRepo";
 import slugify from "slugify";
+import CommentType from "./CommentType";
+import { getCommentIdsForPostId } from "../data/CommentRepo";
 
-const postFieldHoc = (fieldName: string) => (id: number) => getPostFieldById(id, fieldName);
+const postFieldHoc = (fieldName: string) => (id: string) => getPostFieldById(id, fieldName);
 
 export default new GraphQLObjectType({
   name: "Post",
@@ -26,10 +28,11 @@ export default new GraphQLObjectType({
       },
       url: {
         type: GraphQLString,
-        resolve: async (id: number) => {
+        resolve: async (id: string) => {
           const post = await getPostById(id);
           const { title, communityId } = post;
-          const callsign = await getCommunityFieldById(communityId, "callsign");
+          // TODO: Straighten up types so that "" + is not required
+          const callsign = await getCommunityFieldById("" + communityId, "callsign");
           const slug = slugify(title, {
             lower: true,
             strict: true,
@@ -48,6 +51,10 @@ export default new GraphQLObjectType({
       community: {
         type: CommunityType,
         resolve: postFieldHoc("communityId"),
+      },
+      comments: {
+        type: GraphQLList(CommentType),
+        resolve: async (id: string) => getCommentIdsForPostId(id),
       },
     };
   },

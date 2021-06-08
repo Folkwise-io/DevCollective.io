@@ -4,6 +4,7 @@ import { Express } from "express";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import TestManager from "../test/TestManager";
+import { createComment } from "../data/CommentRepo";
 
 describe("Post object", () => {
   let app: Express;
@@ -29,11 +30,36 @@ describe("Post object", () => {
   describe("queries", () => {
     describe("sunny", () => {
       it("can get all comments for a post.", async () => {
+        const user = users[0];
+        const community = communities[0];
+        const post = posts.find((p: DPost) => p.authorId === user.id);
+
+        const comments = [
+          {
+            body: "This is comment number 1",
+            authorId: "" + user.id,
+            postId: post.id,
+          },
+          {
+            body: "This is comment number 2",
+            authorId: "" + user.id,
+            postId: post.id,
+          },
+          {
+            body: "This is comment number 3",
+            authorId: "" + user.id,
+            postId: post.id,
+          },
+        ];
+
         // directly create 3 comments for a post
-        // TODO
+        // TODO: Fix types
+        // @ts-expect-error number/string mismatch
+        await Promise.all(comments.map((c) => createComment(c)));
 
         // query for those 3 comments
-        const response = await tm.gql(`
+        const response = await tm.gql(
+          `
           query Query($id: ID!) {
             post(id: $id) {
               comments {
@@ -47,10 +73,23 @@ describe("Post object", () => {
               }
             }
           }
-        `);
+        `,
+          {
+            id: post.id,
+          }
+        );
 
-        // expect 3 comments to match
-        // TODO
+        expect(response.body.errors).toBeUndefined();
+        response.body.data.post.comments.forEach((comment: any) => {
+          expect(comment.id);
+        });
+
+        for (let i = 0; i < response.body.data.post.comments; i++) {
+          const actual = response.body.data.post.comments[i];
+          const expected = comments[i];
+          expect(actual.author.id).toMatch(expected.authorId);
+          expect(actual.body).toMatch(expected.body);
+        }
       });
 
       it("can get all comments for a user.", () => {
