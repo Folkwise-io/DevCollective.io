@@ -27,7 +27,7 @@ const PostTray = ({ posts }) => {
 
   return (
     <Wrapper>
-      <Card style={{ gridRow: "1", width: "100%" }}>
+      <Card style={{ gridRow: "1", width: "inherit" }}>
         <CardBody>
           <Button onClick={() => history.push(`/c/${callsign}/new`)}>New Post</Button>
         </CardBody>
