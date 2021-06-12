@@ -43,7 +43,7 @@ const SignupFormWrapper = styled(FormWrapper)`
       [row3-start] "password password" [row3-end]
       [row4-start] "submit submit" [row4-end]
       / 1fr 1fr;
-    grid-gap: 1em 1em;
+    grid-gap: 1em;
   }
 `;
 
