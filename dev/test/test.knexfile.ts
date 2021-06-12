@@ -4,9 +4,9 @@ export default {
   client: "postgresql",
   connection: {
     database: "mintbean_v4_test",
-    user: "mintbean",
-    password: "password",
-    port: 10800,
+    user: "postgres",
+    password: "postgres",
+    port: 10801,
   },
   pool: {
     min: 2,
