@@ -24,6 +24,10 @@ yarn
 
 ### 4. Start your database
 
+```sh
+yarn dbup
+```
+
 This step creates 2 Postgres databases in Docker. The one on port 10800 is
 development, while the one on port 10801 is for unit tests.
 
