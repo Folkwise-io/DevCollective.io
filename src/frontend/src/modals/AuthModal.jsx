@@ -17,6 +17,7 @@ const FormWrapper = styled.div`
     outline: none;
     width: 100%;
     border: none;
+    box-sizing: border-box;
 
     &:focus {
       outline: none;
@@ -38,12 +39,12 @@ const SigninFormWrapper = styled(FormWrapper)`
 const SignupFormWrapper = styled(FormWrapper)`
   form {
     grid-template:
-      [row1-start] "firstName lastName" auto [row1-end]
+      [row1-start] "firstName lastName" [row1-end]
       [row2-start] "email email" [row2-end]
       [row3-start] "password password" [row3-end]
       [row4-start] "submit submit" [row4-end]
       / 1fr 1fr;
-    grid-gap: 1em 2em;
+    grid-gap: 1em 1em;
   }
 `;
 
