@@ -1,13 +1,11 @@
-IN PROGRESS
+MONARCH'S IN-PROGRESS TASK
 
-- Threaded comments
+- FS: error handling / toast notifications
 
 TODO
 
-- BE: CommentType validation tests.
 - BE: Authorization - user should only be able to do things on their own behalf. Would be nice if we could put this inside some kind of validator layer.
 - BE: Review GraphQL required arguments for queries and mutations. Use GraphQLNonNull where needed.
-- FS: error handling / toast notifications
 - FE: If user email is not confirmed, nag.
 - FE: user registration frontend
 - FE: confirm account frontend
@@ -16,6 +14,7 @@ TODO
 - FE: Create Comment
 - FE: Like
 - FS: c/cd and production deployment
+- BE: CommentType validation tests.
 
 ==============================================================================================================================
 
@@ -106,6 +105,7 @@ DONE
 - BE: make email lowercase-only
 - BE: if user email is not confirmed, `user.accountConfirmationPending` flag on the `/auth` calls should be `true`
 - BE: SEO: Move all records from UUID to numeric incremented IDs.
+- Threaded comments
 
 KNOWN ISSUES
 
