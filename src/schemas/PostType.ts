@@ -1,4 +1,4 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
+import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID } from "graphql";
 import { getCommunityFieldById } from "../data/CommunityRepo";
 import { getPostFieldById, getPostById } from "../data/PostRepo";
 import slugify from "slugify";
@@ -15,8 +15,8 @@ export default new GraphQLObjectType({
 
     return {
       id: {
-        type: GraphQLInt,
-        resolve: (id) => id,
+        type: GraphQLID,
+        resolve: (id: string) => id,
       },
       title: {
         type: GraphQLString,

@@ -1,12 +1,12 @@
-CURRENT
+IN PROGRESS
 
 - Threaded comments
 
-then
+TODO
 
-ROADMAP TO V.01
-
-- BE: Authorization - user should only be able to do things on their own behalf.
+- BE: CommentType validation tests.
+- BE: Authorization - user should only be able to do things on their own behalf. Would be nice if we could put this inside some kind of validator layer.
+- BE: Review GraphQL required arguments for queries and mutations. Use GraphQLNonNull where needed.
 - FS: error handling / toast notifications
 - FE: If user email is not confirmed, nag.
 - FE: user registration frontend
@@ -17,9 +17,11 @@ ROADMAP TO V.01
 - FE: Like
 - FS: c/cd and production deployment
 
+==============================================================================================================================
+
 ROADMAP TO V1
 
-Tier 1
+Phase 1
 
 - IMPORTANT REFACTOR: Isolate number/string ID conversions at the DAO level. And ffs, just call them DAOs.
 - COOL: keyboard shortcut and navigation system
@@ -42,7 +44,7 @@ Tier 1
 - notifications
 - better email templates
 
-Tier 2 (these depend on at least one Tier 1 ticket)
+Phase 2 (these depend on at least one Phase 1 ticket)
 
 - Admin - create communities
 - Admin - set moderators
@@ -65,7 +67,7 @@ Tier 2 (these depend on at least one Tier 1 ticket)
 - Search user profiles by name
 - Direct messaging
 
-Tier 3 (these depend on at least one Tier 2 ticket)
+Phase 3 (these depend on at least one Phase 2 ticket)
 
 - Admin - review queue for posts.
 - Moderator - review queue for my communities' posts.

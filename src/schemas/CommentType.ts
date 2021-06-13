@@ -4,7 +4,7 @@ import { GraphQLObjectType, GraphQLString, GraphQLID } from "graphql";
 
 const commentFieldHoc = (fieldName: string) => (id: string) => getCommentFieldById(id, fieldName);
 
-export default new GraphQLObjectType({
+const CommentType: GraphQLObjectType = new GraphQLObjectType({
   name: "Comment",
   fields: () => {
     const PostType = require("./PostType").default;
@@ -23,13 +23,13 @@ export default new GraphQLObjectType({
         type: GraphQLString,
         resolve: commentFieldHoc("createdAt"),
       },
-      createdBy: {
-        type: UserType,
-        resolve: commentFieldHoc("createdBy"),
-      },
       post: {
         type: PostType,
         resolve: commentFieldHoc("postId"),
+      },
+      parentComment: {
+        type: CommentType,
+        resolve: commentFieldHoc("parentCommentId"),
       },
       author: {
         type: UserType,
@@ -38,3 +38,5 @@ export default new GraphQLObjectType({
     };
   },
 });
+
+export default CommentType;

@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString, isRequiredArgument } from "graphql";
 import { getCommunityIdByCallsign, getCommunityFieldById } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
 import { getUserById, getUserFieldById } from "../data/UserRepo";
@@ -11,7 +11,7 @@ import { createPost, getPostById } from "../data/PostRepo";
 import CommunityType from "./CommunityType";
 import PostType from "./PostType";
 import CommentType from "./CommentType";
-import { createComment } from "../data/CommentRepo";
+import { createComment, getCommentFieldById, getCommentById } from "../data/CommentRepo";
 
 const MutationType = new GraphQLObjectType({
   name: "Mutation",
@@ -20,16 +20,16 @@ const MutationType = new GraphQLObjectType({
       type: PostType,
       args: {
         title: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
         },
         body: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
         },
         communityCallsign: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
         },
         authorId: {
-          type: GraphQLID,
+          type: GraphQLNonNull(GraphQLID),
         },
       },
       resolve: async function (source, args, context) {
@@ -87,33 +87,50 @@ const MutationType = new GraphQLObjectType({
     createComment: {
       type: CommentType,
       args: {
-        userId: {
+        authorId: {
+          type: GraphQLNonNull(GraphQLID),
+        },
+        parentCommentId: {
           type: GraphQLID,
         },
         postId: {
-          type: GraphQLID,
+          type: GraphQLNonNull(GraphQLID),
         },
         body: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
         },
       },
       resolve: async (source, args, context) => {
         const postId: string = args.postId;
-        const userId: string = args.userId;
+        const authorId: string = args.authorId;
         const body: string = args.body;
+        const parentCommentId: string = args.parentCommentId;
 
         const post = await getPostById(postId);
-        const user = await getUserById(userId);
+        const user = await getUserById(authorId);
 
-        if (!post || !user) {
-          return null;
+        if (!post) {
+          throw new Error(`post with id ${postId} does not exist.`);
+        }
+        if (!user) {
+          throw new Error(`user with id ${authorId} does not exist.`);
         }
 
-        return createComment({
+        if (parentCommentId) {
+          const parentComment = await getCommentById(parentCommentId);
+          if (!parentComment) {
+            throw new Error(`comment with id ${parentCommentId} does not exist`);
+          }
+        }
+
+        const comment = await createComment({
           authorId: user.id,
           body,
           postId: post.id,
+          parentCommentId: parentCommentId ? +parentCommentId : undefined,
         });
+
+        return (comment && comment.id) || null;
       },
     },
   },

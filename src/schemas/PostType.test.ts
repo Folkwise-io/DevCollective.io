@@ -37,7 +37,7 @@ describe("Post object", () => {
           `
         );
 
-        expect(response.body.data.posts.map((p: any) => p.id).sort()).toEqual(posts.map((p: any) => p.id).sort());
+        expect(response.body.data.posts.map((p: any) => p.id).sort()).toEqual(posts.map((p: any) => "" + p.id).sort());
       });
 
       it("can create posts", async () => {

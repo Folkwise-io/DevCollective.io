@@ -210,13 +210,83 @@ describe("Post object", () => {
         await tm.login(user.email, "password").expect(200);
 
         const body = "Happy Holidays!";
+        const responseBody = "Happy Canada Day!";
 
+        let parentCommentId: string;
+
+        // a top-level comment can be created
         {
-          const response = await tm
-            .gql(
-              `
-            mutation Mutation($postId: ID!, $body: String!) {
-              createComment(postId: $postId, body: $body) {
+          const response = await tm.gql(
+            `
+            mutation Mutation($postId: ID!, $body: String!, $authorId: ID!) {
+              createComment(postId: $postId, body: $body, authorId: $authorId) {
+                id
+                body,
+                post {
+                  id
+                }
+                author {
+                  id
+                }
+              }
+            }
+          `,
+            {
+              postId: post.id,
+              authorId: user.id,
+              body,
+            }
+          );
+
+          expect(response.statusCode).toBe(200);
+          expect(response.body.errors).toBeFalsy();
+          expect(response.body.data.createComment.id).toBeTruthy();
+          expect(response.body.data.createComment.body).toStrictEqual(body);
+          expect(response.body.data.createComment.post.id).toStrictEqual("" + post.id);
+          expect(response.body.data.createComment.author.id).toStrictEqual("" + user.id);
+
+          parentCommentId = response.body.data.createComment.id;
+        }
+
+        // the comment shows up in a community->posts->comments call.
+        {
+          const response = await tm.gql(
+            `#graphql
+            query Query($id: ID!) {
+              community(id: $id) {
+                posts {
+                  id
+                  comments {
+                    id
+                    body
+                  }
+                }
+              }
+            }
+          `,
+            {
+              id: post.communityId,
+            }
+          );
+
+          expect(response.statusCode).toBe(200);
+          expect(response.body.errors).toBeFalsy();
+
+          const postsWithComments = response.body.data.community.posts.filter((p: any) => p.comments.length > 0);
+          expect(postsWithComments.length).toBe(1);
+          const postWithComment = postsWithComments[0];
+
+          expect(postWithComment.comments.length).toBe(1);
+          expect(postWithComment.comments[0].body).toBe(body);
+        }
+
+        // test responding to the comment in a thread (1 level deep)
+        {
+          const response = await tm.gql(
+            `#graphql
+              mutation Mutation($postId: ID!, $body: String!, $authorId: ID!, $parentCommentId: ID) {
+                createComment(postId: $postId, body: $body, authorId: $authorId, parentCommentId: $parentCommentId) {
+                  id
                   body,
                   post {
                     id
@@ -224,172 +294,50 @@ describe("Post object", () => {
                   author {
                     id
                   }
+                  parentComment {
+                    id
+                    body
+                    post {
+                      id
+                    }
+                  }
                 }
-              }
+              } 
+            `,
+            {
+              postId: post.id,
+              body: responseBody,
+              authorId: user.id,
+              parentCommentId,
             }
-          `,
-              {
-                postId: post.id,
-                body,
-              }
-            )
-            .expect(200);
+          );
 
-          expect(response.body.errors).toMatchObject([]);
-          expect(response.body.data.createComment.body).toStrictEqual(body);
-          expect(response.body.data.createComment.post.id).toStrictEqual("" + post.id);
-          expect(response.body.data.createComment.user.id).toStrictEqual("" + user.id);
+          expect(response.statusCode).toBe(200);
+          expect(response.body.errors).toBeFalsy();
+          expect(response.body.data.createComment.id).toBeTruthy();
+          expect(response.body.data.createComment.body).toBe(responseBody);
+          expect(response.body.data.createComment.parentComment.id).toBe(parentCommentId);
+          expect(response.body.data.createComment.parentComment.body).toBe(body);
+          expect(response.body.data.createComment.post.id).toBe("" + post.id);
         }
-
-        // login as a user
-        // comment on a post
-        // query post comments
-        // expect the comment to be there.
-      });
-
-      it("can respond to comments.", () => {
-        // login as a user
-        // respond to a comment
-        // query post comments
-        // expect the comment to be there.
-        // expect the comment parent to be the correct comment
       });
     });
 
     describe("validations", () => {
-      it("requires the user to be logged in", () => {});
+      it("requires the user to be logged in", async () => {
+        // TODO
+      });
 
-      it("requires a body of at least a single character", () => {});
+      it("requires a body of at least a single character", () => {
+        // TODO
+      });
 
-      it("has a max comment length of 1000", () => {});
+      it("has a max comment length of 1000", () => {
+        // TODO
+      });
+
+      it("requires postId/communityId/authorId, and parentCommentId is optional", () => {
+        // TODO
+      });
     });
   });
-
-  // describe("root posts query", () => {
-  //   describe("sunny cases", () => {
-  //     it("can fetch all posts", async () => {
-  //       const response = await query(app).gqlQuery(
-  //         `#graphql
-  //           {
-  //             posts {
-  //               id,
-  //               title,
-  //               body,
-  //             }
-  //           }
-  //         `
-  //       );
-
-  //       expect(response.body.data.posts.map((p: any) => p.id).sort()).toEqual(posts.map((p: any) => p.id).sort());
-  //     });
-
-  //     it("can create posts", async () => {
-  //       const params = {
-  //         title: "Some new title",
-  //         body: "A little body",
-  //         communityCallsign: communities[0].callsign,
-  //         authorId: "" + users[0].id,
-  //       };
-
-  //       const response = await query(app).gqlMutation(
-  //         `#graphql
-  //         mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: ID!) {
-  //           createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
-  //             id
-  //             title
-  //             body
-  //             url
-  //             author {
-  //               id
-  //               firstName
-  //             }
-  //             community {
-  //               id
-  //               callsign
-  //             }
-  //           }
-  //         }
-  //       `,
-  //         params
-  //       );
-
-  //       expect(response.body?.errors?.length).toBeFalsy();
-  //       expect(response.body?.data?.createPost?.id).toBeTruthy();
-  //       expect(response.body?.data?.createPost?.url).toBeTruthy();
-  //       expect(response.body?.data?.createPost?.author?.id).toBeTruthy();
-  //       expect(response.body?.data?.createPost?.author?.firstName).toBeTruthy();
-  //       expect(response.body?.data?.createPost?.community?.id).toBeTruthy();
-  //       expect(response.body?.data?.createPost?.community?.callsign).toBeTruthy();
-  //     });
-
-  //     it("can fetch the community and author for a given post", async () => {
-  //       const post = posts[1];
-  //       const expectedAuthor = users.find((u: any) => u.id === post.authorId);
-  //       const expectedCommunity = communities.find((c: any) => c.id === post.communityId);
-
-  //       const response = await query(app).gqlQuery(
-  //         `#graphql
-  //         query Query($id: ID!) {
-  //           post(id: $id) {
-  //             id,
-  //             author {
-  //               id
-  //             }
-  //             community {
-  //               id
-  //             }
-  //           }
-  //         }
-  //         `,
-  //         {
-  //           id: post.id,
-  //         }
-  //       );
-
-  //       const responsePost = response.body.data.post;
-
-  //       expect(responsePost.author.id).toEqual("" + expectedAuthor.id);
-  //       expect(responsePost.community.id).toEqual("" + expectedCommunity.id);
-  //     });
-  //   });
-
-  //   describe("rainy cases", () => {
-  //     it("does not provide email", async () => {
-  //       const response = await query(app).gqlQuery(
-  //         `#graphql
-  //         {
-  //           users {
-  //             email
-  //           }
-  //         }
-  //       `
-  //       );
-  //       expect(response.body.errors[0].message).toEqual('Cannot query field "email" on type "User".');
-  //     });
-  //     it("does not provide password", async () => {
-  //       const response = await query(app).gqlQuery(
-  //         `#graphql
-  //         {
-  //           users {
-  //             password
-  //           }
-  //         }
-  //       `
-  //       );
-  //       expect(response.body.errors[0].message).toEqual('Cannot query field "password" on type "User".');
-  //     });
-  //     it("does not provide passwordHash", async () => {
-  //       const response = await query(app).gqlQuery(
-  //         `#graphql
-  //         {
-  //           users {
-  //             passwordHash
-  //           }
-  //         }
-  //       `
-  //       );
-  //       expect(response.body.errors[0].message).toEqual('Cannot query field "passwordHash" on type "User".');
-  //     });
-  //   });
-  // });
-});

@@ -59,7 +59,7 @@ describe("User object", () => {
           }
         );
         expect(response.body.data.user.posts.map((p: any) => p.id).sort()).toMatchObject(
-          userPostIds.map((p: any) => p.id).sort()
+          userPostIds.map((p: any) => "" + p.id).sort()
         );
       });
     });

@@ -15,7 +15,7 @@ export default new GraphQLObjectType({
     return {
       id: {
         type: GraphQLID,
-        resolve: (id) => id,
+        resolve: (id: string) => id,
       },
       firstName: {
         type: GraphQLString,
