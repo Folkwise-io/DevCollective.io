@@ -16,7 +16,8 @@
     "knex:test": "cross-env MB_ENV_FILE=dev/test.env knex --knexfile ./dev/test/test.knexfile.ts",
     "pristine": "yarn knex migrate:latest && yarn knex seed:run && yarn knex:test migrate:latest && yarn knex:test seed:run",
     "lint": "tsc --noEmit && prettier --check .",
-    "dev:generate-dataset": "ts-node dev/test/datasetGenerator.ts"
+    "dev:generate-dataset": "ts-node dev/test/datasetGenerator.ts",
+    "psql": "docker exec -ti mintbean-database-dev psql -U postgres mintbean_v4"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
