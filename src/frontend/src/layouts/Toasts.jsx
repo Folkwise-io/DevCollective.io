@@ -1,11 +1,26 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
+
+const slide = keyframes`
+  0% {
+    background-position: 0 0;
+  }
+  0% {
+    background-position: 100% 0;
+  }
+  `;
 
 const ToastCard = styled(Card)`
   height: 6em;
   padding-top: 0;
   padding-bottom: 0;
+  ${CardHeaderAction} {
+    :hover {
+      cursor: pointer;
+    }
+  }
+
 `;
 
 export const ToastTypes = {
@@ -20,6 +35,11 @@ export const ToastTypes = {
       ${CardHeader}, ${CardHeaderAction}, ${CardBody} {
         color: var(--green-800);
       }
+
+    background: linear-gradient(90deg, var(--green-600) 50%, var(--green-300) 50%);
+    background-size: 200% 100%;
+    background-position: 0 0;
+    animation: ${slide} 6s linear 0.5s;
     `,
   },
   success: {
@@ -74,10 +94,15 @@ const Toasts = ({ toasts = [] }) => {
 };
 
 const Toast = ({ title, body, type }) => {
+  const [show, setShow] = useState(true);
+  // close Toast after 7s
+  useEffect( () => setTimeout(() => setShow(false), 7000), []);
+  
+
   return (
-    <type.Card>
+    show && <type.Card>
       <CardHeader>{title}</CardHeader>
-      <CardHeaderAction>Close</CardHeaderAction>
+      <CardHeaderAction onClick={() => setShow(false)}>Close</CardHeaderAction>
       <CardBody>{body}</CardBody>
     </type.Card>
   );
