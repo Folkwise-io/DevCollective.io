@@ -94,6 +94,7 @@ Recommended for GQL work.
 
 [How to make your first pull request](./docs/FirstPullRequest.md) - Thank you, Julio Alcantara!
 [How to create new entities](./docs/HowToCreateNewEntities.md)
+[How to sync your repo with updated code](./docs/HowToSyncUpdatedRepo.md)
 
 # Production config
 
