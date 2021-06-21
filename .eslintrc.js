@@ -23,7 +23,7 @@ module.exports = {
         alphabetize: { order: `asc`, caseInsensitive: true },
       },
     ],
-    "prefer-const": 1,
+    "prefer-const": 2,
     "no-console": [1, { allow: [`warn`, `error`, `info`] }],
     "no-constant-condition": [2, { checkLoops: false }],
     "no-control-regex": 0,
@@ -36,7 +36,7 @@ module.exports = {
       parser: `@babel/eslint-parser`,
       rules: {
         "no-unused-vars": [1, { argsIgnorePattern: `^_`, ignoreRestSiblings: true, args: `none` }],
-        quotes: [1, `backtick`],
+        quotes: [2, `backtick`],
       },
     },
     {
@@ -70,8 +70,7 @@ module.exports = {
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-non-null-assertion": 0,
-        "@typescript-eslint/quotes": [1, `backtick`],
-        "prefer-const": 1,
+        "@typescript-eslint/quotes": [2, `backtick`],
       },
     },
   ],

@@ -17,7 +17,7 @@
     "pristine": "yarn knex migrate:latest && yarn knex seed:run && yarn knex:test migrate:latest && yarn knex:test seed:run",
     "dev:generate-dataset": "ts-node dev/test/datasetGenerator.ts",
     "psql": "docker exec -ti mintbean-database-dev psql -U postgres mintbean_v4",
-    "lint": "prettier --write . --loglevel warn && eslint . && tsc"
+    "lint": "prettier --write . --loglevel warn && eslint --fix . && tsc"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
