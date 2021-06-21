@@ -1,11 +1,11 @@
 import { Field, Form, Formik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import styled from "styled-components";
 
 import Button from "../elements/Button";
 import { Modal } from "../layouts/Modal";
 import { StateContext } from "../state";
 import { post } from "../utils/rest-api";
-import styled from "styled-components";
 
 const FormWrapper = styled.div`
   form {
@@ -47,11 +47,9 @@ const SignupFormWrapper = styled(FormWrapper)`
   }
 `;
 
-
-
-const makeField = ({ label, id, type = "input" }) => (
+const makeField = ({ label, id, type = `input` }) => (
   <label htmlFor={id} style={{ gridArea: id }}>
-      {label}
+    {label}
     <Field id={id} name={id} type={type} placeholder={label} />
   </label>
 );
@@ -88,11 +86,11 @@ const AuthModal = ({ onClose, page }) => {
         <SignupFormWrapper>
           <Formik initialValues={{ firstName: ``, lastName: ``, email: ``, password: `` }} onSubmit={onSubmit}>
             <Form>
-              {makeField({ id: "firstName", label: "First Name" })}
-              {makeField({ id: "lastName", label: "Last Name" })}
-              {makeField({ id: "email", label: "Email" })}
-              {makeField({ id: "password", label: "Password", type: "password" })}
-              <Button type="submit" style={{ gridArea: "submit" }}>
+              {makeField({ id: `firstName`, label: `First Name` })}
+              {makeField({ id: `lastName`, label: `Last Name` })}
+              {makeField({ id: `email`, label: `Email` })}
+              {makeField({ id: `password`, label: `Password`, type: `password` })}
+              <Button type="submit" style={{ gridArea: `submit` }}>
                 Submit
               </Button>
             </Form>
@@ -106,8 +104,8 @@ const AuthModal = ({ onClose, page }) => {
         <SigninFormWrapper>
           <Formik initialValues={{ email: ``, password: `` }} onSubmit={onSubmit}>
             <Form>
-              {makeField({ id: "email", label: "Email" })}
-              {makeField({ id: "password", label: "Password", type: "password" })}
+              {makeField({ id: `email`, label: `Email` })}
+              {makeField({ id: `password`, label: `Password`, type: `password` })}
               <Button type="submit">Submit</Button>
             </Form>
           </Formik>

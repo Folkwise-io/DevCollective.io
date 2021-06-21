@@ -1,15 +1,14 @@
-import { getCommentFieldById } from "../data/CommentRepo";
+import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
 
-import { GraphQLObjectType, GraphQLString, GraphQLID } from "graphql";
+import { getCommentFieldById } from "../data/CommentRepo";
+import PostType from "./PostType";
+import UserType from "./UserType";
 
 const commentFieldHoc = (fieldName: string) => (id: string) => getCommentFieldById(id, fieldName);
 
 const CommentType: GraphQLObjectType = new GraphQLObjectType({
-  name: "Comment",
+  name: `Comment`,
   fields: () => {
-    const PostType = require("./PostType").default;
-    const UserType = require("./UserType").default;
-
     return {
       id: {
         type: GraphQLID,
@@ -17,23 +16,23 @@ const CommentType: GraphQLObjectType = new GraphQLObjectType({
       },
       body: {
         type: GraphQLString,
-        resolve: commentFieldHoc("body"),
+        resolve: commentFieldHoc(`body`),
       },
       createdAt: {
         type: GraphQLString,
-        resolve: commentFieldHoc("createdAt"),
+        resolve: commentFieldHoc(`createdAt`),
       },
       post: {
         type: PostType,
-        resolve: commentFieldHoc("postId"),
+        resolve: commentFieldHoc(`postId`),
       },
       parentComment: {
         type: CommentType,
-        resolve: commentFieldHoc("parentCommentId"),
+        resolve: commentFieldHoc(`parentCommentId`),
       },
       author: {
         type: UserType,
-        resolve: commentFieldHoc("authorId"),
+        resolve: commentFieldHoc(`authorId`),
       },
     };
   },

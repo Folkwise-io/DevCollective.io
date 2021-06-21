@@ -1,6 +1,6 @@
-import React from "react";
-import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
 import styled from "styled-components";
+
+import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
 
 const ToastCard = styled(Card)`
   height: 6em;

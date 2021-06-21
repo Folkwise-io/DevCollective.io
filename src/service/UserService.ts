@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+
 import { getUserByEmail, insertUser } from "../data/UserRepo";
 
 export const sanitizeDbUser = (user: DUser): EUser => {
@@ -23,7 +24,7 @@ interface CreateUserParams {
 export const createUser = async (createUserParams: CreateUserParams) => {
   const { email, firstName, lastName, password, confirmationToken } = createUserParams;
   const passwordHash = await bcrypt.hash(password, 10);
-  let confirmationTokenHash = confirmationToken && (await bcrypt.hash(confirmationToken, 10));
+  const confirmationTokenHash = confirmationToken && (await bcrypt.hash(confirmationToken, 10));
 
   const insertUserParams = {
     email: email.trim().toLowerCase(),
