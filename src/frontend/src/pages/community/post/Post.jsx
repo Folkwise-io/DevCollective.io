@@ -73,6 +73,7 @@ const Post = () => {
             {data.post.createdAt}
           </span>
           {data.post.author.id === user.id && <span>edit</span>}
+          {data.post.author.id === user.id && <span>delete</span>}
         </div>
       </div>
       <div style={{ background: `#3E3E3E`, padding: `1rem` }}>
