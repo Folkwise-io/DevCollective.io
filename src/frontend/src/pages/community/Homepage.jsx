@@ -6,7 +6,7 @@ import Card, { CardBody, CardHeader } from "../../elements/Card";
 import PostTray from "../../organisms/PostTray";
 import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
-import ViewPostFragment from "./ViewPostFragment";
+import Post from "./post/Post";
 
 const Container = styled.div`
   display: grid;
@@ -18,7 +18,7 @@ const Container = styled.div`
   align-items: start;
 `;
 
-const CommunityPage = () => {
+const Homepage = () => {
   const { callsign } = useParams();
   const { loading, error, data } = useQuery(
     gql`
@@ -59,8 +59,8 @@ const CommunityPage = () => {
           <Route path="/c/:callsign/new" exact>
             <NewPostFragment />
           </Route>
-          <Route path="/c/:callsign/:postId/:postSeoTitle">
-            <ViewPostFragment />
+          <Route path="/c/:callsign/:postId-*">
+            <Post />
           </Route>
           <Route path="/c/:callsign/:postId/:postSeoTitle/edit">
             <EditPostFragment />
@@ -84,4 +84,4 @@ const CommunityPage = () => {
   );
 };
 
-export default CommunityPage;
+export default Homepage;

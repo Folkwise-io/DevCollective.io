@@ -100,7 +100,7 @@ const PostCard = ({ post }) => {
   const icon = isLiked ? faHeartSolid : faHeart;
 
   return (
-    <Wrapper onClick={() => history.push(url)}>
+    <Wrapper>
       <Heart>
         <FontAwesomeIcon
           icon={icon}

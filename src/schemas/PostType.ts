@@ -37,7 +37,7 @@ const PostType: any = new GraphQLObjectType({
             lower: true,
             strict: true,
           });
-          return `/c/${callsign}/${id}/${slug}`;
+          return `/c/${callsign}/${id}-${slug}`;
         },
       },
       createdAt: {
