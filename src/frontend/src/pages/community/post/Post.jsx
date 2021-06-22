@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { useContext } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -67,7 +67,10 @@ const Post = () => {
         <ReactMarkdown components={components}>{data.post.body}</ReactMarkdown>
         <div>
           <span>
-            by {data.post.author.firstName} {data.post.author.lastName} at {data.post.createdAt}
+            posted to <Link to={`/c/${data.post.community.callsign}`}>/c/{data.post.community.callsign}</Link> by{` `}
+            {data.post.author.firstName} {data.post.author.lastName} at
+            {` `}
+            {data.post.createdAt}
           </span>
           {data.post.author.id === user.id && <span>edit</span>}
         </div>
