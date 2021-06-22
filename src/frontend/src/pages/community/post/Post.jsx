@@ -2,6 +2,8 @@ import { gql, useQuery } from "@apollo/client";
 import { useContext } from "react";
 import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router-dom";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { coldarkDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import { StateContext } from "../../../state";
 import Comment from "./Comment";
@@ -40,6 +42,21 @@ const Post = () => {
 
   const user = useContext(StateContext).state.user;
 
+  const components = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || ``);
+      return !inline && match ? (
+        <SyntaxHighlighter style={coldarkDark} language={match[1]} PreTag="div" {...props}>
+          {String(children).replace(/\n$/, ``)}
+        </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Failed to load Post.</div>;
 
@@ -47,7 +64,7 @@ const Post = () => {
     <div>
       <div style={{ background: `#3E3E3E`, padding: `1rem` }}>
         <h1>{data.post.title}</h1>
-        <ReactMarkdown>{data.post.body}</ReactMarkdown>
+        <ReactMarkdown components={components}>{data.post.body}</ReactMarkdown>
         <div>
           <span>
             by {data.post.author.firstName} {data.post.author.lastName} at {data.post.createdAt}
