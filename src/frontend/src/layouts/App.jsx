@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import NavBar, { NavbarHeight } from "../organisms/NavBar";
 import CommunityPage from "../pages/CommunityPage";
+import UserPage from "../pages/user/UserPage";
 import Toasts, { ToastTypes } from "./Toasts";
 
 const Container = styled.div`
@@ -29,6 +30,9 @@ const App = () => {
               }
             }}
           />
+          <Route path="/user/:userId">
+            <UserPage />
+          </Route>
         </Switch>
         <Toasts
           toasts={[
