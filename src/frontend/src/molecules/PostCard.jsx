@@ -2,7 +2,7 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons/faHeart";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons/faHeart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Heart = styled.div`
@@ -72,7 +72,6 @@ const Wrapper = styled.div`
 `;
 
 const PostCard = ({ post }) => {
-  const history = useHistory();
   const { title, author, community, url, body } = post;
   const [isLiked, setLiked] = useState(false);
 
