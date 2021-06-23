@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env ts-node src/main.ts",
-    "dev": "cross-env MB_ENV_FILE=dev/dev.env nodemon -e graphql,js,ts --ignore ./src/frontend/ src/main.ts",
-    "dev:win": "cross-env MB_ENV_FILE=dev/dev.env \"nodemon -e graphql,js,ts --ignore './src/frontend/' src/main.ts\"",
+    "dev": "cross-env MB_ENV_FILE=dev/dev.env OVR_MB_ENV_FILE=dev/dev-overrides.env nodemon -e graphql,js,ts --ignore ./src/frontend/ src/main.ts",
+    "dev:win": "cross-env MB_ENV_FILE=dev/dev.env OVR_MB_ENV_FILE=dev/dev-overrides.env \"nodemon -e graphql,js,ts --ignore './src/frontend/' src/main.ts\"",
     "dbup": "cd dev/db && docker-compose up -d",
     "test": "cross-env MB_ENV_FILE=dev/test.env yarn jest --runInBand --no-cache --forceExit --detectOpenHandles",
     "tdd": "cross-env MB_ENV_FILE=dev/test.env yarn jest --runInBand --no-cache --forceExit --detectOpenHandles --watchAll",
