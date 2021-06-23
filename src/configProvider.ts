@@ -31,7 +31,8 @@ let instance: ConfigInstance;
 export default () => {
   if (!instance) {
     const envFilePath = getConfig("MB_ENV_FILE");
-    const overrideEnvFilePath = getConfig("OVR_MB_ENV_FILE");
+    
+    const overrideEnvFilePath = getConfig("MB_ENV_FILE_OVR");
     
     config({
       path: path.join(__dirname, "..", envFilePath),
@@ -53,7 +54,6 @@ export default () => {
       MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig("MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE", (val) => +val),
       PORT: getConfig("PORT"),
     };
-
   }
 
   return instance;
