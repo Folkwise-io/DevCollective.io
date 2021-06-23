@@ -73,7 +73,7 @@ const Wrapper = styled.div`
 
 const PostCard = ({ post }) => {
   const history = useHistory();
-  const { title, author, community, url } = post;
+  const { title, author, community, url, body } = post;
   const [isLiked, setLiked] = useState(false);
 
   const summaryFragments = [];
@@ -100,28 +100,25 @@ const PostCard = ({ post }) => {
   const icon = isLiked ? faHeartSolid : faHeart;
 
   return (
-    <Wrapper onClick={() => history.push(url)}>
-      <Heart>
-        <FontAwesomeIcon
-          icon={icon}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setLiked(!isLiked);
-          }}
-        />
-      </Heart>
-      <LikeCount>29</LikeCount>
-      <Title>
-        <Link to={url}>{title}</Link>
-      </Title>
-      <Preview>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi quo, excepturi animi exercitationem eaque cum
-        impedit voluptates nemo praesentium dicta veniam. A reiciendis veniam provident sint porro. Quod, non illo?
-      </Preview>
-      <Spacer />
-      <Summary>{writableFragments}</Summary>
-    </Wrapper>
+    <Link to={url}>
+      <Wrapper>
+        <Heart>
+          <FontAwesomeIcon
+            icon={icon}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setLiked(!isLiked);
+            }}
+          />
+        </Heart>
+        <LikeCount>29</LikeCount>
+        <Title>{title}</Title>
+        <Preview>{body}</Preview>
+        <Spacer />
+        <Summary>{writableFragments}</Summary>
+      </Wrapper>
+    </Link>
   );
 };
 

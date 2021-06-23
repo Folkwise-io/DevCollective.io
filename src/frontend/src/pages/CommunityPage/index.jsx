@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Card, { CardBody, CardHeader } from "../../elements/Card";
 import PostTray from "../../organisms/PostTray";
 import EditPostFragment from "./EditPostFragment";
-import NewPostFragment from "./NewPostFragment";
+import NewPostFragment from "./NewPostPage";
 import ViewPostFragment from "./ViewPostFragment";
 
 const Container = styled.div`

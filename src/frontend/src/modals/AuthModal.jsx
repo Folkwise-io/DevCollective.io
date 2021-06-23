@@ -66,7 +66,7 @@ const AuthModal = ({ onClose, page }) => {
   useEffect(() => setPageMode(page), [page]);
 
   const onSubmit = async (values) => {
-    const url = pageMode === pages.signin ? `/auth/login` : `/auth/signup`;
+    const url = pageMode === pages.signin ? `/auth/login` : `/auth/register`;
     const response = await post(url, values);
 
     if (response.ok) {
