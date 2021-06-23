@@ -1,4 +1,4 @@
-import { config } from "dotenv";
+import { config, parse } from "dotenv";
 import fs from 'fs';
 import path from "path";
 
@@ -33,14 +33,14 @@ export default () => {
     const envFilePath = getConfig("MB_ENV_FILE");
     const overrideEnvFilePath = getConfig("OVR_MB_ENV_FILE");
     
-    if(fs.existsSync(path.join(__dirname, "..", overrideEnvFilePath))) {
-      config({
-        path: path.join(__dirname, "..", overrideEnvFilePath),
-      });
-    } else {
-      config({
-        path: path.join(__dirname, "..", envFilePath),
-      });
+    config({
+      path: path.join(__dirname, "..", envFilePath),
+    });
+
+    // override
+    const envConfig = parse(fs.readFileSync(path.join(__dirname, "..", overrideEnvFilePath)));
+    for(const key in envConfig) {
+      process.env[key] = envConfig[key];
     }
     
     instance = {
@@ -53,6 +53,7 @@ export default () => {
       MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig("MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE", (val) => +val),
       PORT: getConfig("PORT"),
     };
+
   }
 
   return instance;
