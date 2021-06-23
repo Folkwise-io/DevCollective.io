@@ -7,12 +7,12 @@ const StateContext = React.createContext(null);
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "setUser":
+    case `setUser`:
       return { ...state, user: action.payload };
-    case "unsetUser":
+    case `unsetUser`:
       return { ...state, user: null };
     default:
-      console.warn("Unknown reducer action received", action);
+      console.warn(`Unknown reducer action received`, action);
       return state;
   }
 };

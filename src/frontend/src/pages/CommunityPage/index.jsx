@@ -1,14 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
-import React from "react";
 import { Route, Switch, useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import Card, { CardBody, CardHeader } from "../../elements/Card";
 import PostTray from "../../organisms/PostTray";
 import EditPostFragment from "./EditPostFragment";
 import NewPostFragment from "./NewPostFragment";
 import ViewPostFragment from "./ViewPostFragment";
-
-import Card, { CardHeader, CardBody } from "../../elements/Card";
 
 const Container = styled.div`
   display: grid;
@@ -46,7 +44,7 @@ const CommunityPage = () => {
       variables: {
         callsign: callsign,
       },
-    }
+    },
   );
 
   if (loading) return <div>Loading</div>;

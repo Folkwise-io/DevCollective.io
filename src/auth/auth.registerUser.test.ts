@@ -1,24 +1,25 @@
-import appFactory from "../appFactory";
-import { Express } from "express";
-import TestManager from "../test/TestManager";
-import { createUser } from "../service/UserService";
-import { clearDatabase } from "../../dev/test/TestRepo";
-import { datasetLoader } from "../../dev/test/datasetLoader";
 import sgMail from "@sendgrid/mail";
-import { getUserByEmail, getUserById } from "../data/UserRepo";
-import { v4 } from "uuid";
+import { Express } from "express";
 import { PromiseValue } from "type-fest";
+import { v4 } from "uuid";
+
+import { datasetLoader } from "../../dev/test/datasetLoader";
+import { clearDatabase } from "../../dev/test/TestRepo";
+import appFactory from "../appFactory";
+import { getUserByEmail, getUserById } from "../data/UserRepo";
+import { createUser } from "../service/UserService";
+import TestManager from "../test/TestManager";
 import { extractUuidTokenFromEmail, getSentEmail } from "../test/utils";
 
 // disable emails
-jest.mock("@sendgrid/mail");
+jest.mock(`@sendgrid/mail`);
 
-describe("Authentication", () => {
+describe(`Authentication`, () => {
   let tm: TestManager;
   let app: Express;
   let data: PromiseValue<ReturnType<typeof datasetLoader>>;
 
-  const newUser = { firstName: "New", lastName: "User", email: "new@user.com", password: "newpassword" };
+  const newUser = { firstName: `New`, lastName: `User`, email: `new@user.com`, password: `newpassword` };
 
   beforeAll(async () => {
     await clearDatabase();
@@ -34,13 +35,13 @@ describe("Authentication", () => {
     tm = new TestManager(app);
   });
 
-  describe("sunny", () => {
-    it("can register a new user", async () => {
+  describe(`sunny`, () => {
+    it(`can register a new user`, async () => {
       const registerResponse = await tm.register({
-        firstName: "New",
-        lastName: "User",
-        email: "new@user.com",
-        password: "newpassword",
+        firstName: `New`,
+        lastName: `User`,
+        email: `new@user.com`,
+        password: `newpassword`,
       });
 
       expect(registerResponse.statusCode).toBe(200);
@@ -54,12 +55,12 @@ describe("Authentication", () => {
       expect(sgMail.send).toHaveBeenCalledTimes(1);
     });
 
-    it("Successfully sets a confirmation token in the db.", async () => {
+    it(`Successfully sets a confirmation token in the db.`, async () => {
       const response = await tm.register({
-        firstName: "New",
-        lastName: "User",
-        email: "new@user.com",
-        password: "newpassword",
+        firstName: `New`,
+        lastName: `User`,
+        email: `new@user.com`,
+        password: `newpassword`,
       });
 
       expect(response.statusCode).toBe(200);
@@ -68,12 +69,12 @@ describe("Authentication", () => {
       expect(dbUser.id).toBeTruthy();
     });
 
-    it("Successfully sends an email with a password confirmation token.", async () => {
+    it(`Successfully sends an email with a password confirmation token.`, async () => {
       const response = await tm.register({
-        firstName: "New",
-        lastName: "User",
-        email: "new@user.com",
-        password: "newpassword",
+        firstName: `New`,
+        lastName: `User`,
+        email: `new@user.com`,
+        password: `newpassword`,
       });
 
       expect(response.statusCode).toBe(200);
@@ -84,81 +85,81 @@ describe("Authentication", () => {
     });
   });
 
-  describe("validations", () => {
-    it("validates email", async () => {
+  describe(`validations`, () => {
+    it(`validates email`, async () => {
       await tm.register({ ...newUser, email: null }).expect(400);
       await tm.register({ ...newUser, email: undefined }).expect(400);
       await tm.register({ ...newUser, email: 0 }).expect(400);
       await tm.register({ ...newUser, email: 1 }).expect(400);
-      await tm.register({ ...newUser, email: { email: "lol" } }).expect(400);
+      await tm.register({ ...newUser, email: { email: `lol` } }).expect(400);
       await tm.register({ ...newUser, email: {} }).expect(400);
-      await tm.register({ ...newUser, email: "bademail" }).expect(400);
-      await tm.register({ ...newUser, email: "bademail@" }).expect(400);
-      await tm.register({ ...newUser, email: "bademail.com" }).expect(400);
-      await tm.register({ ...newUser, email: "@bademail.com" }).expect(400);
-      await tm.register({ ...newUser, email: " @bademail.com" }).expect(400);
-      await tm.register({ ...newUser, email: "bademail@something" }).expect(400);
-      await tm.register({ ...newUser, email: " bademail@something" }).expect(400);
-      await tm.register({ ...newUser, email: "bademail@something " }).expect(400);
-      await tm.register({ ...newUser, email: "bademail " }).expect(400);
-      await tm.register({ ...newUser, email: "lol@bademail .com" }).expect(400);
+      await tm.register({ ...newUser, email: `bademail` }).expect(400);
+      await tm.register({ ...newUser, email: `bademail@` }).expect(400);
+      await tm.register({ ...newUser, email: `bademail.com` }).expect(400);
+      await tm.register({ ...newUser, email: `@bademail.com` }).expect(400);
+      await tm.register({ ...newUser, email: ` @bademail.com` }).expect(400);
+      await tm.register({ ...newUser, email: `bademail@something` }).expect(400);
+      await tm.register({ ...newUser, email: ` bademail@something` }).expect(400);
+      await tm.register({ ...newUser, email: `bademail@something ` }).expect(400);
+      await tm.register({ ...newUser, email: `bademail ` }).expect(400);
+      await tm.register({ ...newUser, email: `lol@bademail .com` }).expect(400);
 
       // lowercase only
-      await tm.register({ ...newUser, email: "UPPERCASE@EMAIL.COM" }).expect(400);
-      await tm.register({ ...newUser, email: "lowerCamel@email.com" }).expect(400);
-      await tm.register({ ...newUser, email: "UpperCamel@email.com" }).expect(400);
-      await tm.register({ ...newUser, email: "user@EMAIL.com" }).expect(400);
-      await tm.register({ ...newUser, email: "user@email.COM" }).expect(400);
+      await tm.register({ ...newUser, email: `UPPERCASE@EMAIL.COM` }).expect(400);
+      await tm.register({ ...newUser, email: `lowerCamel@email.com` }).expect(400);
+      await tm.register({ ...newUser, email: `UpperCamel@email.com` }).expect(400);
+      await tm.register({ ...newUser, email: `user@EMAIL.com` }).expect(400);
+      await tm.register({ ...newUser, email: `user@email.COM` }).expect(400);
 
       expect(sgMail.send).toHaveBeenCalledTimes(0);
     });
 
-    it("requires a password of at least 8 characters in length.", async () => {
+    it(`requires a password of at least 8 characters in length.`, async () => {
       await tm.register({ ...newUser, password: undefined }).expect(400);
       await tm.register({ ...newUser, password: null }).expect(400);
       await tm.register({ ...newUser, password: {} }).expect(400);
-      await tm.register({ ...newUser, password: { password: "lol" } }).expect(400);
+      await tm.register({ ...newUser, password: { password: `lol` } }).expect(400);
       await tm.register({ ...newUser, password: { password: null } }).expect(400);
-      await tm.register({ ...newUser, password: "" }).expect(400);
-      await tm.register({ ...newUser, password: "t" }).expect(400);
-      await tm.register({ ...newUser, password: "to" }).expect(400);
-      await tm.register({ ...newUser, password: "too" }).expect(400);
-      await tm.register({ ...newUser, password: "toos" }).expect(400);
-      await tm.register({ ...newUser, password: "toosh" }).expect(400);
-      await tm.register({ ...newUser, password: "toosho" }).expect(400);
-      await tm.register({ ...newUser, password: "tooshor" }).expect(400);
+      await tm.register({ ...newUser, password: `` }).expect(400);
+      await tm.register({ ...newUser, password: `t` }).expect(400);
+      await tm.register({ ...newUser, password: `to` }).expect(400);
+      await tm.register({ ...newUser, password: `too` }).expect(400);
+      await tm.register({ ...newUser, password: `toos` }).expect(400);
+      await tm.register({ ...newUser, password: `toosh` }).expect(400);
+      await tm.register({ ...newUser, password: `toosho` }).expect(400);
+      await tm.register({ ...newUser, password: `tooshor` }).expect(400);
       expect(sgMail.send).toHaveBeenCalledTimes(0);
       expect(await getUserByEmail(newUser.email)).toBeFalsy();
-      await tm.register({ ...newUser, password: "NOTshort" }).expect(200);
+      await tm.register({ ...newUser, password: `NOTshort` }).expect(200);
       expect(sgMail.send).toHaveBeenCalledTimes(1);
       expect(await getUserByEmail(newUser.email)).toBeTruthy();
     });
 
-    it("requires a first name", async () => {
+    it(`requires a first name`, async () => {
       await tm.register({ ...newUser, firstName: undefined }).expect(400);
       await tm.register({ ...newUser, firstName: null }).expect(400);
       await tm.register({ ...newUser, firstName: {} }).expect(400);
-      await tm.register({ ...newUser, firstName: { firstName: "lol" } }).expect(400);
+      await tm.register({ ...newUser, firstName: { firstName: `lol` } }).expect(400);
       await tm.register({ ...newUser, firstName: { firstName: null } }).expect(400);
-      await tm.register({ ...newUser, firstName: "" }).expect(400);
+      await tm.register({ ...newUser, firstName: `` }).expect(400);
       expect(sgMail.send).toHaveBeenCalledTimes(0);
     });
-    it("requires a last name", async () => {
+    it(`requires a last name`, async () => {
       await tm.register({ ...newUser, lastName: undefined }).expect(400);
       await tm.register({ ...newUser, lastName: null }).expect(400);
       await tm.register({ ...newUser, lastName: {} }).expect(400);
-      await tm.register({ ...newUser, lastName: { lastName: "lol" } }).expect(400);
+      await tm.register({ ...newUser, lastName: { lastName: `lol` } }).expect(400);
       await tm.register({ ...newUser, lastName: { lastName: null } }).expect(400);
-      await tm.register({ ...newUser, lastName: "" }).expect(400);
+      await tm.register({ ...newUser, lastName: `` }).expect(400);
       expect(sgMail.send).toHaveBeenCalledTimes(0);
     });
   });
 
-  describe("behaviour", () => {
-    it("correctly performs accountConfirmation flag behaviour", async () => {
-      const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
-      const email = "new@user.com";
-      const password = "password";
+  describe(`behaviour`, () => {
+    it(`correctly performs accountConfirmation flag behaviour`, async () => {
+      const confirmationToken = `9123f99b-e69b-4816-8e27-536856162f26`;
+      const email = `new@user.com`;
+      const password = `password`;
 
       // confirm the user doesnt exist in the db
       const userNotYetCreated = await getUserByEmail(email);
@@ -167,8 +168,8 @@ describe("Authentication", () => {
       // create the user
       await createUser({
         email,
-        firstName: "new",
-        lastName: "user",
+        firstName: `new`,
+        lastName: `user`,
         password,
         confirmationToken,
       });
@@ -212,9 +213,9 @@ describe("Authentication", () => {
       expect(checkResponse3.body.accountConfirmationPending).toBeFalsy();
     });
 
-    it("Successfully confirms an account with a confirmationToken", async () => {
-      const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
-      const email = "new@user.com";
+    it(`Successfully confirms an account with a confirmationToken`, async () => {
+      const confirmationToken = `9123f99b-e69b-4816-8e27-536856162f26`;
+      const email = `new@user.com`;
 
       // confirm the user doesnt exist in the db
       const userNotYetCreated = await getUserByEmail(email);
@@ -223,9 +224,9 @@ describe("Authentication", () => {
       // create the user
       await createUser({
         email,
-        firstName: "new",
-        lastName: "user",
-        password: "password",
+        firstName: `new`,
+        lastName: `user`,
+        password: `password`,
         confirmationToken,
       });
 
@@ -246,24 +247,24 @@ describe("Authentication", () => {
     });
   });
 
-  describe("rainy", () => {
-    it("fails account confirmation if confirmationToken not in query param.", async () => {
+  describe(`rainy`, () => {
+    it(`fails account confirmation if confirmationToken not in query param.`, async () => {
       const response = await tm.submitAccountConfirmationToken({
         confirmationToken: undefined,
-        email: "user@user.com",
+        email: `user@user.com`,
       });
       expect(response.statusCode).toBe(400);
     });
 
-    it("fails account confirmation if confirmationToken is not uuid", async () => {
+    it(`fails account confirmation if confirmationToken is not uuid`, async () => {
       const response = await tm.submitAccountConfirmationToken({
-        confirmationToken: "not-uuid",
-        email: "user@user.com",
+        confirmationToken: `not-uuid`,
+        email: `user@user.com`,
       });
       expect(response.body.errors.length).toBe(1);
     });
 
-    it("fails account confirmation if an email is not in the query param.", async () => {
+    it(`fails account confirmation if an email is not in the query param.`, async () => {
       const response = await tm.submitAccountConfirmationToken({
         email: undefined,
         confirmationToken: v4(),
@@ -272,18 +273,18 @@ describe("Authentication", () => {
       expect(response.body.errors.length).toBe(1);
     });
 
-    it("fails account confirmation if email string is not email format.", async () => {
+    it(`fails account confirmation if email string is not email format.`, async () => {
       const response = await tm.submitAccountConfirmationToken({
-        email: "not-email",
+        email: `not-email`,
         confirmationToken: v4(),
       });
       expect(response.statusCode).toBe(400);
       expect(response.body.errors.length).toBe(1);
     });
 
-    it("will not confirm an account that has no confirmationToken in the database", async () => {
-      const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
-      const email = "new@user.com";
+    it(`will not confirm an account that has no confirmationToken in the database`, async () => {
+      const confirmationToken = `9123f99b-e69b-4816-8e27-536856162f26`;
+      const email = `new@user.com`;
 
       // confirm the user doesnt exist in the db
       const userNotYetCreated = await getUserByEmail(email);
@@ -292,9 +293,9 @@ describe("Authentication", () => {
       // create the user
       await createUser({
         email,
-        firstName: "new",
-        lastName: "user",
-        password: "password",
+        firstName: `new`,
+        lastName: `user`,
+        password: `password`,
         confirmationToken: undefined,
       });
 
@@ -313,9 +314,9 @@ describe("Authentication", () => {
       expect(createdUser2).toBeTruthy();
       expect(createdUser2.confirmationTokenHash).toBeFalsy();
     });
-    it("will not confirm an account that does not exist", async () => {
-      const confirmationToken = "9123f99b-e69b-4816-8e27-536856162f26";
-      const email = "new@user.com";
+    it(`will not confirm an account that does not exist`, async () => {
+      const confirmationToken = `9123f99b-e69b-4816-8e27-536856162f26`;
+      const email = `new@user.com`;
 
       // ensure the user doesnt exist in the db
       const userNotYetCreated = await getUserByEmail(email);

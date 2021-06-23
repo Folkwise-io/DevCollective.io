@@ -1,13 +1,13 @@
-import React from "react";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import ReactDOM from "react-dom";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
 import App from "./layouts/App";
 import { StateProvider } from "./state";
 
 import "./global.scss";
 
 const client = new ApolloClient({
-  uri: "http://localhost:8080/graphql",
+  uri: `http://localhost:8080/graphql`,
   cache: new InMemoryCache(),
 });
 
@@ -17,5 +17,5 @@ ReactDOM.render(
       <App />
     </ApolloProvider>
   </StateProvider>,
-  document.getElementById("out"),
+  document.getElementById(`root`),
 );

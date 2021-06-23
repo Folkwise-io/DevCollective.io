@@ -1,6 +1,7 @@
-import Knex, { Knex as IKnex } from "knex";
 import fs from "fs";
+import Knex, { Knex as IKnex } from "knex";
 import path from "path";
+
 import configProvider from "../configProvider";
 
 let instance: IKnex<any, unknown[]>;
@@ -8,7 +9,7 @@ let instance: IKnex<any, unknown[]>;
 const getKnex = async () => {
   if (!instance) {
     const { MB_KNEXFILE } = configProvider();
-    const knexfilePath = path.resolve(__dirname, "../..", MB_KNEXFILE);
+    const knexfilePath = path.resolve(__dirname, `../..`, MB_KNEXFILE);
 
     const stat = fs.statSync(knexfilePath);
     if (!stat.isFile) {
