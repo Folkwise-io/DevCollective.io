@@ -13,11 +13,14 @@ export const pickOne =
 // TODO: Tighten up types. This should just accept a string... i think.
 export const fieldGetterHoc = (cb: (id: string) => Promise<any>) => {
   return async (id: string, fieldName: string) => {
-    const community = await cb(id);
-    if (!community) {
+    const object = await cb(id);
+    if (fieldName === `title`) {
+      console.log(`INSIDE FIELDGETTERHOC`, object);
+    }
+    if (!object) {
       return null;
     } else {
-      return community[fieldName];
+      return object[fieldName];
     }
   };
 };

@@ -1,4 +1,5 @@
 import { Express } from "express";
+import knexProvider from "src/data/knex-provider";
 import supertest from "supertest";
 
 import query, { MbQueryAgent } from "./query";
@@ -39,6 +40,10 @@ export default class TestManager {
       email,
       password,
     });
+  }
+
+  getKnex() {
+    return knexProvider();
   }
 
   submitAccountConfirmationToken(opts: SubmitAccountConfirmationTokenParams, agent = this.agent) {

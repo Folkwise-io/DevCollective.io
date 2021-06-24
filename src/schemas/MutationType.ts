@@ -1,17 +1,36 @@
-import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLFieldResolver, GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
 
 import { createComment, getCommentById } from "../data/CommentRepo";
 import { getCommunityIdByCallsign } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
-import { createPost, getPostById } from "../data/PostRepo";
+import { createPost, editPost, getPostById, postLoader } from "../data/PostRepo";
 import { getUserById } from "../data/UserRepo";
 import CommentType from "./CommentType";
 import CommunityType from "./CommunityType";
+import EditPostInput from "./dtos/EditPostInput";
 import PostType from "./PostType";
 
 const MutationType = new GraphQLObjectType({
   name: `Mutation`,
   fields: {
+    editPost: {
+      type: PostType,
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLID),
+        },
+        post: {
+          type: GraphQLNonNull(EditPostInput),
+        },
+      },
+      resolve: async function (source, args, context) {
+        const post: { title?: string; body?: string } = args.post;
+        const id: string = args.id;
+        console.log(`INSIDE EDITPOST, THIS IS THE INCOMING DTO`, post);
+        await editPost(id, post);
+        return id;
+      },
+    },
     createPost: {
       type: PostType,
       args: {
