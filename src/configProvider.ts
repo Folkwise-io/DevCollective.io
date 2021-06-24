@@ -1,4 +1,4 @@
-import { config } from "dotenv";
+import { config, parse } from "dotenv";
 import fs from 'fs';
 import path from "path";
 
@@ -31,16 +31,17 @@ let instance: ConfigInstance;
 export default () => {
   if (!instance) {
     const envFilePath = getConfig("MB_ENV_FILE");
-    const overrideEnvFilePath = getConfig("OVR_MB_ENV_FILE");
     
-    if(fs.existsSync(path.join(__dirname, "..", overrideEnvFilePath))) {
-      config({
-        path: path.join(__dirname, "..", overrideEnvFilePath),
-      });
-    } else {
-      config({
-        path: path.join(__dirname, "..", envFilePath),
-      });
+    const overrideEnvFilePath = getConfig("MB_ENV_FILE_OVR");
+    
+    config({
+      path: path.join(__dirname, "..", envFilePath),
+    });
+
+    // override
+    const envConfig = parse(fs.readFileSync(path.join(__dirname, "..", overrideEnvFilePath)));
+    for(const key in envConfig) {
+      process.env[key] = envConfig[key];
     }
     
     instance = {

@@ -78,14 +78,7 @@ environment, then default values will be used from dev.env file present in dev f
 
 First create dev-override.env file in dev folder present in root directory. Then copy
 and paste the following fields in your file.
-
-    MB_KNEXFILE=./dev/db/dev.knexfile.ts
-    MB_SESSION_KEY=password
-    MB_ENABLE_GRAPHQL_LOGGER=true
-    MB_ENABLE_GRAPHIQL=true
-    MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE=14
-    SENDGRID_KEY=SG.FAKE_KEY
-    SENDGRID_PRINT_ONLY=true
+    
     PORT= *
 
 In place of \* you can declare your own port number that is available in your machine.
