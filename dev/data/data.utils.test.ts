@@ -1,13 +1,13 @@
 import { autoIncrement } from "./utils";
 
-describe("Auto Increment", () => {
-  it("increments as expected", () => {
+describe(`Auto Increment`, () => {
+  it(`increments as expected`, () => {
     const foo = autoIncrement();
 
     expect([foo(), foo(), foo()]).toMatchObject([1, 2, 3]);
   });
 
-  it("increments independently", () => {
+  it(`increments independently`, () => {
     const foo = autoIncrement();
     const bar = autoIncrement();
     const baz = autoIncrement();

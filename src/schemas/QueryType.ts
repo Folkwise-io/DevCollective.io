@@ -1,15 +1,15 @@
-import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLID } from "graphql";
-import { getAllUserIds } from "../data/UserRepo";
+import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
+
 import { getAllCommunityIds, getCommunityIdByCallsign } from "../data/CommunityRepo";
 import { getAllPostIds } from "../data/PostRepo";
+import { getAllUserIds } from "../data/UserRepo";
+import CommunityType from "./CommunityType";
+import PostType from "./PostType";
+import UserType from "./UserType";
 
 export default new GraphQLObjectType({
-  name: "Query",
+  name: `Query`,
   fields: () => {
-    const UserType = require("./UserType").default;
-    const CommunityType = require("./CommunityType").default;
-    const PostType = require("./PostType").default;
-
     return {
       user: {
         type: UserType,
@@ -41,9 +41,9 @@ export default new GraphQLObjectType({
 
           // XOR
           if (id && callsign) {
-            throw new Error("Cannot query Community by both id and callsign.");
+            throw new Error(`Cannot query Community by both id and callsign.`);
           } else if (!id && !callsign) {
-            const e = new Error("Must query Community by either id or callsign, but neither was provided.");
+            const e = new Error(`Must query Community by either id or callsign, but neither was provided.`);
             // @ts-ignore
             e.extensions = {
               errorCode: 1000,

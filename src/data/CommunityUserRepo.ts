@@ -7,7 +7,7 @@ interface CommunityUserParams {
 
 export const createCommunityUser = async ({ userId, communityId }: CommunityUserParams): Promise<void> => {
   const knex = await knexProvider();
-  return await knex("communitiesUsers").insert({
+  return await knex(`communitiesUsers`).insert({
     userId,
     communityId,
   });
@@ -15,7 +15,7 @@ export const createCommunityUser = async ({ userId, communityId }: CommunityUser
 
 export const getCommunityUser = async ({ userId, communityId }: CommunityUserParams) => {
   const knex = await knexProvider();
-  return knex("communitiesUsers")
+  return knex(`communitiesUsers`)
     .where({
       userId,
       communityId,

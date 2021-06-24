@@ -1,4 +1,5 @@
 import faker from "faker";
+
 import { autoIncrement } from "../utils";
 
 const n = autoIncrement();

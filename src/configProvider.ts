@@ -30,12 +30,13 @@ let instance: ConfigInstance;
 
 export default () => {
   if (!instance) {
+
     const envFilePath = getConfig("MB_ENV_FILE");
     
     const overrideEnvFilePath = getConfig("MB_ENV_FILE_OVR");
     
     config({
-      path: path.join(__dirname, "..", envFilePath),
+      path: path.join(__dirname, `..`, envFilePath),
     });
 
     // override

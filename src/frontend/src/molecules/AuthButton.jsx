@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
+import Button from "../elements/Button";
 import AuthModal, { pages } from "../modals/AuthModal";
 import { StateContext } from "../state";
 import { post } from "../utils/rest-api";
-import Button from "../elements/Button";
-  
 
 const AuthButton = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -33,15 +32,10 @@ const AuthButton = () => {
     }
   };
 
-  
   return (
     <div>
       {modalPage && <AuthModal page={modalPage} onClose={() => setModalPage(null)} />}
-      {user && (
-        <Button onClick={() => signOut()}>
-          Sign Out
-        </Button>
-      )}
+      {user && <Button onClick={() => signOut()}>Sign Out</Button>}
       {!user && (
         <>
           <Button onClick={() => setModalPage(pages.signin)}>Sign In</Button>
