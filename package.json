@@ -91,6 +91,7 @@
     "react-markdown": "^6.0.2",
     "react-refresh": "^0.10.0",
     "react-router-dom": "^5.2.0",
+    "react-transition-group": "^4.4.2",
     "sass": "^1.35.1",
     "sass-loader": "^12.1.0",
     "slugify": "^1.5.3",
