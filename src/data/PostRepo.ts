@@ -1,36 +1,37 @@
-import { fieldGetterHoc, pickOne } from "./utils";
 import DataLoader from "dataloader";
+
 import knexProvider from "./knex-provider";
+import { fieldGetterHoc, pickOne } from "./utils";
 
 const postLoader = new DataLoader<string, DPost>(async (ids) => {
-  const response = await knexProvider().then((knex) => knex<DPost>("posts").whereIn("id", ids));
+  const response = await knexProvider().then((knex) => knex<DPost>(`posts`).whereIn(`id`, ids));
   return response;
 });
 
 const prime = (posts: DPost[]) => {
   posts.forEach((p: DPost) => {
     // TODO: Straighten up types so that "" + is not required
-    postLoader.prime("" + p.id, p);
+    postLoader.prime(`` + p.id, p);
   });
-  return pickOne("id")(posts);
+  return pickOne(`id`)(posts);
 };
 
 export const getPostFieldById = fieldGetterHoc((id) => postLoader.load(id));
 
 export const getPostIdsForCommunityId = async (communityId: number) => {
   const knex = await knexProvider();
-  const posts = await knex("posts").where({
+  const posts = await knex(`posts`).where({
     communityId,
   });
   prime(posts);
-  return pickOne("id")(posts);
+  return pickOne(`id`)(posts);
 };
 
 export const getAllPostIds = async () => {
   const knex = await knexProvider();
-  const posts = await knex.raw("select * from posts");
+  const posts = await knex.raw(`select * from posts`);
   prime(posts.rows);
-  return pickOne("id")(posts.rows);
+  return pickOne(`id`)(posts.rows);
 };
 
 export const getPostIdsForUserId = async (userId: number) => {
@@ -39,10 +40,10 @@ export const getPostIdsForUserId = async (userId: number) => {
     `
     SELECT * FROM posts WHERE "authorId" = ?
   `,
-    [userId]
+    [userId],
   );
   prime(posts.rows);
-  return pickOne("id")(posts.rows);
+  return pickOne(`id`)(posts.rows);
 };
 
 export const getPostById = async (id: string) => postLoader.load(id);
@@ -55,11 +56,11 @@ interface CreatePostParams {
 }
 export const createPost = async (params: CreatePostParams): Promise<DPost | void> => {
   const knex = await knexProvider();
-  const posts: DPost[] = (await knex<DPost>("posts").insert(params).returning("*")) as any;
+  const posts: DPost[] = (await knex<DPost>(`posts`).insert(params).returning(`*`)) as any;
   if (posts && posts.length) {
     posts.forEach((p) => {
       getPostById;
-      postLoader.prime("" + p.id, p);
+      postLoader.prime(`` + p.id, p);
     });
     return posts[0];
   }

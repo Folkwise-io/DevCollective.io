@@ -1,4 +1,5 @@
 import sgMail from "@sendgrid/mail";
+
 import configProvider from "../configProvider";
 
 const { SENDGRID_KEY, SENDGRID_PRINT_ONLY } = configProvider();
@@ -16,7 +17,7 @@ interface Email {
 
 export const sendEmail = async (email: Email) => {
   if (SENDGRID_PRINT_ONLY) {
-    console.log(`EMAIL: ${JSON.stringify(email)}`);
+    console.info(`EMAIL: ${JSON.stringify(email)}`);
   } else {
     sgMail.send(email);
   }

@@ -1,15 +1,16 @@
-import React, { useState, useContext } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useContext } from "react";
+import { useHistory, useParams } from "react-router-dom";
+
 import PostEditorTray from "../../organisms/PostEditorTray";
-import { useParams, useHistory } from "react-router-dom";
-import { useMutation, gql } from "@apollo/client";
 import { StateContext } from "../../state";
 
 const NewPostFragment = () => {
-  const { state, dispatch } = useContext(StateContext);
+  const { state } = useContext(StateContext);
   const history = useHistory();
   const { callsign } = useParams();
 
-  const [submitPost, { data }] = useMutation(
+  const [submitPost] = useMutation(
     gql`
       mutation Mutation($communityCallsign: String!, $title: String!, $body: String!, $authorId: ID!) {
         createPost(communityCallsign: $communityCallsign, title: $title, body: $body, authorId: $authorId) {
@@ -18,7 +19,7 @@ const NewPostFragment = () => {
           url
         }
       }
-    `
+    `,
   );
 
   const handleSubmit = async ({ title, body }) => {
@@ -43,7 +44,7 @@ const NewPostFragment = () => {
       history.push(url);
     } catch (e) {
       console.error(e);
-      alert("Something went wrong while creating the post.");
+      alert(`Something went wrong while creating the post.`);
     }
   };
 

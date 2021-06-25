@@ -1,11 +1,11 @@
 const query = async (url, method, body) => {
   let opts = {
     method,
-    redirect: "manual",
+    redirect: `manual`,
   };
 
   if (body) {
-    opts = { ...opts, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
+    opts = { ...opts, headers: { "Content-Type": `application/json` }, body: JSON.stringify(body) };
   }
 
   // make the request and await the response.
@@ -23,5 +23,5 @@ const query = async (url, method, body) => {
   };
 };
 
-export const get = (url) => query(url, "GET");
-export const post = (url, body) => query(url, "POST", body);
+export const get = (url) => query(url, `GET`);
+export const post = (url, body) => query(url, `POST`, body);

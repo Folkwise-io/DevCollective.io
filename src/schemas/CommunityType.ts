@@ -1,16 +1,15 @@
+import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
+
 import { getCommunityFieldById } from "../data/CommunityRepo";
 import { getPostIdsForCommunityId } from "../data/PostRepo";
-
-import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInt, GraphQLID } from "graphql";
+import PostType from "./PostType";
+import UserType from "./UserType";
 
 const communityFieldHoc = (fieldName: string) => (id: string) => getCommunityFieldById(id, fieldName);
 
 export default new GraphQLObjectType({
-  name: "Community",
+  name: `Community`,
   fields: () => {
-    const PostType = require("./PostType").default;
-    const UserType = require("./UserType").default;
-
     return {
       id: {
         type: GraphQLID,
@@ -18,23 +17,23 @@ export default new GraphQLObjectType({
       },
       title: {
         type: GraphQLString,
-        resolve: communityFieldHoc("title"),
+        resolve: communityFieldHoc(`title`),
       },
       callsign: {
         type: GraphQLString,
-        resolve: communityFieldHoc("callsign"),
+        resolve: communityFieldHoc(`callsign`),
       },
       description: {
         type: GraphQLString,
-        resolve: communityFieldHoc("description"),
+        resolve: communityFieldHoc(`description`),
       },
       createdAt: {
         type: GraphQLString,
-        resolve: communityFieldHoc("createdAt"),
+        resolve: communityFieldHoc(`createdAt`),
       },
       createdBy: {
         type: UserType,
-        resolve: communityFieldHoc("createdBy"),
+        resolve: communityFieldHoc(`createdBy`),
       },
       posts: {
         type: GraphQLList(PostType),

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons/faHeart";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons/faHeart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import styled from "styled-components";
 
 const Heart = styled.div`
   grid-area: heart;
@@ -74,7 +73,7 @@ const Wrapper = styled.div`
 
 const PostCard = ({ post }) => {
   const history = useHistory();
-  const { title, author, community, url, id } = post;
+  const { title, author, community, url } = post;
   const [isLiked, setLiked] = useState(false);
 
   const summaryFragments = [];

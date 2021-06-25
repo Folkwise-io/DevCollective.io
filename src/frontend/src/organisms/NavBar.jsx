@@ -1,10 +1,9 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import AuthButton from "../molecules/AuthButton";
 
-export const NavbarHeight = "70px";
+export const NavbarHeight = `70px`;
 
 const Container = styled.div`
   position: fixed;
@@ -40,7 +39,7 @@ const NavBar = () => {
   return (
     <Container>
       <Logo>
-        <Link to="/" style={{ textDecoration: "inherit", color: "inherit" }}>
+        <Link to="/" style={{ textDecoration: `inherit`, color: `inherit` }}>
           Dev Collective
         </Link>
       </Logo>

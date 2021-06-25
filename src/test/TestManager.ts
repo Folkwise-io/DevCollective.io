@@ -1,5 +1,6 @@
 import { Express } from "express";
 import supertest from "supertest";
+
 import query, { MbQueryAgent } from "./query";
 
 interface RegisterParams {
@@ -21,7 +22,7 @@ export default class TestManager {
   }
 
   login(email: any, password: any, agent = this.agent): supertest.Test {
-    return agent.post("/auth/login", {
+    return agent.post(`/auth/login`, {
       email,
       password,
     });
@@ -32,7 +33,7 @@ export default class TestManager {
   register(opts: RegisterParams, agent = this.agent) {
     const { firstName, lastName, email, password } = opts;
 
-    return agent.post("/auth/register", {
+    return agent.post(`/auth/register`, {
       firstName,
       lastName,
       email,
@@ -42,22 +43,22 @@ export default class TestManager {
 
   submitAccountConfirmationToken(opts: SubmitAccountConfirmationTokenParams, agent = this.agent) {
     const { confirmationToken, email } = opts;
-    return agent.get("/auth/confirmAccount").query({ confirm: confirmationToken, email });
+    return agent.get(`/auth/confirmAccount`).query({ confirm: confirmationToken, email });
   }
 
   forgotRequest(email: string, agent = this.agent) {
-    return agent.post("/auth/forgot/request", { email });
+    return agent.post(`/auth/forgot/request`, { email });
   }
   forgotConfirm(payload: any, agent = this.agent) {
-    return agent.post("/auth/forgot/confirm", payload);
+    return agent.post(`/auth/forgot/confirm`, payload);
   }
 
   check(agent = this.agent) {
-    return agent.post("/auth/check");
+    return agent.post(`/auth/check`);
   }
 
   logout(agent = this.agent) {
-    return agent.post("/auth/logout");
+    return agent.post(`/auth/logout`);
   }
 
   raw() {
@@ -69,6 +70,6 @@ export default class TestManager {
   }
 
   gql(query: string, variables?: any, agent = this.agent) {
-    return agent.post("/graphql", { query, variables });
+    return agent.post(`/graphql`, { query, variables });
   }
 }
