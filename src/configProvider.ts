@@ -30,18 +30,23 @@ let instance: ConfigInstance;
 
 export default () => {
   if (!instance) {
+
     const envFilePath = getConfig("MB_ENV_FILE");
     
     const overrideEnvFilePath = getConfig("MB_ENV_FILE_OVR");
     
     config({
-      path: path.join(__dirname, "..", envFilePath),
+      path: path.join(__dirname, `..`, envFilePath),
     });
 
-    // override
-    const envConfig = parse(fs.readFileSync(path.join(__dirname, "..", overrideEnvFilePath)));
-    for(const key in envConfig) {
-      process.env[key] = envConfig[key];
+    // checks to see if the dev-overrides.env file is present in root directory
+    if(fs.existsSync(path.join(__dirname, "..", overrideEnvFilePath))) {
+      // override
+      const envConfig = parse(fs.readFileSync(path.join(__dirname, "..", overrideEnvFilePath)));
+
+      for(const key in envConfig) {
+        process.env[key] = envConfig[key];
+      }
     }
     
     instance = {

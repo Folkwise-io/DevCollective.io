@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
-import Card, { CardHeader, CardHeaderAction, CardBody } from "../elements/Card";
+
+import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
 
 const Overlay = styled.div`
   position: fixed;
@@ -31,7 +32,7 @@ export const Modal = ({ title, children, onClose }) => {
 
   return (
     <Overlay ref={overlay} onClick={handleClose}>
-      <Card style={{ gridArea: "none" }}>
+      <Card style={{ gridArea: `none` }}>
         <CardHeader>{title}</CardHeader>
         <CardHeaderAction>
           <a ref={closeButton} href="#" onClick={handleClose}>

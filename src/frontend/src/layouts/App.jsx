@@ -1,4 +1,3 @@
-import React from "react";
 import { Redirect, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import styled from "styled-components";
 
@@ -35,18 +34,18 @@ const App = () => {
           toasts={[
             {
               type: ToastTypes.info,
-              title: "Test Toast",
-              body: "This is a test toast. It should say some things. Then it should disappear.",
+              title: `Test Toast`,
+              body: `This is a test toast. It should say some things. Then it should disappear.`,
             },
             {
               type: ToastTypes.danger,
-              title: "Test Toast",
-              body: "This is a test toast. It should say some things. Then it should disappear.",
+              title: `Test Toast`,
+              body: `This is a test toast. It should say some things. Then it should disappear.`,
             },
             {
               type: ToastTypes.success,
-              title: "Test Toast",
-              body: "This is a test toast. It should say some things. Then it should disappear.",
+              title: `Test Toast`,
+              body: `This is a test toast. It should say some things. Then it should disappear.`,
             },
           ]}
         ></Toasts>

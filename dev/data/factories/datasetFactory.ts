@@ -1,10 +1,8 @@
-import faker from "faker";
 import { fillArray } from "../utils";
 import communityFactory, { nextCommunityId } from "./communityFactory";
-import postFactory from "./postFactory";
 import communityUserMixer from "./communityUserFactory";
+import postFactory from "./postFactory";
 import userFactory, { nextUserId } from "./userFactory";
-import { autoIncrement } from "../utils";
 
 interface DatasetFactoryParams {
   totalUsers: number;
@@ -24,14 +22,14 @@ const datasetFactory = (params: DatasetFactoryParams) => {
   const users: DUser[] = [
     {
       id: nextUserId(),
-      email: "a@a.com",
-      firstName: "Amy",
-      lastName: "Adams",
-      passwordHash: "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // "password"
-      confirmationTokenHash: "$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.", // also "password" for convenience
+      email: `a@a.com`,
+      firstName: `Amy`,
+      lastName: `Adams`,
+      passwordHash: `$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.`, // "password"
+      confirmationTokenHash: `$2a$10$FB/BOAVhpuLvpOREQVmvmezD4ED/.JBIDRh70tGevYzYzQgFId2u.`, // also "password" for convenience
       forgotPasswordExpiry: null,
       forgotPasswordTokenHash: null,
-      createdAt: new Date("2019-10-15"),
+      createdAt: new Date(`2019-10-15`),
       updatedAt: new Date(),
     },
     ...fillArray(totalUsers - 1, userFactory),
@@ -39,11 +37,10 @@ const datasetFactory = (params: DatasetFactoryParams) => {
   const communities: DCommunity[] = [
     {
       id: nextCommunityId(),
-      title: "Mintbean",
-      callsign: "mintbean",
-      description:
-        "We help job-seeking coders get ahead in their careers through our learnathons. Wanna get started? Come join our Discord chat: http://discord.com/invite/j7CjBAz",
-      createdAt: new Date("2019-12-12"),
+      title: `Mintbean`,
+      callsign: `mintbean`,
+      description: `We help job-seeking coders get ahead in their careers through our learnathons. Wanna get started? Come join our Discord chat: http://discord.com/invite/j7CjBAz`,
+      createdAt: new Date(`2019-12-12`),
       updatedAt: new Date(),
     },
     ...fillArray(totalCommunities - 1, () => communityFactory()),

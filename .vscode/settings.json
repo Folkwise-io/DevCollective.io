@@ -1,8 +1,14 @@
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "files.eol": "\n",
   "files.exclude": {
     "/wishing-wall/**/*": true,
     "/yarn.lock": true
   },
+  "editor.tabSize": 2,
   "search.exclude": {
     "/wishing-wall/**/*": true,
     "/yarn.lock": true

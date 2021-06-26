@@ -1,11 +1,9 @@
-import React from "react";
-import PostEditorTray from "../../organisms/PostEditorTray";
-import { useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import ReactMarkdown from "react-markdown";
+import { useParams } from "react-router-dom";
 
 const ViewPostFragment = () => {
-  const { callsign: communityCallsign, postId } = useParams();
+  const { postId } = useParams();
   const { loading, error, data } = useQuery(
     gql`
       query Query($id: ID!) {
@@ -29,7 +27,7 @@ const ViewPostFragment = () => {
       variables: {
         id: postId,
       },
-    }
+    },
   );
 
   if (loading) {

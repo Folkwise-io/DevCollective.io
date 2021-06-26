@@ -1,17 +1,16 @@
-import appFactory from "../appFactory";
-import query from "../test/query";
 import { Express } from "express";
+
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import { clearDatabase } from "../../dev/test/TestRepo";
-import TestManager from "../test/TestManager";
+import appFactory from "../appFactory";
 import { createComment } from "../data/CommentRepo";
+import TestManager from "../test/TestManager";
 
-describe("Post object", () => {
+describe(`Post object`, () => {
   let app: Express;
   let users: DUser[];
   let tm: TestManager;
   let posts: DPost[];
-  let communities: DCommunity[];
 
   beforeAll(async () => {
     await clearDatabase();
@@ -24,29 +23,28 @@ describe("Post object", () => {
     tm = new TestManager(app);
     users = data.users;
     posts = data.posts;
-    communities = data.communities;
   });
 
-  describe("queries", () => {
-    describe("sunny", () => {
-      it("can get all comments for a post.", async () => {
+  describe(`queries`, () => {
+    describe(`sunny`, () => {
+      it(`can get all comments for a post.`, async () => {
         const user = users[0];
         const post = posts.find((p: DPost) => p.authorId === user.id)!;
 
         const comments = [
           {
-            body: "This is comment number 1",
-            authorId: "" + user.id,
+            body: `This is comment number 1`,
+            authorId: `` + user.id,
             postId: post?.id,
           },
           {
-            body: "This is comment number 2",
-            authorId: "" + user.id,
+            body: `This is comment number 2`,
+            authorId: `` + user.id,
             postId: post?.id,
           },
           {
-            body: "This is comment number 3",
-            authorId: "" + user.id,
+            body: `This is comment number 3`,
+            authorId: `` + user.id,
             postId: post?.id,
           },
         ];
@@ -75,7 +73,7 @@ describe("Post object", () => {
         `,
           {
             id: post.id,
-          }
+          },
         );
 
         expect(response.body.errors).toBeUndefined();
@@ -91,25 +89,25 @@ describe("Post object", () => {
         }
       });
 
-      it("can get all comments for a user.", async () => {
+      it(`can get all comments for a user.`, async () => {
         // directly create 3 comments for a user
         const user = users[0];
         const post = posts.find((p: DPost) => p.authorId === user.id);
 
         const comments = [
           {
-            body: "This is comment number 1",
-            authorId: "" + user.id,
+            body: `This is comment number 1`,
+            authorId: `` + user.id,
             postId: post?.id,
           },
           {
-            body: "This is comment number 2",
-            authorId: "" + user.id,
+            body: `This is comment number 2`,
+            authorId: `` + user.id,
             postId: post?.id,
           },
           {
-            body: "This is comment number 3",
-            authorId: "" + user.id,
+            body: `This is comment number 3`,
+            authorId: `` + user.id,
             postId: post?.id,
           },
         ];
@@ -136,7 +134,7 @@ describe("Post object", () => {
         `,
           {
             id: user.id,
-          }
+          },
         );
 
         // query for those 3 comments
@@ -155,7 +153,7 @@ describe("Post object", () => {
         }
       });
 
-      it("returns an empty array if a user does not have comments", async () => {
+      it(`returns an empty array if a user does not have comments`, async () => {
         // no comments have been created.
         const response = await tm.gql(
           `
@@ -170,14 +168,14 @@ describe("Post object", () => {
         `,
           {
             id: users[0].id,
-          }
+          },
         );
 
         expect(response.statusCode).toBe(200);
         expect(response.body.data.user.comments).toMatchObject([]);
       });
 
-      it("returns an empty array if a post does not have comments", async () => {
+      it(`returns an empty array if a post does not have comments`, async () => {
         // no comments have been created.
         const response = await tm.gql(
           `
@@ -192,7 +190,7 @@ describe("Post object", () => {
         `,
           {
             id: posts[0].id,
-          }
+          },
         );
 
         expect(response.statusCode).toBe(200);
@@ -201,16 +199,16 @@ describe("Post object", () => {
     });
   });
 
-  describe("mutations", () => {
-    describe("sunny", () => {
-      it("can create top-level comment for a post.", async () => {
+  describe(`mutations`, () => {
+    describe(`sunny`, () => {
+      it(`can create top-level comment for a post.`, async () => {
         const user = users[0];
         const post = posts[0];
 
-        await tm.login(user.email, "password").expect(200);
+        await tm.login(user.email, `password`).expect(200);
 
-        const body = "Happy Holidays!";
-        const responseBody = "Happy Canada Day!";
+        const body = `Happy Holidays!`;
+        const responseBody = `Happy Canada Day!`;
 
         let parentCommentId: string;
 
@@ -235,15 +233,15 @@ describe("Post object", () => {
               postId: post.id,
               authorId: user.id,
               body,
-            }
+            },
           );
 
           expect(response.statusCode).toBe(200);
           expect(response.body.errors).toBeFalsy();
           expect(response.body.data.createComment.id).toBeTruthy();
           expect(response.body.data.createComment.body).toStrictEqual(body);
-          expect(response.body.data.createComment.post.id).toStrictEqual("" + post.id);
-          expect(response.body.data.createComment.author.id).toStrictEqual("" + user.id);
+          expect(response.body.data.createComment.post.id).toStrictEqual(`` + post.id);
+          expect(response.body.data.createComment.author.id).toStrictEqual(`` + user.id);
 
           parentCommentId = response.body.data.createComment.id;
         }
@@ -266,7 +264,7 @@ describe("Post object", () => {
           `,
             {
               id: post.communityId,
-            }
+            },
           );
 
           expect(response.statusCode).toBe(200);
@@ -309,7 +307,7 @@ describe("Post object", () => {
               body: responseBody,
               authorId: user.id,
               parentCommentId,
-            }
+            },
           );
 
           expect(response.statusCode).toBe(200);
@@ -318,26 +316,27 @@ describe("Post object", () => {
           expect(response.body.data.createComment.body).toBe(responseBody);
           expect(response.body.data.createComment.parentComment.id).toBe(parentCommentId);
           expect(response.body.data.createComment.parentComment.body).toBe(body);
-          expect(response.body.data.createComment.post.id).toBe("" + post.id);
+          expect(response.body.data.createComment.post.id).toBe(`` + post.id);
         }
       });
     });
 
-    describe("validations", () => {
-      it("requires the user to be logged in", async () => {
+    describe(`validations`, () => {
+      it(`requires the user to be logged in`, async () => {
         // TODO
       });
 
-      it("requires a body of at least a single character", () => {
+      it(`requires a body of at least a single character`, () => {
         // TODO
       });
 
-      it("has a max comment length of 1000", () => {
+      it(`has a max comment length of 1000`, () => {
         // TODO
       });
 
-      it("requires postId/communityId/authorId, and parentCommentId is optional", () => {
+      it(`requires postId/communityId/authorId, and parentCommentId is optional`, () => {
         // TODO
       });
     });
   });
+});
