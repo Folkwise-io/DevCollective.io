@@ -7,7 +7,7 @@ import { StateProvider } from "./state";
 import "./global.scss";
 
 const client = new ApolloClient({
-  uri: `http://localhost:8080/graphql`,
+  uri: "/graphql",
   cache: new InMemoryCache(),
 });
 

@@ -71,12 +71,24 @@ docker processes related to this project, and then run `docker system prune -a`.
 This is a dangerous command that will destroy EVERYTHING that isn't currently running
 in Docker, including any non-DC.io projects.
 
-### 6. Start your server
+### 6. Declare custom port number to start the application
+
+\*\* The creation of this file is optional. If you don't create this file in dev
+environment, then default values will be used from dev.env file present in dev folder.
+
+First create dev-override.env file in dev folder present in root directory. Then copy
+and paste the following fields in your file.
+    
+    PORT= *
+
+In place of \* you can declare your own port number that is available in your machine.
+
+### 7. Start your server
 
 Finally, you can run the command `yarn dev` (Windows: `yarn dev:win`) to start the server. This will serve
 both the frontend and the backend on port 3000.
 
-### 7. Optional: Set up VSCode extensions
+### 8. Optional: Set up VSCode extensions
 
 The [debugging menu](https://code.visualstudio.com/docs/editor/debugging) on VSCode, which relies on launch.json,
 has been populated with a couple of run options. One runs the server, while the other runs the unit tests.
