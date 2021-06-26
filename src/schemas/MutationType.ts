@@ -1,20 +1,16 @@
-import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString, isRequiredArgument } from "graphql";
-import { getCommunityIdByCallsign, getCommunityFieldById } from "../data/CommunityRepo";
+import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+
+import { createComment, getCommentById } from "../data/CommentRepo";
+import { getCommunityIdByCallsign } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
-import { getUserById, getUserFieldById } from "../data/UserRepo";
 import { createPost, getPostById } from "../data/PostRepo";
-
-// const {movieType} = require('./types.js');
-// const {inputMovieType} = require('./inputtypes.js');
-// let {movies} = require('./data.js');
-
+import { getUserById } from "../data/UserRepo";
+import CommentType from "./CommentType";
 import CommunityType from "./CommunityType";
 import PostType from "./PostType";
-import CommentType from "./CommentType";
-import { createComment, getCommentFieldById, getCommentById } from "../data/CommentRepo";
 
 const MutationType = new GraphQLObjectType({
-  name: "Mutation",
+  name: `Mutation`,
   fields: {
     createPost: {
       type: PostType,
@@ -71,7 +67,7 @@ const MutationType = new GraphQLObjectType({
           return null;
         }
 
-        let communityUser = await getCommunityUser({ userId: user.id, communityId });
+        const communityUser = await getCommunityUser({ userId: user.id, communityId });
         if (communityUser) {
           return communityUser.communityId;
         } else {

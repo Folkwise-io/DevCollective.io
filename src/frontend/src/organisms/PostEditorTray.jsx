@@ -1,5 +1,4 @@
 import { Field, Form, Formik } from "formik";
-import React from "react";
 
 import Button from "../elements/Button";
 import MarkdownEditor from "../molecules/MarkdownEditor";

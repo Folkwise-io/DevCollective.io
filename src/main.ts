@@ -8,5 +8,5 @@ const app = appFactory();
 frontendDevMiddleware(app);
 const server = app.listen(PORT, () => {
   const port = (server.address() as AddressInfo)?.port;
-  console.log(`Started on port ${port}`);
+  console.info(`Started on port ${port}`);
 });

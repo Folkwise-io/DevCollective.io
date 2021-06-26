@@ -1,18 +1,18 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID } from "graphql";
-import { getCommunityFieldById } from "../data/CommunityRepo";
-import { getPostFieldById, getPostById } from "../data/PostRepo";
+import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 import slugify from "slugify";
-import CommentType from "./CommentType";
+
 import { getCommentIdsForPostId } from "../data/CommentRepo";
+import { getCommunityFieldById } from "../data/CommunityRepo";
+import { getPostById, getPostFieldById } from "../data/PostRepo";
+import CommentType from "./CommentType";
+import CommunityType from "./CommunityType";
+import UserType from "./UserType";
 
 const postFieldHoc = (fieldName: string) => (id: string) => getPostFieldById(id, fieldName);
 
-export default new GraphQLObjectType({
-  name: "Post",
+const PostType: any = new GraphQLObjectType({
+  name: `Post`,
   fields: () => {
-    const UserType = require("./UserType").default;
-    const CommunityType = require("./CommunityType").default;
-
     return {
       id: {
         type: GraphQLID,
@@ -20,11 +20,11 @@ export default new GraphQLObjectType({
       },
       title: {
         type: GraphQLString,
-        resolve: postFieldHoc("title"),
+        resolve: postFieldHoc(`title`),
       },
       body: {
         type: GraphQLString,
-        resolve: postFieldHoc("body"),
+        resolve: postFieldHoc(`body`),
       },
       url: {
         type: GraphQLString,
@@ -32,7 +32,7 @@ export default new GraphQLObjectType({
           const post = await getPostById(id);
           const { title, communityId } = post;
           // TODO: Straighten up types so that "" + is not required
-          const callsign = await getCommunityFieldById("" + communityId, "callsign");
+          const callsign = await getCommunityFieldById(`` + communityId, `callsign`);
           const slug = slugify(title, {
             lower: true,
             strict: true,
@@ -42,15 +42,15 @@ export default new GraphQLObjectType({
       },
       createdAt: {
         type: GraphQLString,
-        resolve: postFieldHoc("createdAt"),
+        resolve: postFieldHoc(`createdAt`),
       },
       author: {
         type: UserType,
-        resolve: postFieldHoc("authorId"),
+        resolve: postFieldHoc(`authorId`),
       },
       community: {
         type: CommunityType,
-        resolve: postFieldHoc("communityId"),
+        resolve: postFieldHoc(`communityId`),
       },
       comments: {
         type: GraphQLList(CommentType),
@@ -59,3 +59,5 @@ export default new GraphQLObjectType({
     };
   },
 });
+
+export default PostType;

@@ -1,17 +1,18 @@
-import { Router } from "express";
-import { json } from "body-parser";
-import { checkPassword, createUser, sanitizeDbUser } from "../service/UserService";
-import * as yup from "yup";
-import { getUserByEmail, updateUser } from "../data/UserRepo";
-import { v4 } from "uuid";
-import { sendEmail } from "../service/EmailService";
 import bcrypt from "bcrypt";
-import configProvider from "../configProvider";
-const { MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE } = configProvider();
+import { json } from "body-parser";
 import add from "date-fns/add";
 import isBefore from "date-fns/isBefore";
+import { Router } from "express";
+import { v4 } from "uuid";
+import * as yup from "yup";
+
+import configProvider from "../configProvider";
+import { getUserByEmail, updateUser } from "../data/UserRepo";
+import { sendEmail } from "../service/EmailService";
+import { checkPassword, createUser, sanitizeDbUser } from "../service/UserService";
 import { validateEmail, validateFirstName, validateLastName, validatePassword, validateUuid } from "./validators";
 
+const { MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE } = configProvider();
 const authRouter = Router();
 
 authRouter.use(json());
@@ -22,7 +23,7 @@ const startSession = (req: any, user: EUser) => {
   }
 };
 
-authRouter.post("/login", async (req, res) => {
+authRouter.post(`/login`, async (req, res) => {
   let params;
   try {
     params = await yup
@@ -35,7 +36,7 @@ authRouter.post("/login", async (req, res) => {
   } catch (e) {
     // don't do fail() this time, because it's a special case
     return res.status(400).json({
-      message: "Validation failed",
+      message: `Validation failed`,
       errors: e.errors,
     });
   }
@@ -47,7 +48,7 @@ authRouter.post("/login", async (req, res) => {
   try {
     user = await checkPassword({ email, password });
   } catch (e) {
-    console.error("Error while logging in", e);
+    console.error(`Error while logging in`, e);
     return res.sendStatus(401);
   }
 
@@ -59,14 +60,14 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.post("/logout", async (req, res) => {
+authRouter.post(`/logout`, async (req, res) => {
   if (req.session) {
     req.session.user = null;
   }
   return res.sendStatus(200);
 });
 
-authRouter.post("/check", async (req, res) => {
+authRouter.post(`/check`, async (req, res) => {
   if (req.session?.user) {
     return res.json(req.session.user);
   } else {
@@ -74,17 +75,17 @@ authRouter.post("/check", async (req, res) => {
   }
 });
 
-authRouter.post("/register", async (req, res) => {
+authRouter.post(`/register`, async (req, res) => {
   // utility function
   function fail(message: string | null, e?: Error): void {
-    const m = message || "Failed to create dev.";
-    e && console.log(m, e);
+    const m = message || `Failed to create dev.`;
+    e && console.error(m, e);
     res.status(401).json({ message: m });
     return;
   }
 
   if (req.session?.user) {
-    return fail("You are already logged in.");
+    return fail(`You are already logged in.`);
   }
 
   let params;
@@ -101,7 +102,7 @@ authRouter.post("/register", async (req, res) => {
   } catch (e) {
     // don't do fail() this time, because it's a special case
     return res.status(400).json({
-      message: "Validation failed",
+      message: `Validation failed`,
       errors: e.errors,
     });
   }
@@ -112,30 +113,30 @@ authRouter.post("/register", async (req, res) => {
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       // no need to log, this is not an exception
-      return fail("A dev with this email already exists in the database.");
+      return fail(`A dev with this email already exists in the database.`);
     }
     const recordsAffected = await createUser({ email, password, firstName, lastName, confirmationToken });
     if (!recordsAffected) {
-      return fail("Failed to create user.");
+      return fail(`Failed to create user.`);
     }
   } catch (e) {
     return fail(null, e);
   }
 
   try {
-    let dbUser = await getUserByEmail(params.email);
+    const dbUser = await getUserByEmail(params.email);
     if (!dbUser) {
-      return fail("Failed to create user.");
+      return fail(`Failed to create user.`);
     }
     const newUser = sanitizeDbUser(dbUser);
 
     // TODO: set hash on user
     const confirmUrl = `https://devcollective.io/auth/token?${confirmationToken}&email=${encodeURIComponent(
-      newUser.email
+      newUser.email,
     )}`;
     sendEmail({
-      from: "noreply@devcollective.io",
-      subject: "Confirm your account",
+      from: `noreply@devcollective.io`,
+      subject: `Confirm your account`,
       to: newUser.email,
       html: `
         Thank you for registering an account at <a href="https://devcollective.io">DevCollective.io</a>.<br/>
@@ -150,12 +151,12 @@ authRouter.post("/register", async (req, res) => {
     return res.json(newUser);
   } catch (e) {
     return fail(
-      "Unexpected failure. User may or may not have been created. Aconfirmation email may not have been sent. Try logging in."
+      `Unexpected failure. User may or may not have been created. Aconfirmation email may not have been sent. Try logging in.`,
     );
   }
 });
 
-authRouter.get("/confirmAccount", async (req, res) => {
+authRouter.get(`/confirmAccount`, async (req, res) => {
   const schema = yup
     .object()
     .shape({
@@ -168,11 +169,11 @@ authRouter.get("/confirmAccount", async (req, res) => {
   try {
     await schema.validate(req.query);
   } catch (e) {
-    if (e.name === "ValidationError") {
+    if (e.name === `ValidationError`) {
       return res.status(400).json({ errors: e.errors });
     } else {
       console.error(e);
-      return res.status(400).json({ message: "Validation failed" });
+      return res.status(400).json({ message: `Validation failed` });
     }
   }
 
@@ -181,28 +182,28 @@ authRouter.get("/confirmAccount", async (req, res) => {
 
   const user = await getUserByEmail(email);
   if (!user) {
-    return res.status(400).json({ message: "Validation failed" });
+    return res.status(400).json({ message: `Validation failed` });
   }
   if (!user.confirmationTokenHash) {
-    return res.status(409).json({ message: "Account already validated." });
+    return res.status(409).json({ message: `Account already validated.` });
   }
 
   const isMatch = await bcrypt.compare(confirm, user.confirmationTokenHash);
 
   if (!isMatch) {
-    return res.status(400).json({ message: "Validation failed" });
+    return res.status(400).json({ message: `Validation failed` });
   }
 
   try {
     await updateUser(user.id, { confirmationTokenHash: null });
   } catch (e) {
-    console.error("Failed to erase the confirmationTokenHash for the user", e);
+    console.error(`Failed to erase the confirmationTokenHash for the user`, e);
   }
 
   return res.sendStatus(200);
 });
 
-authRouter.post("/forgot/request", async (req, res) => {
+authRouter.post(`/forgot/request`, async (req, res) => {
   try {
     const schema = yup
       .object()
@@ -234,13 +235,13 @@ authRouter.post("/forgot/request", async (req, res) => {
   });
 
   const confirmUrl = `https://devcollective.io/auth/token?${forgotPasswordToken}&email=${encodeURIComponent(
-    user.email
+    user.email,
   )}`;
 
   await sendEmail({
-    from: "noreply@devcollective.io",
+    from: `noreply@devcollective.io`,
     to: user.email,
-    subject: "Your password reset link.",
+    subject: `Your password reset link.`,
     html: `
       We received a forgot password request from this email.<br/>
       To reset your password, please click <a href="${confirmUrl}">here</a>, or visit the following URL:<br/>
@@ -253,7 +254,7 @@ authRouter.post("/forgot/request", async (req, res) => {
   res.sendStatus(200);
 });
 
-authRouter.post("/forgot/confirm", async (req, res) => {
+authRouter.post(`/forgot/confirm`, async (req, res) => {
   try {
     const schema = yup
       .object()

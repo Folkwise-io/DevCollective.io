@@ -1,12 +1,11 @@
-import express from "express";
-import { graphqlHTTP, RequestInfo, OptionsData } from "express-graphql";
-import schema from "./schemas";
-import depthLimit from "graphql-depth-limit";
-import authRouter from "./auth/authRouter";
 import cookieSession from "cookie-session";
-import { config } from "dotenv";
+import express from "express";
+import { OptionsData, graphqlHTTP } from "express-graphql";
+import depthLimit from "graphql-depth-limit";
 
+import authRouter from "./auth/authRouter";
 import configProvider from "./configProvider";
+import schema from "./schemas";
 
 const { MB_SESSION_KEY, MB_ENABLE_GRAPHQL_LOGGER, MB_ENABLE_GRAPHIQL } = configProvider();
 
@@ -15,11 +14,11 @@ export default function appFactory() {
 
   app.use(
     cookieSession({
-      name: "mb-session",
+      name: `mb-session`,
       keys: [MB_SESSION_KEY], // TODO: change
     }),
   );
-  app.use("/auth", authRouter);
+  app.use(`/auth`, authRouter);
 
   const graphqlOptions: OptionsData = {
     schema,
@@ -29,19 +28,18 @@ export default function appFactory() {
 
   graphqlOptions.customFormatErrorFn = (error) => {
     if (error.stack && MB_ENABLE_GRAPHQL_LOGGER) {
-      console.error("GraphQL Error:", error.stack);
+      console.error(`GraphQL Error:`, error.stack);
     }
     return {
       message: error.message,
-      // @ts-ignore
       extensions: error?.extensions,
       locations: error.locations,
-      stack: error.stack ? error.stack.split("\n") : [],
+      stack: error.stack ? error.stack.split(`\n`) : [],
       path: error.path,
     };
   };
 
-  app.use("/graphql", graphqlHTTP(graphqlOptions));
+  app.use(`/graphql`, graphqlHTTP(graphqlOptions));
 
   return app;
 }

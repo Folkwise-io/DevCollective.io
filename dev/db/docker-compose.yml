@@ -1,7 +1,7 @@
-version: "3"
+version: "3.9"
 services:
   database-dev:
-    image: postgres:12.3
+    image: postgres:13.2-alpine
     container_name: mintbean-database-dev
     ports:
       - "10800:5432"
@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: mintbean_v4
   database-test:
-    image: postgres:12.3
+    image: postgres:13.2-alpine
     container_name: mintbean-database-test
     ports:
       - "10801:5432"
