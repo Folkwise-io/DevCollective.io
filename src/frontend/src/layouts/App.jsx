@@ -34,17 +34,17 @@ const App = () => {
           toasts={[
             {
               type: ToastTypes.info,
-              title: `Test Toast`,
+              title: `Info Test Toast`,
               body: `This is a test toast. It should say some things. Then it should disappear.`,
             },
             {
               type: ToastTypes.danger,
-              title: `Test Toast`,
+              title: `Danger Test Toast`,
               body: `This is a test toast. It should say some things. Then it should disappear.`,
             },
             {
               type: ToastTypes.success,
-              title: `Test Toast`,
+              title: `Success Test Toast`,
               body: `This is a test toast. It should say some things. Then it should disappear.`,
             },
           ]}
