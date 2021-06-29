@@ -21,7 +21,6 @@ const countdownStyle = css`
   animation: ${countdown} 6s linear 250ms;
   animation-fill-mode: forwards;
 `;
-//import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
 
 const ToastCard = styled(Card)`
   height: 6em;
@@ -125,16 +124,17 @@ const Toasts = ({ toasts = [] }) => {
   const { state } = useContext(StateContext);
   return (
     <ToastContainer>
-      {toasts.filter(toast => state.toast.includes(toast.title)).map(({ title, body, type }) => (
-        <Toast key={title + body} title={title} body={body} type={type} />
+      {toasts
+        .filter(toast => state.toast.includes(toast.title))
+        .map(({ title, body, type }) => (
+          <Toast key={title + body} title={title} body={body} type={type} />
       ))}
     </ToastContainer>
   );
-
 };
 
 const Toast = ({ title, body, type }) => {
-  const [show, setShow] = useState(false);
+  const [ show, setShow ] = useState(false);
   const { dispatch } = useContext(StateContext);
   let timer;
 
@@ -143,7 +143,7 @@ const Toast = ({ title, body, type }) => {
     return () => {                   // clean up timer and state on unmount
         clearTimeout(timer);         
         unmount();
-      }  
+      };  
     }, []
   );
 
@@ -157,7 +157,7 @@ const Toast = ({ title, body, type }) => {
     dispatch({
       type: `unmountToast`,
       payload: title
-    })
+    });
   };
 
   return (
@@ -168,7 +168,7 @@ const Toast = ({ title, body, type }) => {
       onEntered={() => startCountdown()}
       onExited={() => unmount()}
       unmountOnExit
-      >
+    >
       <type.Card >
         <CardHeader>{title}</CardHeader>
         <CardHeaderAction onClick={() => setShow(false)}>Close</CardHeaderAction>
