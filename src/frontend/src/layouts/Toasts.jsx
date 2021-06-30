@@ -26,9 +26,7 @@ const ToastCard = styled(Card)`
   padding-top: 0;
   padding-bottom: 0;
 
-   {
-    /* animation classes for toast enter/exit */
-  }
+  /* animation classes for toast enter/exit */
   &.toast-enter {
     transform: rotateX(90deg);
     transform-origin: 0 top;
