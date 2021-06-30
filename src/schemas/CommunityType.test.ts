@@ -15,11 +15,10 @@ describe(`Community object`, () => {
     app = appFactory();
   });
 
-  beforeEach(async (done) => {
+  beforeEach(async () => {
     const data = await datasetLoader();
     communities = data.communities;
     users = data.users;
-    done();
   });
 
   describe(`root community query`, () => {

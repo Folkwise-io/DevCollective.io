@@ -3,9 +3,8 @@ import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 import { fieldGetterHoc, pickOne } from "./utils";
 
-const postLoader = new DataLoader<string, DPost>(async (ids) => {
-  const response = await knexProvider().then((knex) => knex<DPost>(`posts`).whereIn(`id`, ids));
-  return response;
+export const postLoader = new DataLoader<string, DPost>(async (ids) => {
+  return await knexProvider().then((knex) => knex<DPost>(`posts`).whereIn(`id`, ids));
 });
 
 const prime = (posts: DPost[]) => {

@@ -3,7 +3,7 @@ import DataLoader from "dataloader";
 import knexProvider from "./knex-provider";
 import { fieldGetterHoc, pickOne } from "./utils";
 
-const userLoader = new DataLoader<string, DUser>(async (ids) => {
+export const userLoader = new DataLoader<string, DUser>(async (ids) => {
   const knex = await knexProvider();
   return knex(`users`).whereIn(`id`, ids);
 });

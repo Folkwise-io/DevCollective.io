@@ -1,13 +1,15 @@
-import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
 
 import { createComment, getCommentById } from "../data/CommentRepo";
 import { getCommunityIdByCallsign } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
 import { createPost, getPostById } from "../data/PostRepo";
-import { getUserById } from "../data/UserRepo";
+import { getUserById, updateUser } from "../data/UserRepo";
 import CommentType from "./CommentType";
 import CommunityType from "./CommunityType";
+import EditUserInput from "./dtos/EditUserInput";
 import PostType from "./PostType";
+import UserType from "./UserType";
 
 const MutationType = new GraphQLObjectType({
   name: `Mutation`,
@@ -127,6 +129,22 @@ const MutationType = new GraphQLObjectType({
         });
 
         return (comment && comment.id) || null;
+      },
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        id: {
+          type: GraphQLInt,
+        },
+        editUserInput: {
+          type: GraphQLNonNull(EditUserInput),
+        },
+      },
+      resolve: async (source, args, context) => {
+        await updateUser(args.id, { firstName: args.editUserInput.firstName, lastName: args.editUserInput.lastName });
+
+        return args.id;
       },
     },
   },

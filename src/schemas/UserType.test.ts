@@ -3,6 +3,7 @@ import { Express } from "express";
 import { datasetLoader } from "../../dev/test/datasetLoader";
 import { clearDatabase } from "../../dev/test/TestRepo";
 import appFactory from "../appFactory";
+import { getUserById, userLoader } from "../data/UserRepo";
 import query from "../test/query";
 
 describe(`User object`, () => {
@@ -101,6 +102,37 @@ describe(`User object`, () => {
         `,
         );
         expect(response.body.errors[0].message).toEqual(`Cannot query field "passwordHash" on type "User".`);
+      });
+    });
+  });
+
+  describe(`root user mutation`, () => {
+    describe(`sunny cases`, () => {
+      it(`can edit users`, async () => {
+        const user = await getUserById(`1`);
+
+        userLoader.clearAll();
+
+        const response = await query(app).gqlMutation(
+          `#graphql
+            mutation UserEditMutation($id: Int!, $firstName: String!, $lastName: String!) {
+              editUser(id: $id, editUserInput: {firstName: $firstName, lastName: $lastName}) {
+                id
+                firstName
+                lastName
+              }
+            }
+          `,
+          {
+            id: user.id,
+            firstName: `Apple`,
+            lastName: `Banana`,
+          },
+        );
+
+        expect(response.body?.errors?.length).toBeFalsy();
+        expect(response.body.data.editUser.firstName).toEqual(`Apple`);
+        expect(response.body.data.editUser.lastName).toEqual(`Banana`);
       });
     });
   });
