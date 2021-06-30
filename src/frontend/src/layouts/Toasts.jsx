@@ -20,8 +20,6 @@ const countdownStyle = css`
   animation-fill-mode: forwards;
 `;
 
-import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
-
 const ToastCard = styled(Card)`
   height: 6em;
   padding-top: 0;
