@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { CSSTransition } from 'react-transition-group';
+
 import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
 import styled, { keyframes, css } from "styled-components";
+import { StateContext } from "../state";
 
 // countdown animation does not use transition-group
 const countdown = keyframes`
@@ -19,8 +21,6 @@ const countdownStyle = css`
   animation: ${countdown} 6s linear 250ms;
   animation-fill-mode: forwards;
 `;
-
-import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
 
 const ToastCard = styled(Card)`
   height: 6em;
@@ -121,29 +121,43 @@ const ToastContainer = styled.div`
 `;
 
 const Toasts = ({ toasts = [] }) => {
- 
+  const { state } = useContext(StateContext);
   return (
     <ToastContainer>
-      {toasts.map(({ title, body, type }) => (
-        <Toast key={type + body} title={title} body={body} type={type} />
+      {toasts
+        .filter(toast => state.toast.includes(toast.title))
+        .map(({ title, body, type }) => (
+          <Toast key={title + body} title={title} body={body} type={type} />
       ))}
     </ToastContainer>
   );
-
 };
 
 const Toast = ({ title, body, type }) => {
-  const [show, setShow] = useState(false);
+  const [ show, setShow ] = useState(false);
+  const { dispatch } = useContext(StateContext);
   let timer;
 
   useEffect( () => {
-    setShow(true);                    // activate enter animation on mount
-    return clearTimeout(timer);      // clear timer on unmount
+    setShow(true);                   // activate enter animation on mount
+    return () => {                   // clean up timer and state on unmount
+        clearTimeout(timer);         
+        unmount();
+      };  
     }, []
   );
 
+  // sets timer to 6 seconds before automatic close
   const startCountdown = () => {
-    timer = setTimeout(() =>setShow(false), 6000);
+    timer = setTimeout(() => setShow(false), 6000);
+  };
+
+  // clears state after component unmounts
+  const unmount = () => {
+    dispatch({
+      type: `unmountToast`,
+      payload: title
+    });
   };
 
   return (
@@ -152,8 +166,9 @@ const Toast = ({ title, body, type }) => {
       timeout={400} 
       classNames='toast'
       onEntered={() => startCountdown()}
+      onExited={() => unmount()}
       unmountOnExit
-      >
+    >
       <type.Card >
         <CardHeader>{title}</CardHeader>
         <CardHeaderAction onClick={() => setShow(false)}>Close</CardHeaderAction>

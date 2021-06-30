@@ -2,7 +2,9 @@ import React, { useReducer } from "react";
 
 const initialState = {
   user: null,
+  toast: [],
 };
+
 const StateContext = React.createContext(null);
 
 const reducer = (state = initialState, action) => {
@@ -11,6 +13,10 @@ const reducer = (state = initialState, action) => {
       return { ...state, user: action.payload };
     case `unsetUser`:
       return { ...state, user: null };
+    case `triggerToast`:
+      return { ...state, toast: [...state.toast, action.payload] };
+    case `unmountToast`:
+      return { ...state, toast: state.toast.filter(toast => toast !== action.payload)};
     default:
       console.warn(`Unknown reducer action received`, action);
       return state;
