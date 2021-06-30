@@ -66,14 +66,14 @@ const UserPage = () => {
         <input {...register(`lastName`)} />
         <button>Submit</button>
       </form>
-      <h2>Posts</h2>
-      {data.posts.map((post) => (
+      <h2>test</h2>
+      {/* {data.posts.map((post) => (
         <div key={post.id}>
           <h3>{post.title}</h3>
           <p>{post.body}</p>
           <span>Posted to {post.community.title}</span>
         </div>
-      ))}
+      ))} */}
       <h2>Comments</h2>
     </div>
   );
