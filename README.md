@@ -78,7 +78,7 @@ environment, then default values will be used from dev.env file present in dev f
 
 First create dev-override.env file in dev folder present in root directory. Then copy
 and paste the following fields in your file.
-    
+
     PORT= *
 
 In place of \* you can declare your own port number that is available in your machine.

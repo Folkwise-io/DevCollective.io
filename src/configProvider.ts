@@ -1,5 +1,5 @@
 import { config, parse } from "dotenv";
-import fs from 'fs';
+import fs from "fs";
 import path from "path";
 
 type Mapper<T> = (x: string) => T;
@@ -30,34 +30,33 @@ let instance: ConfigInstance;
 
 export default () => {
   if (!instance) {
+    const envFilePath = getConfig(`MB_ENV_FILE`);
 
-    const envFilePath = getConfig("MB_ENV_FILE");
-    
-    const overrideEnvFilePath = getConfig("MB_ENV_FILE_OVR");
-    
+    const overrideEnvFilePath = getConfig(`MB_ENV_FILE_OVR`);
+
     config({
       path: path.join(__dirname, `..`, envFilePath),
     });
 
     // checks to see if the dev-overrides.env file is present in root directory
-    if(fs.existsSync(path.join(__dirname, "..", overrideEnvFilePath))) {
+    if (fs.existsSync(path.join(__dirname, `..`, overrideEnvFilePath))) {
       // override
-      const envConfig = parse(fs.readFileSync(path.join(__dirname, "..", overrideEnvFilePath)));
+      const envConfig = parse(fs.readFileSync(path.join(__dirname, `..`, overrideEnvFilePath)));
 
-      for(const key in envConfig) {
+      for (const key in envConfig) {
         process.env[key] = envConfig[key];
       }
     }
-    
+
     instance = {
-      MB_KNEXFILE: getConfig("MB_KNEXFILE"),
-      MB_SESSION_KEY: getConfig("MB_SESSION_KEY"),
-      SENDGRID_KEY: getConfig("SENDGRID_KEY"),
-      MB_ENABLE_GRAPHQL_LOGGER: getConfig("MB_ENABLE_GRAPHQL_LOGGER", (val) => val === "true"),
-      MB_ENABLE_GRAPHIQL: getConfig("MB_ENABLE_GRAPHIQL", (val) => val === "true"),
-      SENDGRID_PRINT_ONLY: getConfig("SENDGRID_PRINT_ONLY", (val) => val === "true"),
-      MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig("MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE", (val) => +val),
-      PORT: getConfig("PORT"),
+      MB_KNEXFILE: getConfig(`MB_KNEXFILE`),
+      MB_SESSION_KEY: getConfig(`MB_SESSION_KEY`),
+      SENDGRID_KEY: getConfig(`SENDGRID_KEY`),
+      MB_ENABLE_GRAPHQL_LOGGER: getConfig(`MB_ENABLE_GRAPHQL_LOGGER`, (val) => val === `true`),
+      MB_ENABLE_GRAPHIQL: getConfig(`MB_ENABLE_GRAPHIQL`, (val) => val === `true`),
+      SENDGRID_PRINT_ONLY: getConfig(`SENDGRID_PRINT_ONLY`, (val) => val === `true`),
+      MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig(`MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE`, (val) => +val),
+      PORT: getConfig(`PORT`),
     };
   }
 

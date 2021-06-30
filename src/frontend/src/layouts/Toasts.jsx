@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { CSSTransition } from 'react-transition-group';
+import { useEffect, useState } from "react";
+import { CSSTransition } from "react-transition-group";
+import styled, { css, keyframes } from "styled-components";
+
 import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
-import styled, { keyframes, css } from "styled-components";
 
 // countdown animation does not use transition-group
 const countdown = keyframes`
@@ -20,14 +21,12 @@ const countdownStyle = css`
   animation-fill-mode: forwards;
 `;
 
-import Card, { CardBody, CardHeader, CardHeaderAction } from "../elements/Card";
-
 const ToastCard = styled(Card)`
   height: 6em;
   padding-top: 0;
   padding-bottom: 0;
- 
- { /* animation classes for toast enter/exit */}
+
+  /* animation classes for toast enter/exit */
   &.toast-enter {
     transform: rotateX(90deg);
     transform-origin: 0 top;
@@ -85,7 +84,7 @@ export const ToastTypes = {
 
       ${countdownStyle} {
         background-image: linear-gradient(90deg, var(--blue-300) 50%, var(--blue-600) 50%);
-      };
+      } ;
     `,
   },
   danger: {
@@ -102,7 +101,7 @@ export const ToastTypes = {
 
       ${countdownStyle} {
         background-image: linear-gradient(90deg, var(--red-300) 50%, var(--red-600) 50%);
-      };
+      } ;
     `,
   },
 };
@@ -121,7 +120,6 @@ const ToastContainer = styled.div`
 `;
 
 const Toasts = ({ toasts = [] }) => {
- 
   return (
     <ToastContainer>
       {toasts.map(({ title, body, type }) => (
@@ -129,32 +127,24 @@ const Toasts = ({ toasts = [] }) => {
       ))}
     </ToastContainer>
   );
-
 };
 
 const Toast = ({ title, body, type }) => {
   const [show, setShow] = useState(false);
   let timer;
 
-  useEffect( () => {
-    setShow(true);                    // activate enter animation on mount
-    return clearTimeout(timer);      // clear timer on unmount
-    }, []
-  );
+  useEffect(() => {
+    setShow(true); // activate enter animation on mount
+    return clearTimeout(timer); // clear timer on unmount
+  }, [timer]);
 
   const startCountdown = () => {
-    timer = setTimeout(() =>setShow(false), 6000);
+    timer = setTimeout(() => setShow(false), 6000);
   };
 
   return (
-    <CSSTransition 
-      in={show}
-      timeout={400} 
-      classNames='toast'
-      onEntered={() => startCountdown()}
-      unmountOnExit
-      >
-      <type.Card >
+    <CSSTransition in={show} timeout={400} classNames="toast" onEntered={() => startCountdown()} unmountOnExit>
+      <type.Card>
         <CardHeader>{title}</CardHeader>
         <CardHeaderAction onClick={() => setShow(false)}>Close</CardHeaderAction>
         <CardBody>{body}</CardBody>

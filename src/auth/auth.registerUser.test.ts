@@ -17,7 +17,6 @@ jest.mock(`@sendgrid/mail`);
 describe(`Authentication`, () => {
   let tm: TestManager;
   let app: Express;
-  let data: PromiseValue<ReturnType<typeof datasetLoader>>;
 
   const newUser = { firstName: `New`, lastName: `User`, email: `new@user.com`, password: `newpassword` };
 
@@ -31,7 +30,6 @@ describe(`Authentication`, () => {
   });
 
   beforeEach(async () => {
-    data = await datasetLoader();
     tm = new TestManager(app);
   });
 
