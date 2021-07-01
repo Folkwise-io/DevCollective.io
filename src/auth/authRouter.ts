@@ -51,7 +51,7 @@ authRouter.post(`/login`, async (req, res) => {
     console.error(`Error while logging in`, e);
     return res.sendStatus(401);
   }
-
+  
   if (user) {
     startSession(req, user);
     return res.send(user);
@@ -68,11 +68,7 @@ authRouter.post(`/logout`, async (req, res) => {
 });
 
 authRouter.post(`/check`, async (req, res) => {
-  if (req.session?.user) {
-    return res.json(req.session.user);
-  } else {
-    return res.sendStatus(401);
-  }
+  req.session?.user ? res.json(req.session.user) : res.sendStatus(401)
 });
 
 authRouter.post(`/register`, async (req, res) => {
