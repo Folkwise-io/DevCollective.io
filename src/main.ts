@@ -1,7 +1,8 @@
-import appFactory from "./appFactory";
-import frontendDevMiddleware from "./frontend/frontendDevMiddleware";
 import { AddressInfo } from "net";
+
+import appFactory from "./appFactory";
 import configProvider from "./configProvider";
+import frontendDevMiddleware from "./frontend/frontendDevMiddleware";
 
 const { PORT } = configProvider();
 const app = appFactory();
