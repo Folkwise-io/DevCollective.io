@@ -4,7 +4,8 @@
   },
   "exclude": ["coverage", "jest.config.js"],
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2018",
+    "lib": ["esnext"],
     "module": "commonjs",
     "allowJs": true,
     "noEmit": true,
@@ -16,6 +17,8 @@
     },
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }

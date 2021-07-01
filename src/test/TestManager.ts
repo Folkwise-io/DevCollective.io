@@ -33,12 +33,15 @@ export default class TestManager {
   register(opts: RegisterParams, agent = this.agent) {
     const { firstName, lastName, email, password } = opts;
 
-    return agent.post(`/auth/register`, {
+    const res = agent.post(`/auth/register`, {
       firstName,
       lastName,
       email,
       password,
     });
+    res.then((res) => console.log(res.body.errors));
+
+    return res;
   }
 
   submitAccountConfirmationToken(opts: SubmitAccountConfirmationTokenParams, agent = this.agent) {

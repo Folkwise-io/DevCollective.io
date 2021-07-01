@@ -21,7 +21,6 @@ describe(`Authentication`, () => {
   const newUser = { firstName: `New`, lastName: `User`, email: `new@user.com`, password: `newpassword` };
 
   beforeAll(async () => {
-    await clearDatabase();
     app = appFactory();
   });
 
@@ -30,6 +29,7 @@ describe(`Authentication`, () => {
   });
 
   beforeEach(async () => {
+    await clearDatabase();
     tm = new TestManager(app);
   });
 
@@ -61,6 +61,7 @@ describe(`Authentication`, () => {
         password: `newpassword`,
       });
 
+      console.log(`ERRORS: Successfully sets a confirmation`, response.body);
       expect(response.statusCode).toBe(200);
 
       const dbUser = await getUserById(response.body.id);
@@ -75,6 +76,7 @@ describe(`Authentication`, () => {
         password: `newpassword`,
       });
 
+      console.log(`ERRORS: Successfully sends an email`, response.body);
       expect(response.statusCode).toBe(200);
 
       const sentHtml = getSentEmail(sgMail);

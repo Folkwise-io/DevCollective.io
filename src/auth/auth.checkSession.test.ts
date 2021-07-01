@@ -18,7 +18,6 @@ describe(`Check Session`, () => {
   const defaultPassword = `password`;
 
   beforeAll(async () => {
-    await clearDatabase();
     app = appFactory();
   });
 
