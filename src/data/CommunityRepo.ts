@@ -1,15 +1,8 @@
-import DataLoader from "dataloader";
-
-import knexProvider from "./knex-provider";
+import { getKnex } from "./knexProvider";
 import { fieldGetterHoc, pickOne } from "./utils";
 
-const communityLoader = new DataLoader<string, DCommunity>(async (ids) => {
-  const knex = await knexProvider();
-  return knex<DCommunity>(`communities`).whereIn(`id`, ids);
-});
-
 export const getCommunityIdByCallsign = async (communityCallsign: string): Promise<number> => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const community: DCommunity = await knex(`communities`)
     .select(`*`)
     .where({
@@ -28,7 +21,7 @@ export const getCommunityIdByCallsign = async (communityCallsign: string): Promi
 export const getCommunityFieldById = fieldGetterHoc((id) => communityLoader.load(id));
 
 export const getCommunityIdsForUserId = async (authorId: number) => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const communities = await knex.raw(
     `
     SELECT * FROM communities AS c
@@ -43,7 +36,7 @@ export const getCommunityIdsForUserId = async (authorId: number) => {
 };
 
 export const getAllCommunityIds = async () => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const communities = await knex.raw(`select * from communities`);
   communities.rows.forEach((c: DCommunity) => {
     // TODO: Straighten up types so that "" + is not required

@@ -6,7 +6,7 @@ import configProvider from "../configProvider";
 
 let instance: IKnex<any, unknown[]>;
 
-const getKnex = async () => {
+export async function getKnex() {
   if (!instance) {
     const { MB_KNEXFILE } = configProvider();
     const knexfilePath = path.resolve(__dirname, `../..`, MB_KNEXFILE);
@@ -28,6 +28,4 @@ const getKnex = async () => {
   }
 
   return instance;
-};
-
-export default getKnex;
+}

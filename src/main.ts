@@ -1,16 +1,40 @@
-import { AddressInfo } from "net";
+import "reflect-metadata";
 
-import appFactory from "./appFactory";
+import cookieSession from "cookie-session";
+import express from "express";
+import { graphqlHTTP } from "express-graphql";
+import depthLimit from "graphql-depth-limit";
+import { buildSchema } from "type-graphql";
+
 import configProvider from "./configProvider";
-import frontendDevMiddleware from "./frontend/frontendDevMiddleware";
+import { UserResolver } from "./graphql/user/user.resolver";
 
-const { PORT } = configProvider();
+const { MB_ENABLE_GRAPHIQL, MB_SESSION_KEY, PORT } = configProvider();
 
 (async () => {
-  const app = await appFactory();
-  frontendDevMiddleware(app);
-  const server = app.listen(PORT, () => {
-    const port = (server.address() as AddressInfo)?.port;
-    console.info(`Started on port ${port}`);
+  const app = express();
+
+  const schema = await buildSchema({
+    resolvers: [UserResolver],
+  });
+
+  app.use(
+    cookieSession({
+      name: `mb-session`,
+      keys: [MB_SESSION_KEY], // TODO: change
+    }),
+  );
+
+  app.use(
+    `/graphql`,
+    graphqlHTTP({
+      schema,
+      graphiql: MB_ENABLE_GRAPHIQL,
+      validationRules: [depthLimit(10)],
+    }),
+  );
+
+  app.listen(PORT, () => {
+    console.info(`API started on port ${PORT}. GraphiQL is available at /graphql/graphiql.`);
   });
 })();

@@ -1,17 +1,10 @@
-import DataLoader from "dataloader";
-
-import knexProvider from "./knex-provider";
+import { getKnex } from "./knexProvider";
 import { fieldGetterHoc } from "./utils";
-
-const commentLoader = new DataLoader<string, DComment>(async (ids) => {
-  const knex = await knexProvider();
-  return knex<DComment>(`comments`).whereIn(`id`, ids);
-});
 
 export const getCommentFieldById = fieldGetterHoc((id) => commentLoader.load(id));
 
 export const getCommentIdsForPostId = async (postId: string) => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const comments: DComment[] = await knex(`comments`).where({
     postId,
   });
@@ -24,12 +17,12 @@ export const getCommentIdsForPostId = async (postId: string) => {
 };
 
 export const getCommentById = async (id: string): Promise<DComment> => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   return knex(`comments`).where({ id }).first();
 };
 
 export const getCommentIdsForUserId = async (authorId: string) => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const comments: DComment[] = await knex(`comments`).where({
     authorId,
   });
@@ -43,7 +36,7 @@ export const getCommentIdsForUserId = async (authorId: string) => {
 
 type CreateCommentParams = Pick<DComment, "body" | "postId" | "authorId" | "parentCommentId">;
 export const createComment = async (params: CreateCommentParams): Promise<DComment | void> => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const comments: DComment[] = (await knex<DComment>(`comments`).insert(params).returning(`*`)) as any;
 
   // todo: simplify. why do we have to loop over an array??

@@ -1,9 +1,9 @@
 {
-  "name": "mintbean-api",
+  "name": "dcio",
   "version": "1.0.0",
-  "main": "src/main.js",
   "author": "Monarch Wadia",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "start": "cross-env ts-node src/main.ts",
     "dev": "cross-env MB_ENV_FILE=dev/dev.env MB_ENV_FILE_OVR=dev-overrides.env nodemon -e graphql,js,ts --ignore ./src/frontend/ src/main.ts",

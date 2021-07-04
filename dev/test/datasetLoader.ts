@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import knexProvider from "../../src/data/knex-provider";
+import { getKnex } from "../../src/data/knexProvider";
 import { FOLDER_PATH } from "./constants";
 import { clearDatabase } from "./TestRepo";
 
@@ -22,7 +22,7 @@ export const datasetLoader = async (verbose = false) => {
   const communitiesUsers: DCommunitiesUsers[] = r(`communitiesUsers`);
   const posts: DPost[] = r(`posts`);
 
-  const knex = await knexProvider();
+  const knex = await getKnex();
   log(`Clearing database...`);
   await clearDatabase();
 

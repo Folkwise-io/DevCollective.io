@@ -1,35 +1,34 @@
+import DataLoader from "dataloader";
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
 
 import { createComment, getCommentById } from "../data/CommentRepo";
 import { getCommunityIdByCallsign } from "../data/CommunityRepo";
 import { createCommunityUser, getCommunityUser } from "../data/CommunityUserRepo";
+import { getKnex } from "../data/knexProvider";
 import { createPost, getPostById } from "../data/PostRepo";
 import { getUserById } from "../data/UserRepo";
-import CommentType from "./CommentType";
-import CommunityType from "./CommunityType";
-import PostType from "./PostType";
+import { CommentType } from "./CommentType";
+import { CommunityType } from "./CommunityType";
+import { PostType } from "./PostType";
 
-const MutationType = new GraphQLObjectType({
+export const RootMutation = new GraphQLObjectType({
   name: `Mutation`,
   fields: {
     createPost: {
       type: PostType,
       args: {
-        title: {
-          type: GraphQLNonNull(GraphQLString),
-        },
-        body: {
-          type: GraphQLNonNull(GraphQLString),
-        },
-        communityCallsign: {
-          type: GraphQLNonNull(GraphQLString),
-        },
-        authorId: {
-          type: GraphQLNonNull(GraphQLID),
-        },
+        title: { type: GraphQLNonNull(GraphQLString) },
+        body: { type: GraphQLNonNull(GraphQLString) },
+        communityCallsign: { type: GraphQLNonNull(GraphQLString) },
+        authorId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve: async function (source, args, context) {
+      resolve: async function (obj, args, context, info) {
         const { body, title, communityCallsign, authorId } = args;
+        context.loader.post = new DataLoader<number, DUser>(async (ids) => {
+          const knex = await getKnex();
+          return knex(`posts`).whereIn(`id`, ids);
+        });
+
         const communityId = await getCommunityIdByCallsign(communityCallsign);
 
         if (!communityId) {
@@ -53,9 +52,14 @@ const MutationType = new GraphQLObjectType({
           type: GraphQLString,
         },
       },
-      resolve: async function (source, args, context) {
+      resolve: async function (obj, args, context, info) {
         // TODO: Simplify
         const { communityCallsign, userId } = args;
+        context.loader.community = new DataLoader<number, DUser>(async (ids) => {
+          const knex = await getKnex();
+          return knex(`communities`).whereIn(`id`, ids);
+        });
+
         const communityId = await getCommunityIdByCallsign(communityCallsign);
         const user = await getUserById(userId);
 
@@ -96,11 +100,16 @@ const MutationType = new GraphQLObjectType({
           type: GraphQLNonNull(GraphQLString),
         },
       },
-      resolve: async (source, args, context) => {
+      resolve: async (obj, args, context, info) => {
         const postId: string = args.postId;
         const authorId: string = args.authorId;
         const body: string = args.body;
         const parentCommentId: string = args.parentCommentId;
+
+        context.loader.comments = new DataLoader<number, DUser>(async (ids) => {
+          const knex = await getKnex();
+          return knex(`comments`).whereIn(`id`, ids);
+        });
 
         const post = await getPostById(postId);
         const user = await getUserById(authorId);
@@ -131,5 +140,3 @@ const MutationType = new GraphQLObjectType({
     },
   },
 });
-
-export default MutationType;

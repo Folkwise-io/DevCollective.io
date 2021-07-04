@@ -12,7 +12,7 @@ describe(`User object`, () => {
 
   beforeAll(async () => {
     await clearDatabase();
-    app = appFactory();
+    app = await appFactory();
   });
 
   beforeEach(async () => {

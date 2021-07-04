@@ -1,4 +1,4 @@
-import knexProvider from "./knex-provider";
+import { getKnex } from "./knexProvider";
 
 interface CommunityUserParams {
   userId: number;
@@ -6,7 +6,7 @@ interface CommunityUserParams {
 }
 
 export const createCommunityUser = async ({ userId, communityId }: CommunityUserParams): Promise<void> => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   return await knex(`communitiesUsers`).insert({
     userId,
     communityId,
@@ -14,7 +14,7 @@ export const createCommunityUser = async ({ userId, communityId }: CommunityUser
 };
 
 export const getCommunityUser = async ({ userId, communityId }: CommunityUserParams) => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   return knex(`communitiesUsers`)
     .where({
       userId,
@@ -24,7 +24,7 @@ export const getCommunityUser = async ({ userId, communityId }: CommunityUserPar
 };
 
 // const communityLoader = new DataLoader<string, DCommunity>(async (ids) => {
-//   const knex = await knexProvider();
+//   const knex = await getKnex();
 //   // @ts-ignore
 //   return knex.raw<DCommunity[]>("select * from comunities where id in (?)", ids);
 // });
@@ -32,7 +32,7 @@ export const getCommunityUser = async ({ userId, communityId }: CommunityUserPar
 // export const getCommunityFieldById = fieldGetterHoc((id) => communityLoader.load(id));
 
 // export const getCommunityIdsForUserId = async (authorId: number) => {
-//   const knex = await knexProvider();
+//   const knex = await getKnex();
 //   const communities = await knex.raw(
 //     `
 //     SELECT * FROM communities AS c
@@ -46,7 +46,7 @@ export const getCommunityUser = async ({ userId, communityId }: CommunityUserPar
 // };
 
 // export const getAllCommunityIds = async () => {
-//   const knex = await knexProvider();
+//   const knex = await getKnex();
 //   const communities = await knex.raw("select * from communities");
 //   communities.rows.forEach((c: DCommunity) => {
 //     communityLoader.prime(c.id, c);

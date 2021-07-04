@@ -1,12 +1,5 @@
-import DataLoader from "dataloader";
-
-import knexProvider from "./knex-provider";
+import { getKnex } from "./knexProvider";
 import { fieldGetterHoc, pickOne } from "./utils";
-
-const postLoader = new DataLoader<string, DPost>(async (ids) => {
-  const response = await knexProvider().then((knex) => knex<DPost>(`posts`).whereIn(`id`, ids));
-  return response;
-});
 
 const prime = (posts: DPost[]) => {
   posts.forEach((p: DPost) => {
@@ -19,7 +12,7 @@ const prime = (posts: DPost[]) => {
 export const getPostFieldById = fieldGetterHoc((id) => postLoader.load(id));
 
 export const getPostIdsForCommunityId = async (communityId: number) => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const posts = await knex(`posts`).where({
     communityId,
   });
@@ -28,14 +21,14 @@ export const getPostIdsForCommunityId = async (communityId: number) => {
 };
 
 export const getAllPostIds = async () => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const posts = await knex.raw(`select * from posts`);
   prime(posts.rows);
   return pickOne(`id`)(posts.rows);
 };
 
 export const getPostIdsForUserId = async (userId: number) => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const posts = await knex.raw(
     `
     SELECT * FROM posts WHERE "authorId" = ?
@@ -55,7 +48,7 @@ interface CreatePostParams {
   authorId: number;
 }
 export const createPost = async (params: CreatePostParams): Promise<DPost | void> => {
-  const knex = await knexProvider();
+  const knex = await getKnex();
   const posts: DPost[] = (await knex<DPost>(`posts`).insert(params).returning(`*`)) as any;
   if (posts && posts.length) {
     posts.forEach((p) => {
