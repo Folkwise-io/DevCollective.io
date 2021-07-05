@@ -11,7 +11,7 @@
     "dbup": "cd dev/db && docker-compose up -d",
     "test": "cross-env MB_ENV_FILE=dev/test.env yarn jest --runInBand --no-cache --forceExit --detectOpenHandles",
     "tdd": "cross-env MB_ENV_FILE=dev/test.env yarn jest --runInBand --no-cache --forceExit --detectOpenHandles --watchAll",
-    "knex": "cross-env MB_ENV_FILE=dev/dev.env knex --knexfile=./dev/db/dev.knexfile.ts",
+    "knex": "cross-env MB_ENV_FILE=dev/dev.env MB_ENV_FILE_OVR=dev-overrides.env knex --knexfile=./dev/db/dev.knexfile.ts",
     "knex:prod": "cross-env MB_ENV_FILE=/etc/mintbean-v4/config/prod.env knex --knexfile /etc/mintbean-v4/config/prod.env",
     "knex:test": "cross-env MB_ENV_FILE=dev/test.env knex --knexfile ./dev/test/test.knexfile.ts",
     "pristine": "yarn knex migrate:latest && yarn knex seed:run && yarn knex:test migrate:latest && yarn knex:test seed:run",

@@ -1,6 +1,7 @@
 import { config, parse } from "dotenv";
-import fs from 'fs';
+import fs from "fs";
 import path from "path";
+import * as yup from 'yup';
 
 type Mapper<T> = (x: string) => T;
 const defaultMapper: Mapper<string> = (x) => x;
@@ -16,49 +17,55 @@ function getConfig(key: string, mapper = defaultMapper): any {
   }
 }
 
-interface ConfigInstance {
-  MB_KNEXFILE: string;
-  MB_SESSION_KEY: string;
-  MB_ENABLE_GRAPHQL_LOGGER: boolean;
-  MB_ENABLE_GRAPHIQL: boolean;
-  MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: number;
-  SENDGRID_KEY: string;
-  SENDGRID_PRINT_ONLY: boolean;
-  PORT: string;
-}
-let instance: ConfigInstance;
+const instanceSchema = yup.object().shape({
+  MB_KNEXFILE: yup.string().required(),
+  MB_SESSION_KEY: yup.string().required(),
+  MB_ENABLE_GRAPHQL_LOGGER: yup.bool().required(),
+  MB_ENABLE_GRAPHIQL: yup.bool().required(),
+  MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: yup.number().required(),
+  SENDGRID_KEY: yup.string().required(),
+  SENDGRID_PRINT_ONLY: yup.bool().required(),
+  PORT: yup.number().required(),
+}).required();
+
+let instance : yup.InferType<typeof instanceSchema>;
 
 export default () => {
   if (!instance) {
+    const envFilePath = getConfig(`MB_ENV_FILE`);
 
-    const envFilePath = getConfig("MB_ENV_FILE");
-    
-    const overrideEnvFilePath = getConfig("MB_ENV_FILE_OVR");
-    
+    const overrideEnvFilePath = getConfig(`MB_ENV_FILE_OVR`);
+
     config({
       path: path.join(__dirname, `..`, envFilePath),
     });
 
     // checks to see if the dev-overrides.env file is present in root directory
-    if(fs.existsSync(path.join(__dirname, "..", overrideEnvFilePath))) {
+    if (fs.existsSync(path.join(__dirname, `..`, overrideEnvFilePath))) {
       // override
-      const envConfig = parse(fs.readFileSync(path.join(__dirname, "..", overrideEnvFilePath)));
+      const envConfig = parse(fs.readFileSync(path.join(__dirname, `..`, overrideEnvFilePath)));
 
-      for(const key in envConfig) {
+      for (const key in envConfig) {
         process.env[key] = envConfig[key];
       }
     }
     
-    instance = {
-      MB_KNEXFILE: getConfig("MB_KNEXFILE"),
-      MB_SESSION_KEY: getConfig("MB_SESSION_KEY"),
-      SENDGRID_KEY: getConfig("SENDGRID_KEY"),
-      MB_ENABLE_GRAPHQL_LOGGER: getConfig("MB_ENABLE_GRAPHQL_LOGGER", (val) => val === "true"),
-      MB_ENABLE_GRAPHIQL: getConfig("MB_ENABLE_GRAPHIQL", (val) => val === "true"),
-      SENDGRID_PRINT_ONLY: getConfig("SENDGRID_PRINT_ONLY", (val) => val === "true"),
-      MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig("MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE", (val) => +val),
-      PORT: getConfig("PORT"),
-    };
+    instance = instanceSchema.cast({
+      MB_KNEXFILE: getConfig(`MB_KNEXFILE`),
+      MB_SESSION_KEY: getConfig(`MB_SESSION_KEY`),
+      SENDGRID_KEY: getConfig(`SENDGRID_KEY`),
+      MB_ENABLE_GRAPHQL_LOGGER: getConfig(`MB_ENABLE_GRAPHQL_LOGGER`),
+      MB_ENABLE_GRAPHIQL: getConfig(`MB_ENABLE_GRAPHIQL`),
+      SENDGRID_PRINT_ONLY: getConfig(`SENDGRID_PRINT_ONLY`),
+      MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE: getConfig(`MB_FORGOT_PASSWORD_TOKEN_DAYS_TO_LIVE`),
+      PORT: getConfig(`PORT`),
+    });
+
+    try {
+      instanceSchema.validate(instance);
+    } catch (err) {
+      console.error(err.errors);
+    }
   }
 
   return instance;
