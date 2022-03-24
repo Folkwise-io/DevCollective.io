@@ -15,7 +15,7 @@ interface Email {
   html: string;
 }
 
-export const sendEmail = async (email: Email) => {
+export const sendEmail = (email: Email): void => {
   if (SENDGRID_PRINT_ONLY) {
     console.info(`EMAIL: ${JSON.stringify(email)}`);
   } else {
